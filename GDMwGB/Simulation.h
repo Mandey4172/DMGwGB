@@ -1,13 +1,16 @@
 #pragma once
+
+/**/
 class Simulation
 {
 public:
 	Simulation();
 
-	void step();
-public:
-	class Neighborhood * neighborhood;
-	class CRule * rule;
+	virtual bool step();
+	void start();
+
 	class CellularAutomata * cellularautomata;
+	class CRule * rule;
+	class Neighborhood * neighborhood;
 };
 

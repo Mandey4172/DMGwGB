@@ -138,37 +138,54 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Calculations.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="CellularAutomata.cpp" />
+    <ClCompile Include="GrainBoundaryRule.cpp" />
+    <ClCompile Include="GrainBoundarySimulation.cpp" />
+    <ClCompile Include="GrainGrowthRule.cpp" />
+    <ClCompile Include="GrainGrowthSimulation.cpp" />
+    <ClCompile Include="GrainNucleation.cpp" />
     <ClCompile Include="HexagonalNeighborhood.cpp" />
     <ClCompile Include="MooreNeighborhood.cpp" />
     <ClCompile Include="Mouse.cpp" />
-    <ClCompile Include="MyForm.cpp" />
+    <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="CRule.cpp" />
     <ClCompile Include="Neighborhood.cpp" />
+    <ClCompile Include="NewForm.cpp" />
     <ClCompile Include="PentagonalNeighborhood.cpp" />
     <ClCompile Include="Simulation.cpp" />
     <ClCompile Include="VonNeummanNeighborhood.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Calculations.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="CellularAutomata.h" />
+    <ClInclude Include="GrainBoundaryRule.h" />
+    <ClInclude Include="GrainBoundarySimulation.h" />
+    <ClInclude Include="GrainGrowthRule.h" />
+    <ClInclude Include="GrainGrowthSimulation.h" />
+    <ClInclude Include="GrainNucleation.h" />
     <ClInclude Include="HexagonalNeighborhood.h" />
     <ClInclude Include="MooreNeighborhood.h" />
     <ClInclude Include="Mouse.h" />
-    <ClInclude Include="MyForm.h">
+    <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="CRule.h" />
     <ClInclude Include="Neighborhood.h" />
+    <ClInclude Include="NewForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="PentagonalNeighborhood.h" />
     <ClInclude Include="Simulation.h" />
     <ClInclude Include="VonNeummanNeighborhood.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ColorFragmentShader.fragmentshader" />
+    <None Include="NoGrainBoundaryFragmentShader.fragmentshader" />
     <None Include="packages.config" />
     <None Include="TransformVertexShader.vertexshader" />
   </ItemGroup>
@@ -178,9 +195,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MyForm.resx">
-      <DependentUpon>MyForm.h</DependentUpon>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="NewForm.resx">
+      <DependentUpon>NewForm.h</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="NoGrainFragmentShader.fragmentshader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

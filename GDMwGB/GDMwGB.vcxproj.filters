@@ -31,29 +31,32 @@
     <Filter Include="Header Files\Class\Neighborhood">
       <UniqueIdentifier>{5a0c78b6-5759-4436-be21-ca7d6a890c66}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Class\Simulation">
+      <UniqueIdentifier>{c2a1c500-1b78-4f5f-8cc4-9baa646a55e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Class\Simulation">
+      <UniqueIdentifier>{45dbebf6-234e-4378-b5c0-ded7ecffd0ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Class\Rule">
+      <UniqueIdentifier>{381ec640-45ca-49c3-8124-1fcb757c5bb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Class\Rule">
+      <UniqueIdentifier>{590fb301-878b-4c75-b7c5-04b011ffb66b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Class\Core">
+      <UniqueIdentifier>{4f22d4c4-cc02-46f8-bfb8-32e3a98a7c46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Drawing">
+      <UniqueIdentifier>{58c111f9-e5a7-4280-a23e-f92e4b33dcf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Class\Core">
+      <UniqueIdentifier>{0db87174-11b5-4cbc-b0c4-c2a777bb7f4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Forms">
+      <UniqueIdentifier>{0d73c797-5dca-4f1e-894f-9f53b1d7cf05}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MyForm.cpp">
-      <Filter>Source Files\Forms</Filter>
-    </ClCompile>
-    <ClCompile Include="Cell.cpp">
-      <Filter>Source Files\Class</Filter>
-    </ClCompile>
-    <ClCompile Include="CellularAutomata.cpp">
-      <Filter>Source Files\Class</Filter>
-    </ClCompile>
-    <ClCompile Include="CRule.cpp">
-      <Filter>Source Files\Class</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mouse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Simulation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Neighborhood.cpp">
       <Filter>Source Files\Class\Neighborhood</Filter>
     </ClCompile>
@@ -69,29 +72,50 @@
     <ClCompile Include="HexagonalNeighborhood.cpp">
       <Filter>Source Files\Class\Neighborhood</Filter>
     </ClCompile>
+    <ClCompile Include="Simulation.cpp">
+      <Filter>Source Files\Class\Simulation</Filter>
+    </ClCompile>
+    <ClCompile Include="GrainGrowthSimulation.cpp">
+      <Filter>Source Files\Class\Simulation</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Source Files\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="GrainBoundarySimulation.cpp">
+      <Filter>Source Files\Class\Simulation</Filter>
+    </ClCompile>
+    <ClCompile Include="CRule.cpp">
+      <Filter>Source Files\Class\Rule</Filter>
+    </ClCompile>
+    <ClCompile Include="CellularAutomata.cpp">
+      <Filter>Source Files\Class\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Cell.cpp">
+      <Filter>Source Files\Class\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GrainGrowthRule.cpp">
+      <Filter>Source Files\Class\Rule</Filter>
+    </ClCompile>
+    <ClCompile Include="GrainBoundaryRule.cpp">
+      <Filter>Source Files\Class\Rule</Filter>
+    </ClCompile>
+    <ClCompile Include="NewForm.cpp">
+      <Filter>Source Files\Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="MainForm.cpp">
+      <Filter>Source Files\Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="Calculations.cpp">
+      <Filter>Source Files\Class\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GrainNucleation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MyForm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Cell.h">
-      <Filter>Header Files\Class</Filter>
-    </ClInclude>
-    <ClInclude Include="CellularAutomata.h">
-      <Filter>Header Files\Class</Filter>
-    </ClInclude>
-    <ClInclude Include="CRule.h">
-      <Filter>Header Files\Class</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mouse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Simulation.h">
-      <Filter>Header Files\Class</Filter>
-    </ClInclude>
     <ClInclude Include="Neighborhood.h">
       <Filter>Header Files\Class\Neighborhood</Filter>
     </ClInclude>
@@ -101,10 +125,52 @@
     <ClInclude Include="VonNeummanNeighborhood.h">
       <Filter>Header Files\Class\Neighborhood</Filter>
     </ClInclude>
+    <ClInclude Include="Simulation.h">
+      <Filter>Header Files\Class\Simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="GrainGrowthSimulation.h">
+      <Filter>Header Files\Class\Simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="CRule.h">
+      <Filter>Header Files\Class\Rule</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Header Files\Drawing</Filter>
+    </ClInclude>
     <ClInclude Include="PentagonalNeighborhood.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Class\Neighborhood</Filter>
     </ClInclude>
     <ClInclude Include="HexagonalNeighborhood.h">
+      <Filter>Header Files\Class\Neighborhood</Filter>
+    </ClInclude>
+    <ClInclude Include="GrainBoundarySimulation.h">
+      <Filter>Header Files\Class\Simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="CellularAutomata.h">
+      <Filter>Header Files\Class\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Cell.h">
+      <Filter>Header Files\Class\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GrainGrowthRule.h">
+      <Filter>Header Files\Class\Rule</Filter>
+    </ClInclude>
+    <ClInclude Include="GrainBoundaryRule.h">
+      <Filter>Header Files\Class\Rule</Filter>
+    </ClInclude>
+    <ClInclude Include="NewForm.h">
+      <Filter>Header Files\Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="MainForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Calculations.h">
+      <Filter>Header Files\Class\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GrainNucleation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -116,10 +182,21 @@
     <None Include="TransformVertexShader.vertexshader">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="NoGrainBoundaryFragmentShader.fragmentshader">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MyForm.resx">
+    <EmbeddedResource Include="MainForm.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
+    <EmbeddedResource Include="NewForm.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="NoGrainFragmentShader.fragmentshader">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
