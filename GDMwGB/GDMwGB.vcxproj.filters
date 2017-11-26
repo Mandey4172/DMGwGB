@@ -114,6 +114,15 @@
     <ClCompile Include="GrainNucleation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NVonNeummanNeighborhood.cpp">
+      <Filter>Source Files\Class\Neighborhood</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorFactory.cpp">
+      <Filter>Source Files\Class\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="NucleonGenerator.cpp">
+      <Filter>Source Files\Class\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Neighborhood.h">
@@ -172,6 +181,15 @@
     </ClInclude>
     <ClInclude Include="GrainNucleation.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NVonNeummanNeighborhood.h">
+      <Filter>Header Files\Class\Neighborhood</Filter>
+    </ClInclude>
+    <ClInclude Include="NucleonGenerator.h">
+      <Filter>Header Files\Class\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorFactory.h">
+      <Filter>Header Files\Class\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

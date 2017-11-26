@@ -14,6 +14,10 @@ public:
 	float	getScale();
 	void	setScale( float Scale );
 
+	int x0, x1,
+		y0, y1,
+		z0, z1;
+
 private:
 	float scale;
 	float alpha;

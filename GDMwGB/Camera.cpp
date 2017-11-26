@@ -5,6 +5,12 @@ Camera::Camera()
 	alpha	= 0.f;
 	beta	= 0.f;
 	scale	= 10.f;
+	x0 = 0;
+	x1 = 0;
+	y0 = 0;
+	y1 = 0;
+	z0 = 0;
+	z1 = 0;
 }
 
 Camera::~Camera()

@@ -20,19 +20,22 @@ void GrainGrowthRule::step(Cell * cell, std::vector<class Cell> neighborhood)
 	std::vector<int> cell_state_count;
 	for (Cell n : neighborhood)
 	{
-		bool exist = false;
-		for (int s = 0; s < cell_state.size(); ++s)
+		if (n.getState() != 1)
 		{
-			if (cell_state[s] == n.getState())
+			bool exist = false;
+			for (int s = 0; s < cell_state.size(); ++s)
 			{
-				cell_state_count[s]++;
-				exist = true;
+				if (cell_state[s] == n.getState())
+				{
+					cell_state_count[s]++;
+					exist = true;
+				}
 			}
-		}
-		if (!exist)
-		{
-			cell_state.push_back(n.getState());
-			cell_state_count.push_back(1);
+			if (!exist)
+			{
+				cell_state.push_back(n.getState());
+				cell_state_count.push_back(1);
+			}
 		}
 	}
 	if (cell_state_count.size() > 0)

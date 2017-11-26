@@ -20,6 +20,7 @@ CellularAutomata::CellularAutomata(unsigned int nm, unsigned int nn, unsigned in
 			this->cells[i][j] = new Cell[this->o];
 		}
 	}
+	this->nucleon_count = 0;
 }
 /*	 Dstruktor	*/
 CellularAutomata::~CellularAutomata()

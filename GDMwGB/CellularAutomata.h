@@ -12,7 +12,7 @@ public:
 	//Pobieranie komórek
 	Cell *** getCells();
 	std::vector<unsigned int> getSize(unsigned int n = 0);
-
+	unsigned int nucleon_count;
 private:
 	//Rozmiar na osi:
 	unsigned int m;	//X

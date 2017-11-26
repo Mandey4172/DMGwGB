@@ -18,7 +18,7 @@
 #include "Simulation.h"
 #include "GrainGrowthSimulation.h"
 #include "CellularAutomata.h"
-
+#include "NucleonGenerator.h"
 #include "MooreNeighborhood.h"
 #include "VonNeummanNeighborhood.h"
 #include "PentagonalNeighborhood.h"
@@ -173,18 +173,7 @@ System::Void GDMwGB::MyForm::OpenGLInit(System::Object ^ sender, System::EventAr
 		for (int j = 0; j < n; j++)
 			for (int k = 0; k < o; k++) //for (int l = 0;l < 36; l++) // TODO:: petla wylacznie dla Intel
 				{
-					if (sim->cellularautomata->getCells()[i][j][k].getState() == 0)
-					{
-						colors[index] = glm::vec3(1.f, 1.f, 1.f);
-					}
-					else if (sim->cellularautomata->getCells()[i][j][k].getState() == 1)
-					{
-						colors[index] = glm::vec3(0.0f, 0.5f, 0.5f);
-					}
-					else if (sim->cellularautomata->getCells()[i][j][k].getState() == 2)
-					{
-						colors[index] = glm::vec3(0.40f, 0.5f, 0.f);
-					}
+					colors[index] = glm::vec3(1.f, 1.f, 1.f);
 					translations[index] = glm::vec3((float) i, (float)j, (float)k);
 					index++;
 				}
@@ -320,9 +309,18 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//Kamera
+	this->camera->x0 = 0;
+	this->camera->x1 = sim->cellularautomata->getSize()[0] - 1;
+	this->camera->y0 = 0;
+	this->camera->y1 = sim->cellularautomata->getSize()[1] - 1;
+	this->camera->z0 = 0;
+	this->camera->z1 = sim->cellularautomata->getSize()[2] - 1;
+
+
 	int	m = sim->cellularautomata->getSize()[0],
 		n = sim->cellularautomata->getSize()[1],
 		o = sim->cellularautomata->getSize()[2];
+
 	float radius = m;
 	if (n > radius) radius = n;
 	if (o > radius) radius = o;
@@ -346,50 +344,122 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 
 	///
 	int index = 0;
-	for (int i = 0; i < m; i++)
+	/*if (this->comboBoxView->SelectedIndex == 0)
 	{
-		for (int j = 0; j < n; j++)
+		for (int i = camera->x0; i <= camera->x1; i++)
 		{
-			for (int k = 0; k < o; k++) //for (int l = 0;l < 36; l++) // TODO:: petla wylacznie dla Intel
+			for (int j = camera->y0; j <= camera->y1; j++)
 			{
+#pragma region Calc
 				unsigned int s = 0;
-				s = sim->cellularautomata->getCells()[i][j][k].getState();
-				if (s == 0)
-				{
-					colors[index] = glm::vec3(1.f, 1.f, 1.f);
-				}
-				else if (s == 1)
-				{
-					colors[index] = glm::vec3(0.f, 0.f, 0.f);
-					
-				}
-				else if (s == 2)
-				{
-					colors[index] = glm::vec3(0.7f, 1.f, 0.1f);
-				}
-				else if (s == 3)
-				{
-					colors[index] = glm::vec3(0.3f, 1.f, 0.3f);
-				}
-				translations[index] = glm::vec3((float)i, (float)j, (float)k);
+				s = sim->cellularautomata->getCells()[i][j][camera->z0].getState();
+				colors[index] = glm::vec3(this->colorFactory->colors[s].r, this->colorFactory->colors[s].g, this->colorFactory->colors[s].b);
+				translations[index] = glm::vec3((float)i, (float)j, (float)camera->z0);
 				index++;
+#pragma endregion	
+			}
+		}
+		for (int i = camera->x0; i <= camera->x1; i++)
+		{
+			for (int j = camera->y0; j <= camera->y1; j++)
+			{
+#pragma region Calc
+				unsigned int s = 0;
+				s = sim->cellularautomata->getCells()[i][j][camera->z1].getState();
+				colors[index] = glm::vec3(this->colorFactory->colors[s].r, this->colorFactory->colors[s].g, this->colorFactory->colors[s].b);
+				translations[index] = glm::vec3((float)i, (float)j, (float)camera->z1);
+				index++;
+#pragma endregion	
+			}
+		}
+
+		for (int i = camera->x0; i <= camera->x1; i++)
+		{
+			for (int k = camera->z0; k <= camera->z1; k++)
+			{
+#pragma region Calc
+				unsigned int s = 0;
+				s = sim->cellularautomata->getCells()[i][camera->y0][k].getState();
+				colors[index] = glm::vec3(this->colorFactory->colors[s].r, this->colorFactory->colors[s].g, this->colorFactory->colors[s].b);				 
+				translations[index] = glm::vec3((float)i, (float)camera->y0, (float)k);
+				index++;
+#pragma endregion	
+			}
+		}
+		for (int i = camera->x0; i <= camera->x1; i++)
+		{
+			for (int k = camera->z0; k < camera->z1; k++)
+			{
+#pragma region Calc
+				unsigned int s = 0;
+				s = sim->cellularautomata->getCells()[i][camera->y1][k].getState();
+				colors[index] = glm::vec3(this->colorFactory->colors[s].r, this->colorFactory->colors[s].g, this->colorFactory->colors[s].b);
+				translations[index] = glm::vec3((float)i, (float)camera->y1, (float)k);
+				index++;
+#pragma endregion	
+			}
+		}
+
+		for (int j = camera->y0 + 1; j <= camera->x1 - 1; j++)
+		{
+			for (int k = camera->z0 + 1; k <= camera->z1 - 1; k++)
+			{
+#pragma region Calc
+				unsigned int s = 0;
+				s = sim->cellularautomata->getCells()[camera->x0][j][k].getState();
+				colors[index] = glm::vec3(this->colorFactory->colors[s].r, this->colorFactory->colors[s].g, this->colorFactory->colors[s].b);
+				translations[index] = glm::vec3((float)camera->x0, (float)j, (float)k);
+				index++;
+#pragma endregion	
+			}
+		}
+		for (int j = camera->y0 + 1; j <= camera->x1 - 1; j++)
+		{
+			for (int k = camera->z0 + 1; k <= camera->z1 - 1; k++)
+			{
+#pragma region Calc
+				unsigned int s = 0;
+				s = sim->cellularautomata->getCells()[camera->x0][j][k].getState();
+				colors[index] = glm::vec3(this->colorFactory->colors[s].r, this->colorFactory->colors[s].g, this->colorFactory->colors[s].b);
+
+				translations[index] = glm::vec3((float)camera->x1, (float)j, (float)k);
+				index++;
+#pragma endregion	
 			}
 		}
 	}
-		
+	else*/
+	{
+		for (int i = 0; i < m; i++)
+		{
+			for (int j = 0; j < n; j++)
+			{
+				for (int k = 0; k < o; k++) //for (int l = 0;l < 36; l++) // TODO:: petla wylacznie dla Intel
+				{
+					unsigned int s = 0;
+					s = sim->cellularautomata->getCells()[i][j][k].getState();
+					colors[index] = glm::vec3(this->colorFactory->colors[s].r, this->colorFactory->colors[s].g, this->colorFactory->colors[s].b);
+					translations[index] = glm::vec3((float)i, (float)j, (float)k);
+					index++;
+				}
+			}
+		}
+	}
+	
+	//int size = (m*n*o) - (m-1*n-1*o-1);
 	glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * n * m * o, &colors[0], GL_DYNAMIC_DRAW); // TODO:: 36 tylko dla Intel
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * index, &colors[0], GL_DYNAMIC_DRAW); // TODO:: 36 tylko dla Intel
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, translationsVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * n * m * o, &translations[0], GL_DYNAMIC_DRAW); // TODO:: 36 tylko dla Intel
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * index, &translations[0], GL_DYNAMIC_DRAW); // TODO:: 36 tylko dla Intel
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glUseProgram(shaderProgram[shaderIndex]);
 	// seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
 	glBindVertexArray(VAO); 
 	//glDrawArrays(GL_TRIANGLES, 0, 36);
-	glDrawArraysInstanced(GL_TRIANGLES, 0, 36, n * m * o);
+	glDrawArraysInstanced(GL_TRIANGLES, 0, 36, index);
 	//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	return System::Void();
@@ -478,9 +548,12 @@ System::Void GDMwGB::MyForm::NewMenuButton(System::Object ^ sender, System::Even
 	{
 		this->simulation->cellularautomata = new CellularAutomata((int)Form.XNumericUpDown->Value, (int)Form.YNumericUpDown->Value, (int)Form.ZNumericUpDown->Value);
 	}
+
 	int	m = this->simulation->cellularautomata->getSize()[0],
 		n = this->simulation->cellularautomata->getSize()[1],
 		o = this->simulation->cellularautomata->getSize()[2];
+
+	this->colorFactory->generate(m*n*o);
 	//TODO:: Intel Graphic nie obsluguje per instance
 	// Tablica bufora kolorow
 
@@ -598,8 +671,9 @@ System::Void GDMwGB::MyForm::SimulationChanged(System::Object ^ sender, System::
 		}
 		this->simulation = newSim;
 	}
-	this->simulation->cellularautomata->getCells()[0][0][0].setState(2);
-	this->simulation->cellularautomata->getCells()[this->simulation->cellularautomata->getSize()[0] - 1][this->simulation->cellularautomata->getSize()[1] - 1][this->simulation->cellularautomata->getSize()[2] - 1].setState(3);
+	/*this->simulation->cellularautomata->getCells()[(this->simulation->cellularautomata->getSize()[0] - 1) / 2][(this->simulation->cellularautomata->getSize()[1] - 1) / 2][0].setState(3);
+	this->simulation->cellularautomata->getCells()[(this->simulation->cellularautomata->getSize()[0] - 1) / 2][(this->simulation->cellularautomata->getSize()[1] - 1) / 2][this->simulation->cellularautomata->getSize()[2] - 1].setState(4);
+	this->simulation->cellularautomata->nucleon_count += 2;*/
 	this->comboBoxNeighborhood->SelectedIndex = 0;
 
 	return System::Void();
@@ -620,6 +694,20 @@ System::Void GDMwGB::MyForm::ViewChanged(System::Object ^ sender, System::EventA
 	if (this->comboBoxView->SelectedIndex == 0) shaderIndex = 0;
 	else if (this->comboBoxView->SelectedIndex == 1) shaderIndex = 1;
 	else if (this->comboBoxView->SelectedIndex == 2) shaderIndex = 2;
+	return System::Void();
+}
+
+System::Void GDMwGB::MyForm::comboBoxNucleation_SelectedIndexChanged(System::Object ^ sender, System::EventArgs ^ e)
+{
+	this->dataGridView1->Rows->Add("Iloœæ", "5");
+	return System::Void();
+}
+
+System::Void GDMwGB::MyForm::nucleationButton_Click(System::Object ^ sender, System::EventArgs ^ e)
+{
+	int c = 0;
+	int::TryParse(this->dataGridView1->Rows[0]->Cells[1]->Value->ToString(), c);
+	NucleonGenerator::random(this->simulation->cellularautomata,c);
 	return System::Void();
 }
 

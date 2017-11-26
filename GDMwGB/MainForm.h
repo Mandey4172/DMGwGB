@@ -4,6 +4,8 @@
 #include "Mouse.h"
 #include "Simulation.h"
 #include "Calculations.h"
+#include "ColorFactory.h"
+#include "CellularAutomata.h"
 
 #include "GrainBoundarySimulation.h"
 #include "GrainGrowthSimulation.h"
@@ -37,6 +39,7 @@ namespace GDMwGB {
 
 			this->camera = new Camera();
 			this->mouse = new Mouse();
+			this->colorFactory = new ColorFactory();
 
 			this->simulation = new GrainGrowthSimulation();
 
@@ -49,6 +52,11 @@ namespace GDMwGB {
 			this->comboBoxSymulation->SelectedIndex = 0;
 			this->comboBoxView->SelectedIndex = 0;
 			this->comboBoxNucleation->SelectedIndex = 0;
+
+			this->colorFactory->generate( this->simulation->cellularautomata->getSize()[0] * 
+										  this->simulation->cellularautomata->getSize()[1] * 
+										  this->simulation->cellularautomata->getSize()[2] / 100);
+			this->CheckForIllegalCrossThreadCalls = false;
 		}
 
 	protected:
@@ -68,6 +76,8 @@ namespace GDMwGB {
 	private: Camera * camera;
 	//Mysz
 	private: Mouse * mouse;
+	//
+	private: ColorFactory * colorFactory;
 	//Kontrolka OpenGL
 	private: Zolver::OpenGLControl^  openGLControl1;
 	//Kontrola MainWindow
@@ -100,6 +110,22 @@ namespace GDMwGB {
 	private: System::Windows::Forms::ComboBox^  comboBoxView;
 
 	private: System::Windows::Forms::GroupBox^  groupBox4;
+	private: System::Windows::Forms::DataGridView^  dataGridView1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Parametr;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -127,15 +153,19 @@ namespace GDMwGB {
 			this->comboBoxNeighborhood = (gcnew System::Windows::Forms::ComboBox());
 			this->comboBoxSymulation = (gcnew System::Windows::Forms::ComboBox());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
 			this->nucleationButton = (gcnew System::Windows::Forms::Button());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->comboBoxNucleation = (gcnew System::Windows::Forms::ComboBox());
 			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
 			this->comboBoxView = (gcnew System::Windows::Forms::ComboBox());
 			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
+			this->Parametr = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->menuStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->groupBox3->SuspendLayout();
 			this->groupBox4->SuspendLayout();
 			this->SuspendLayout();
@@ -249,29 +279,49 @@ namespace GDMwGB {
 			// 
 			// groupBox2
 			// 
+			this->groupBox2->Controls->Add(this->dataGridView1);
 			this->groupBox2->Controls->Add(this->nucleationButton);
 			this->groupBox2->Controls->Add(this->label3);
 			this->groupBox2->Controls->Add(this->comboBoxNucleation);
 			this->groupBox2->Location = System::Drawing::Point(13, 147);
 			this->groupBox2->Name = L"groupBox2";
-			this->groupBox2->Size = System::Drawing::Size(234, 90);
+			this->groupBox2->Size = System::Drawing::Size(234, 219);
 			this->groupBox2->TabIndex = 5;
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Grain Nucleation";
 			// 
+			// dataGridView1
+			// 
+			this->dataGridView1->AllowUserToAddRows = false;
+			this->dataGridView1->AllowUserToDeleteRows = false;
+			this->dataGridView1->BackgroundColor = System::Drawing::SystemColors::ButtonFace;
+			this->dataGridView1->BorderStyle = System::Windows::Forms::BorderStyle::Fixed3D;
+			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {
+				this->Parametr,
+					this->Column1
+			});
+			this->dataGridView1->GridColor = System::Drawing::SystemColors::AppWorkspace;
+			this->dataGridView1->Location = System::Drawing::Point(8, 75);
+			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridView1->RowHeadersWidth = 4;
+			this->dataGridView1->Size = System::Drawing::Size(222, 130);
+			this->dataGridView1->TabIndex = 3;
+			// 
 			// nucleationButton
 			// 
-			this->nucleationButton->Location = System::Drawing::Point(152, 56);
+			this->nucleationButton->Location = System::Drawing::Point(147, 19);
 			this->nucleationButton->Name = L"nucleationButton";
 			this->nucleationButton->Size = System::Drawing::Size(75, 23);
 			this->nucleationButton->TabIndex = 2;
 			this->nucleationButton->Text = L"Generuj";
 			this->nucleationButton->UseVisualStyleBackColor = true;
+			this->nucleationButton->Click += gcnew System::EventHandler(this, &MyForm::nucleationButton_Click);
 			// 
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(6, 22);
+			this->label3->Location = System::Drawing::Point(6, 51);
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(40, 13);
 			this->label3->TabIndex = 1;
@@ -281,10 +331,11 @@ namespace GDMwGB {
 			// 
 			this->comboBoxNucleation->FormattingEnabled = true;
 			this->comboBoxNucleation->Items->AddRange(gcnew cli::array< System::Object^  >(1) { L"Random" });
-			this->comboBoxNucleation->Location = System::Drawing::Point(107, 19);
+			this->comboBoxNucleation->Location = System::Drawing::Point(107, 48);
 			this->comboBoxNucleation->Name = L"comboBoxNucleation";
 			this->comboBoxNucleation->Size = System::Drawing::Size(121, 21);
 			this->comboBoxNucleation->TabIndex = 0;
+			this->comboBoxNucleation->SelectedIndexChanged += gcnew System::EventHandler(this, &MyForm::comboBoxNucleation_SelectedIndexChanged);
 			// 
 			// groupBox3
 			// 
@@ -309,12 +360,27 @@ namespace GDMwGB {
 			// groupBox4
 			// 
 			this->groupBox4->Controls->Add(this->comboBoxView);
-			this->groupBox4->Location = System::Drawing::Point(13, 243);
+			this->groupBox4->Location = System::Drawing::Point(12, 372);
 			this->groupBox4->Name = L"groupBox4";
 			this->groupBox4->Size = System::Drawing::Size(228, 54);
 			this->groupBox4->TabIndex = 8;
 			this->groupBox4->TabStop = false;
 			this->groupBox4->Text = L"Widok";
+			// 
+			// Parametr
+			// 
+			this->Parametr->HeaderText = L"Parametr";
+			this->Parametr->Name = L"Parametr";
+			this->Parametr->ReadOnly = true;
+			this->Parametr->Width = 108;
+			// 
+			// Column1
+			// 
+			this->Column1->FillWeight = 120;
+			this->Column1->HeaderText = L"Wartoœæ";
+			this->Column1->Name = L"Column1";
+			this->Column1->Resizable = System::Windows::Forms::DataGridViewTriState::True;
+			this->Column1->Width = 108;
 			// 
 			// MyForm
 			// 
@@ -340,6 +406,7 @@ namespace GDMwGB {
 			this->groupBox1->PerformLayout();
 			this->groupBox2->ResumeLayout(false);
 			this->groupBox2->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
 			this->groupBox3->ResumeLayout(false);
 			this->groupBox4->ResumeLayout(false);
 			this->ResumeLayout(false);
@@ -365,5 +432,7 @@ namespace GDMwGB {
 	private: System::Void SimulationChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void Close(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e);
 	private: System::Void ViewChanged(System::Object^  sender, System::EventArgs^  e);
+	private: System::Void comboBoxNucleation_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
+	private: System::Void nucleationButton_Click(System::Object^  sender, System::EventArgs^  e);
 };
 }

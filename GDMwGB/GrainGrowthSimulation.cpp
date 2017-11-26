@@ -13,7 +13,7 @@
 
 GrainGrowthSimulation::GrainGrowthSimulation()
 {
-	this->cellularautomata = new CellularAutomata(10, 10, 10);
+	this->cellularautomata = new CellularAutomata(10, 10, 2);
 	this->neighborhood = new MooreNeighborhood();
 	this->rule = new GrainGrowthRule();
 }

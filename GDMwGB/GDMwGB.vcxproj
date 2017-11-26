@@ -89,14 +89,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Projekty\C++\GDMwGB\packages\nupengl.core.0.1.0.1\build\native\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\packages\nupengl.core.0.1.0.1\build\native\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glew32.lib;freeglut.lib</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>Main</EntryPointSymbol>
-      <AdditionalLibraryDirectories>D:\Projekty\C++\GDMwGB\packages\nupengl.core.0.1.0.1\build\native\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\packages\nupengl.core.0.1.0.1\build\native\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -114,10 +114,14 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\packages\nupengl.core.0.1.0.1\build\native\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies />
+      <AdditionalDependencies>glew32.lib;freeglut.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\packages\nupengl.core.0.1.0.1\build\native\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <EntryPointSymbol>Main</EntryPointSymbol>
+      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -142,6 +146,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="CellularAutomata.cpp" />
+    <ClCompile Include="ColorFactory.cpp" />
     <ClCompile Include="GrainBoundaryRule.cpp" />
     <ClCompile Include="GrainBoundarySimulation.cpp" />
     <ClCompile Include="GrainGrowthRule.cpp" />
@@ -154,6 +159,8 @@
     <ClCompile Include="CRule.cpp" />
     <ClCompile Include="Neighborhood.cpp" />
     <ClCompile Include="NewForm.cpp" />
+    <ClCompile Include="NucleonGenerator.cpp" />
+    <ClCompile Include="NVonNeummanNeighborhood.cpp" />
     <ClCompile Include="PentagonalNeighborhood.cpp" />
     <ClCompile Include="Simulation.cpp" />
     <ClCompile Include="VonNeummanNeighborhood.cpp" />
@@ -163,6 +170,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="CellularAutomata.h" />
+    <ClInclude Include="ColorFactory.h" />
     <ClInclude Include="GrainBoundaryRule.h" />
     <ClInclude Include="GrainBoundarySimulation.h" />
     <ClInclude Include="GrainGrowthRule.h" />
@@ -179,6 +187,8 @@
     <ClInclude Include="NewForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="NucleonGenerator.h" />
+    <ClInclude Include="NVonNeummanNeighborhood.h" />
     <ClInclude Include="PentagonalNeighborhood.h" />
     <ClInclude Include="Simulation.h" />
     <ClInclude Include="VonNeummanNeighborhood.h" />

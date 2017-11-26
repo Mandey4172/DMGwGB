@@ -10,7 +10,7 @@ uniform vec3 lightPos;
 
 void main()
 {
-	if(( oColor.x > 0.69f )&&( oColor.x < 0.79f )&&( oColor.y > 0.99f )&&( oColor.z < 0.11f ))
+	if((( oColor.x + oColor.y + oColor.z) < 0.050f) &&( oColor.x < 0.001f) &&( oColor.y < 0.001f) &&( oColor.z < 0.001f) )
     {
         discard;
         //color = vec4(fColor, 0.001f);
