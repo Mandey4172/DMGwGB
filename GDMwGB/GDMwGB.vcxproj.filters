@@ -34,14 +34,8 @@
     <Filter Include="Header Files\Class\Simulation">
       <UniqueIdentifier>{c2a1c500-1b78-4f5f-8cc4-9baa646a55e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Class\Simulation">
-      <UniqueIdentifier>{45dbebf6-234e-4378-b5c0-ded7ecffd0ee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Class\Rule">
       <UniqueIdentifier>{381ec640-45ca-49c3-8124-1fcb757c5bb2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Class\Rule">
-      <UniqueIdentifier>{590fb301-878b-4c75-b7c5-04b011ffb66b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Class\Core">
       <UniqueIdentifier>{4f22d4c4-cc02-46f8-bfb8-32e3a98a7c46}</UniqueIdentifier>
@@ -54,6 +48,12 @@
     </Filter>
     <Filter Include="Header Files\Forms">
       <UniqueIdentifier>{0d73c797-5dca-4f1e-894f-9f53b1d7cf05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Simulation">
+      <UniqueIdentifier>{45dbebf6-234e-4378-b5c0-ded7ecffd0ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rule">
+      <UniqueIdentifier>{590fb301-878b-4c75-b7c5-04b011ffb66b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -73,10 +73,10 @@
       <Filter>Source Files\Class\Neighborhood</Filter>
     </ClCompile>
     <ClCompile Include="Simulation.cpp">
-      <Filter>Source Files\Class\Simulation</Filter>
+      <Filter>Source Files\Simulation</Filter>
     </ClCompile>
     <ClCompile Include="GrainGrowthSimulation.cpp">
-      <Filter>Source Files\Class\Simulation</Filter>
+      <Filter>Source Files\Simulation</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Drawing</Filter>
@@ -85,10 +85,10 @@
       <Filter>Source Files\Drawing</Filter>
     </ClCompile>
     <ClCompile Include="GrainBoundarySimulation.cpp">
-      <Filter>Source Files\Class\Simulation</Filter>
+      <Filter>Source Files\Simulation</Filter>
     </ClCompile>
     <ClCompile Include="CRule.cpp">
-      <Filter>Source Files\Class\Rule</Filter>
+      <Filter>Source Files\Rule</Filter>
     </ClCompile>
     <ClCompile Include="CellularAutomata.cpp">
       <Filter>Source Files\Class\Core</Filter>
@@ -97,10 +97,10 @@
       <Filter>Source Files\Class\Core</Filter>
     </ClCompile>
     <ClCompile Include="GrainGrowthRule.cpp">
-      <Filter>Source Files\Class\Rule</Filter>
+      <Filter>Source Files\Rule</Filter>
     </ClCompile>
     <ClCompile Include="GrainBoundaryRule.cpp">
-      <Filter>Source Files\Class\Rule</Filter>
+      <Filter>Source Files\Rule</Filter>
     </ClCompile>
     <ClCompile Include="NewForm.cpp">
       <Filter>Source Files\Forms</Filter>
@@ -122,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="NucleonGenerator.cpp">
       <Filter>Source Files\Class\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="MyNewForm.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +194,15 @@
     <ClInclude Include="ColorFactory.h">
       <Filter>Header Files\Class\Core</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyNewForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SPoint.h">
+      <Filter>Header Files\Class\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -211,10 +223,23 @@
     <EmbeddedResource Include="NewForm.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
+    <EmbeddedResource Include="MyNewForm.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Text Include="NoGrainFragmentShader.fragmentshader">
       <Filter>Resource Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GDMwGB.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\logo.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

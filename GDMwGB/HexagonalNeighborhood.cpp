@@ -11,7 +11,7 @@ HexagonalNeighborhood::~HexagonalNeighborhood()
 {
 }
 
-std::vector<class Cell> HexagonalNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> HexagonalNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	int v = rand() % 6;
 	if (v == 0) return this->getXA(cellularautomata, x, y, z);
@@ -20,12 +20,12 @@ std::vector<class Cell> HexagonalNeighborhood::get(CellularAutomata * cellularau
 	else if (v == 3) return this->getYB(cellularautomata, x, y, z);
 	else if (v == 4) return this->getZA(cellularautomata, x, y, z);
 	else if (v == 5) return this->getZB(cellularautomata, x, y, z);
-	return std::vector<class Cell>();
+	return std::vector<class Cell*>();
 }
 
-std::vector<class Cell> HexagonalNeighborhood::getXA(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> HexagonalNeighborhood::getXA(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	std::vector<Cell> neighborhood;
+	std::vector<Cell*> neighborhood;
 	int m = cellularautomata->getSize()[0],
 		n = cellularautomata->getSize()[1],
 		o = cellularautomata->getSize()[2];
@@ -47,7 +47,7 @@ std::vector<class Cell> HexagonalNeighborhood::getXA(CellularAutomata * cellular
 								if ((i != 0) || (j != 0) || (k != 0))
 								{
 									if (cellularautomata->getCells()[x + i][y + j][z + k].getState() != 0)
-										neighborhood.push_back(cellularautomata->getCells()[x + i][y + j][z + k]);
+										neighborhood.push_back(&cellularautomata->getCells()[x + i][y + j][z + k]);
 								}
 							}
 							else
@@ -71,9 +71,9 @@ std::vector<class Cell> HexagonalNeighborhood::getXA(CellularAutomata * cellular
 	return neighborhood;
 }
 
-std::vector<class Cell> HexagonalNeighborhood::getXB(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> HexagonalNeighborhood::getXB(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	std::vector<Cell> neighborhood;
+	std::vector<Cell*> neighborhood;
 	int m = cellularautomata->getSize()[0],
 		n = cellularautomata->getSize()[1],
 		o = cellularautomata->getSize()[2];
@@ -95,7 +95,7 @@ std::vector<class Cell> HexagonalNeighborhood::getXB(CellularAutomata * cellular
 								if ((i != 0) || (j != 0) || (k != 0))
 								{
 									if (cellularautomata->getCells()[x + i][y + j][z + k].getState() != 0)
-										neighborhood.push_back(cellularautomata->getCells()[x + i][y + j][z + k]);
+										neighborhood.push_back(&cellularautomata->getCells()[x + i][y + j][z + k]);
 								}
 							}
 							else
@@ -119,9 +119,9 @@ std::vector<class Cell> HexagonalNeighborhood::getXB(CellularAutomata * cellular
 	return neighborhood;
 }
 
-std::vector<class Cell> HexagonalNeighborhood::getYA(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> HexagonalNeighborhood::getYA(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	std::vector<Cell> neighborhood;
+	std::vector<Cell*> neighborhood;
 	int m = cellularautomata->getSize()[0],
 		n = cellularautomata->getSize()[1],
 		o = cellularautomata->getSize()[2];
@@ -143,7 +143,7 @@ std::vector<class Cell> HexagonalNeighborhood::getYA(CellularAutomata * cellular
 								if ((i != 0) || (j != 0) || (k != 0))
 								{
 									if (cellularautomata->getCells()[x + i][y + j][z + k].getState() != 0)
-										neighborhood.push_back(cellularautomata->getCells()[x + i][y + j][z + k]);
+										neighborhood.push_back(&cellularautomata->getCells()[x + i][y + j][z + k]);
 								}
 							}
 						}
@@ -167,9 +167,9 @@ std::vector<class Cell> HexagonalNeighborhood::getYA(CellularAutomata * cellular
 	return neighborhood;
 }
 
-std::vector<class Cell> HexagonalNeighborhood::getYB(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> HexagonalNeighborhood::getYB(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	std::vector<Cell> neighborhood;
+	std::vector<Cell*> neighborhood;
 	int m = cellularautomata->getSize()[0],
 		n = cellularautomata->getSize()[1],
 		o = cellularautomata->getSize()[2];
@@ -191,7 +191,7 @@ std::vector<class Cell> HexagonalNeighborhood::getYB(CellularAutomata * cellular
 								if ((i != 0) || (j != 0) || (k != 0))
 								{
 									if (cellularautomata->getCells()[x + i][y + j][z + k].getState() != 0)
-										neighborhood.push_back(cellularautomata->getCells()[x + i][y + j][z + k]);
+										neighborhood.push_back(&cellularautomata->getCells()[x + i][y + j][z + k]);
 								}
 							}
 						}
@@ -215,9 +215,9 @@ std::vector<class Cell> HexagonalNeighborhood::getYB(CellularAutomata * cellular
 	return neighborhood;
 }
 
-std::vector<class Cell> HexagonalNeighborhood::getZA(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> HexagonalNeighborhood::getZA(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	std::vector<Cell> neighborhood;
+	std::vector<Cell*> neighborhood;
 	int m = cellularautomata->getSize()[0],
 		n = cellularautomata->getSize()[1],
 		o = cellularautomata->getSize()[2];
@@ -239,7 +239,7 @@ std::vector<class Cell> HexagonalNeighborhood::getZA(CellularAutomata * cellular
 								if ((i != 0) || (j != 0) || (k != 0))
 								{
 									if (cellularautomata->getCells()[x + i][y + j][z + k].getState() != 0)
-										neighborhood.push_back(cellularautomata->getCells()[x + i][y + j][z + k]);
+										neighborhood.push_back(&cellularautomata->getCells()[x + i][y + j][z + k]);
 								}
 							}
 						}
@@ -263,9 +263,9 @@ std::vector<class Cell> HexagonalNeighborhood::getZA(CellularAutomata * cellular
 	return neighborhood;
 }
 
-std::vector<class Cell> HexagonalNeighborhood::getZB(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> HexagonalNeighborhood::getZB(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	std::vector<Cell> neighborhood;
+	std::vector<Cell*> neighborhood;
 	int m = cellularautomata->getSize()[0],
 		n = cellularautomata->getSize()[1],
 		o = cellularautomata->getSize()[2];
@@ -287,7 +287,7 @@ std::vector<class Cell> HexagonalNeighborhood::getZB(CellularAutomata * cellular
 								if ((i != 0) || (j != 0) || (k != 0))
 								{
 									if (cellularautomata->getCells()[x + i][y + j][z + k].getState() != 0)
-										neighborhood.push_back(cellularautomata->getCells()[x + i][y + j][z + k]);
+										neighborhood.push_back(&cellularautomata->getCells()[x + i][y + j][z + k]);
 								}
 							}
 						}

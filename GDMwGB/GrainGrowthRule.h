@@ -6,6 +6,8 @@ class GrainGrowthRule :
 public:
 	GrainGrowthRule();
 	~GrainGrowthRule();
-	virtual void step(class Cell * cell, class std::vector<class Cell> neighborhood);
+	
+	virtual void step(class Cell * cell, class std::vector<class Cell*> neighborhood);
+	std::vector<class Cell *> * queue;
 };
 

@@ -1,4 +1,6 @@
 #include "CellularAutomata.h"
+#include "Cell.h"
+#include "SPoint.h"
 
 /*  Konstruktor	*/
 CellularAutomata::CellularAutomata(unsigned int nm, unsigned int nn, unsigned int no)
@@ -18,9 +20,40 @@ CellularAutomata::CellularAutomata(unsigned int nm, unsigned int nn, unsigned in
 		for (int j = 0; j < this->n; j++)
 		{
 			this->cells[i][j] = new Cell[this->o];
+			for (int k = 0; k < this->o; k++)
+			{
+				this->cells[i][j][k].position = new SPoint(i, j, k);
+			}
 		}
 	}
-	this->nucleon_count = 0;
+	this->nucleons_count = 0;
+}
+
+CellularAutomata::CellularAutomata(CellularAutomata & ca)
+{
+	this->m = ca.getSize()[0];
+	this->n = ca.getSize()[1];
+	this->o = ca.getSize()[2];
+
+	this->cells = new Cell **[this->m];
+	for (int i = 0; i < this->m; i++)
+	{
+		this->cells[i] = new Cell *[this->n];
+		for (int j = 0; j < this->n; j++)
+		{
+			this->cells[i][j] = new Cell[this->o];
+			for (int k = 0; k < this->o; k++)
+			{
+				this->cells[i][j][k].setState(ca.getCells()[i][j][k].getState());
+				this->cells[i][j][k].setCheck(ca.getCells()[i][j][k].Check());
+				SPoint * p = ca.getCells()[i][j][k].position;
+				this->cells[i][j][k].position = new SPoint(	ca.getCells()[i][j][k].position->x,
+															ca.getCells()[i][j][k].position->y, 
+															ca.getCells()[i][j][k].position->z);
+			}
+		}
+	}
+	this->nucleons_count = ca.nucleons_count;
 }
 /*	 Dstruktor	*/
 CellularAutomata::~CellularAutomata()

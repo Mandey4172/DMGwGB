@@ -11,9 +11,9 @@ VonNeummanNeighborhood::~VonNeummanNeighborhood()
 {
 }
 
-std::vector<class Cell> VonNeummanNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> VonNeummanNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	std::vector<Cell> neighborhood;
+	std::vector<Cell*> neighborhood;
 	int m = cellularautomata->getSize()[0],
 		n = cellularautomata->getSize()[1],
 		o = cellularautomata->getSize()[2];
@@ -23,7 +23,7 @@ std::vector<class Cell> VonNeummanNeighborhood::get(CellularAutomata * cellulara
 		if ((x + i >= 0) && (x + i < m))
 		{
 			if (cellularautomata->getCells()[x + i][y][z].getState() != 0)
-			neighborhood.push_back(cellularautomata->getCells()[x + i][y][z]);
+			neighborhood.push_back(&cellularautomata->getCells()[x + i][y][z]);
 		}
 		else
 		{
@@ -35,7 +35,7 @@ std::vector<class Cell> VonNeummanNeighborhood::get(CellularAutomata * cellulara
 		if ((y + j >= 0) && (y + j < n))
 		{
 			if (cellularautomata->getCells()[x][y + j][z].getState() != 0)
-				neighborhood.push_back(cellularautomata->getCells()[x][y + j][z]);
+				neighborhood.push_back(&cellularautomata->getCells()[x][y + j][z]);
 		}
 		else
 		{
@@ -47,7 +47,7 @@ std::vector<class Cell> VonNeummanNeighborhood::get(CellularAutomata * cellulara
 		if ((z + k >= 0) && (z + k < o))
 		{
 			if (cellularautomata->getCells()[x][y][z + k].getState() != 0)
-				neighborhood.push_back(cellularautomata->getCells()[x][y][z + k]);
+				neighborhood.push_back(&cellularautomata->getCells()[x][y][z + k]);
 		}
 		else
 		{

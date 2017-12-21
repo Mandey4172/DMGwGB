@@ -25,7 +25,11 @@
 #include "HexagonalNeighborhood.h"
 
 #include "Calculations.h"
+
+#include "MyNewForm.h"
+
 #include "NewForm.h"
+
 
 using namespace System;
 using namespace System::Windows::Forms;
@@ -40,22 +44,9 @@ void Main(array<String^>^ args)
 	Application::Run(%form);
 }
 
-unsigned int VBO, VAO, EBO, colorVBO, translationsVBO;
-int shaderProgram[3];
-int shaderIndex;
-static glm::mat4    projection,
-					model,
-					view;
+bool draw = true;
 
-static GLuint		modelLoc,
-					viewLoc,
-					projLoc,
-					lightPosLoc;
-
-glm::vec3 * colors;
-glm::vec3 * translations;
-
-GLuint LoadShaders(const char * vertex_file_path, const char * fragment_file_path) {
+GLuint GDMwGB::MyForm::LoadShaders(const char * vertex_file_path, const char * fragment_file_path) {
 	// Create the shaders
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -151,32 +142,50 @@ System::Void GDMwGB::MyForm::OpenGLInit(System::Object ^ sender, System::EventAr
 {
 	//inicjacja GLEW
 	glewExperimental = true;
-	glewInit();
+	if (glewInit() != GLEW_OK) return;
 	//
+	while (!this->simulation && colorFactory->count <= 1)
+	{
+
+	}
 	Simulation * sim = new Simulation(*this->simulation);
+
 	int	m = sim->cellularautomata->getSize()[0],
 		n = sim->cellularautomata->getSize()[1],
 		o = sim->cellularautomata->getSize()[2];
+	if (!this->colorFactory)
+	{
+		this->colorFactory->generate(n*m*o);
+	}
 
-	colors = new glm::vec3[m * n * o];
-	// Tablica bufora przeniesien
-	translations = new glm::vec3[m * n * o];
+	std::vector<glm::vec3> vcolors;
+	std::vector<glm::vec3> vtranslations;
 
-	//TODO:: Intel Graphic nie obsluguje per instance
-	// Tablica bufora kolorow
-	colors = new glm::vec3[ m * n * o];
-	// Tablica bufora przeniesien
-	translations = new glm::vec3[ m * n * o];
 	
-	int index = 0;
-	for (int i = 0 ; i < m; i++)
-		for (int j = 0; j < n; j++)
-			for (int k = 0; k < o; k++) //for (int l = 0;l < 36; l++) // TODO:: petla wylacznie dla Intel
-				{
-					colors[index] = glm::vec3(1.f, 1.f, 1.f);
-					translations[index] = glm::vec3((float) i, (float)j, (float)k);
-					index++;
-				}
+	vcolors.push_back(glm::vec3(1.f, 1.f, 1.f));
+	vtranslations.push_back( glm::vec3(1.f, 1.f, 1.f));
+				
+
+	colors = new glm::vec3[vcolors.size()];
+	// Tablica bufora przeniesien
+	translations = new glm::vec3[vtranslations.size()];
+
+	for (int i = 0; i < vcolors.size(); i++)
+	{
+		colors[i] = vcolors[i];
+		translations[i] = vtranslations[i];
+	}
+	
+	/*int index = 0;*/
+	//for (int i = 0 ; i < m; i++)
+	//	for (int j = 0; j < n; j++)
+	//		for (int k = 0; k < o; k++) //for (int l = 0;l < 36; l++) // TODO:: petla wylacznie dla Intel
+	//			{
+	//				colors[index] = glm::vec3(1.f, 1.f, 1.f);
+	//				translations[index] = glm::vec3((float) i, (float)j, (float)k);
+	//				index++;
+	//			}
+	
 	// Create and compile our GLSL program from the shaders
 	shaderProgram[0] = LoadShaders("TransformVertexShader.vertexshader", "ColorFragmentShader.fragmentshader");
 	shaderProgram[1] = LoadShaders("TransformVertexShader.vertexshader", "NoGrainFragmentShader.fragmentshader");
@@ -236,22 +245,22 @@ System::Void GDMwGB::MyForm::OpenGLInit(System::Object ^ sender, System::EventAr
 	glm::vec3 * col = colors;
 	
 	// Store instance data in an array buffer
-	glGenBuffers(1, &translationsVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, translationsVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * n * m * o, &translations[0], GL_STATIC_DRAW);
+	glGenBuffers(1, translationsVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, *translationsVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vtranslations.size(), &translations[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glGenBuffers(1, &colorVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * n * m * o, &colors[0], GL_DYNAMIC_DRAW); // TODO:: 36 tylko dla Intel
+	glGenBuffers(1, colorVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, *colorVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vcolors.size(), &colors[0], GL_DYNAMIC_DRAW); // TODO:: 36 tylko dla Intel
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
 
-	glGenVertexArrays(1, &VAO);													// Twozenie Vertex Array Object
-	glGenBuffers(1, &VBO);														// Twozenie Vertex Buffer Object
-	glBindVertexArray(VAO);														// Konfiguracja Vertex Array Object
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);											// Gneracja tablicy Vertex Buffer Object
+	glGenVertexArrays(1, VAO);													// Twozenie Vertex Array Object
+	glGenBuffers(1, VBO);														// Twozenie Vertex Buffer Object
+	glBindVertexArray(*VAO);														// Konfiguracja Vertex Array Object
+	glBindBuffer(GL_ARRAY_BUFFER, *VBO);											// Gneracja tablicy Vertex Buffer Object
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);	// Przypisanie wieszcho³ków do Vertex Buffer Object
 	//Konfiguracja 0 atrybutu
 	glEnableVertexAttribArray(0);
@@ -263,14 +272,14 @@ System::Void GDMwGB::MyForm::OpenGLInit(System::Object ^ sender, System::EventAr
 	
 	//Konfiguracja 1 atrybutu [ Kolor ]
 	glEnableVertexAttribArray(2);
-	glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, *colorVBO);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glVertexAttribDivisor(2, 1);
 
 	//Konfiguracja 1 atrybutu [ Przeniesienie ]
 	glEnableVertexAttribArray(3);
-	glBindBuffer(GL_ARRAY_BUFFER, translationsVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, *translationsVBO);
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glVertexAttribDivisor(3, 1);
@@ -286,15 +295,15 @@ System::Void GDMwGB::MyForm::OpenGLInit(System::Object ^ sender, System::EventAr
 	
 	
 	// Konfiguracja uniformu mvp
-	projection = glm::perspective(45.0f, (GLfloat)this->openGLControl1->Width / this->openGLControl1->Height, 0.1f, 100000.0f);
-	view =	glm::lookAt(glm::vec3(((GLfloat)n / 2), ((GLfloat)m / 2), ((GLfloat)o / 2)),
+	*projection = glm::perspective(45.0f, (GLfloat)this->openGLControl1->Width / this->openGLControl1->Height, 0.1f, 100000.0f);
+	*view = glm::lookAt(glm::vec3(((GLfloat)n / 2), ((GLfloat)m / 2), ((GLfloat)o / 2)),
 						glm::vec3(((GLfloat)n / 2), ((GLfloat)m / 2), ((GLfloat)o / 2)),
 						glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::mat4();
+	model = new glm::mat4();
 	// Przsylanie uniformów
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(*projection));
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(*view));
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(*model));
 	//Wlaczenie Depth Test
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -305,6 +314,10 @@ System::Void GDMwGB::MyForm::OpenGLInit(System::Object ^ sender, System::EventAr
 System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::EventArgs ^ e)
 {
 	Simulation * sim = new Simulation(*this->simulation);
+
+	std::vector<glm::vec3> vcolors;
+	std::vector<glm::vec3> vtranslations;
+
 	// Czyszczenie obrazu
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -326,50 +339,62 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 	if (o > radius) radius = o;
 	float r = radius  * camera->getScale();
 	GLfloat camX = sin(glm::radians(camera->getBetaRotation()));
-	GLfloat camY = cos( glm::radians(camera->getBetaRotation())) * cos(glm::radians(camera->getAlphaRotation()));
-	GLfloat camZ = cos( glm::radians(camera->getBetaRotation())) * sin(glm::radians(camera->getAlphaRotation()));
-	view = glm::lookAt( glm::vec3( (((GLfloat)m - 1.f) / 2) + (r * camY), (((GLfloat)n - 1.f) / 2) + (r *camX), (((GLfloat)o - 1.f) / 2) + (r * camZ) ),
-						glm::vec3( (((GLfloat)m - 1.f) / 2), (((GLfloat)n - 1.f) / 2) , (((GLfloat)o - 1.f) / 2)),
-						glm::vec3( 0.0f, 1.0f, 0.0f) );
+	GLfloat camY = cos(glm::radians(camera->getBetaRotation())) * cos(glm::radians(camera->getAlphaRotation()));
+	GLfloat camZ = cos(glm::radians(camera->getBetaRotation())) * sin(glm::radians(camera->getAlphaRotation()));
+	*view = glm::lookAt(glm::vec3((((GLfloat)m - 1.f) / 2) + (r * camY), (((GLfloat)n - 1.f) / 2) + (r *camX), (((GLfloat)o - 1.f) / 2) + (r * camZ)),
+		glm::vec3((((GLfloat)m - 1.f) / 2), (((GLfloat)n - 1.f) / 2), (((GLfloat)o - 1.f) / 2)),
+		glm::vec3(0.0f, 1.0f, 0.0f));
 
 	modelLoc = glGetUniformLocation(shaderProgram[shaderIndex], "model");
 	viewLoc = glGetUniformLocation(shaderProgram[shaderIndex], "view");
 	projLoc = glGetUniformLocation(shaderProgram[shaderIndex], "projection");
 	lightPosLoc = glGetUniformLocation(shaderProgram[shaderIndex], "lightPos");
 
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	glUniform3f(lightPosLoc, ((GLfloat)(m - 1) / 2) + ( (radius + 100) * camY), ((GLfloat)(n - 1) / 2) + ((radius + 100) * camX), ((GLfloat)(o - 1) / 2) + ((radius + 100) *camZ));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(*projection));
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(*view));
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(*model));
+	glUniform3f(lightPosLoc, ((GLfloat)(m - 1) / 2) + ((radius + 100) * camY), ((GLfloat)(n - 1) / 2) + ((radius + 100) * camX), ((GLfloat)(o - 1) / 2) + ((radius + 100) *camZ));
 
 	///
-	int index = 0;
-	/*if (this->comboBoxView->SelectedIndex == 0)
+	if (this->comboBoxView->SelectedIndex == 0)
 	{
 		for (int i = camera->x0; i <= camera->x1; i++)
 		{
 			for (int j = camera->y0; j <= camera->y1; j++)
 			{
-#pragma region Calc
+				#pragma region Calc
 				unsigned int s = 0;
 				s = sim->cellularautomata->getCells()[i][j][camera->z0].getState();
-				colors[index] = glm::vec3(this->colorFactory->colors[s].r, this->colorFactory->colors[s].g, this->colorFactory->colors[s].b);
-				translations[index] = glm::vec3((float)i, (float)j, (float)camera->z0);
-				index++;
-#pragma endregion	
+				if(sim->cellularautomata->getCells()[i][j][camera->z0].getState() <= sim->cellularautomata->nucleons_count + 2)
+					vcolors.push_back(glm::vec3(this->colorFactory->colors[s].r,
+												this->colorFactory->colors[s].g, 
+												this->colorFactory->colors[s].b));
+				else
+					vcolors.push_back(glm::vec3(this->colorFactory->colors[(this->colorFactory->count/2) + s].r,
+												this->colorFactory->colors[(this->colorFactory->count / 2) + s].g,
+												this->colorFactory->colors[(this->colorFactory->count / 2) + s].b));
+
+				vtranslations.push_back(glm::vec3((float)i, (float)j, (float)camera->z0));
+				#pragma endregion
 			}
 		}
 		for (int i = camera->x0; i <= camera->x1; i++)
 		{
 			for (int j = camera->y0; j <= camera->y1; j++)
 			{
-#pragma region Calc
+				#pragma region Calc
 				unsigned int s = 0;
 				s = sim->cellularautomata->getCells()[i][j][camera->z1].getState();
-				colors[index] = glm::vec3(this->colorFactory->colors[s].r, this->colorFactory->colors[s].g, this->colorFactory->colors[s].b);
-				translations[index] = glm::vec3((float)i, (float)j, (float)camera->z1);
-				index++;
-#pragma endregion	
+				if (sim->cellularautomata->getCells()[i][j][camera->z1].getState() <= sim->cellularautomata->nucleons_count + 2)
+					vcolors.push_back(glm::vec3(this->colorFactory->colors[s].r,
+						this->colorFactory->colors[s].g,
+						this->colorFactory->colors[s].b));
+				else
+					vcolors.push_back(glm::vec3(this->colorFactory->colors[(this->colorFactory->count / 2) + s].r,
+						this->colorFactory->colors[(this->colorFactory->count / 2) + s].g,
+						this->colorFactory->colors[(this->colorFactory->count / 2) + s].b));
+				vtranslations.push_back(glm::vec3((float)i, (float)j, (float)camera->z1));
+				#pragma endregion
 			}
 		}
 
@@ -377,26 +402,39 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 		{
 			for (int k = camera->z0; k <= camera->z1; k++)
 			{
-#pragma region Calc
+				#pragma region Calc
 				unsigned int s = 0;
 				s = sim->cellularautomata->getCells()[i][camera->y0][k].getState();
-				colors[index] = glm::vec3(this->colorFactory->colors[s].r, this->colorFactory->colors[s].g, this->colorFactory->colors[s].b);				 
-				translations[index] = glm::vec3((float)i, (float)camera->y0, (float)k);
-				index++;
-#pragma endregion	
+				if (sim->cellularautomata->getCells()[i][camera->y0][k].getState() <= sim->cellularautomata->nucleons_count + 2)
+					vcolors.push_back(glm::vec3(this->colorFactory->colors[s].r,
+						this->colorFactory->colors[s].g,
+						this->colorFactory->colors[s].b));
+				else
+					vcolors.push_back(glm::vec3(this->colorFactory->colors[(this->colorFactory->count / 2) + s].r,
+						this->colorFactory->colors[(this->colorFactory->count / 2) + s].g,
+						this->colorFactory->colors[(this->colorFactory->count / 2) + s].b));
+
+				vtranslations.push_back( glm::vec3((float)i, (float)camera->y0, (float)k));
+				#pragma endregion
 			}
 		}
 		for (int i = camera->x0; i <= camera->x1; i++)
 		{
 			for (int k = camera->z0; k < camera->z1; k++)
 			{
-#pragma region Calc
+				#pragma region Calc
 				unsigned int s = 0;
 				s = sim->cellularautomata->getCells()[i][camera->y1][k].getState();
-				colors[index] = glm::vec3(this->colorFactory->colors[s].r, this->colorFactory->colors[s].g, this->colorFactory->colors[s].b);
-				translations[index] = glm::vec3((float)i, (float)camera->y1, (float)k);
-				index++;
-#pragma endregion	
+				if (sim->cellularautomata->getCells()[i][camera->y1][k].getState() <= sim->cellularautomata->nucleons_count + 2)
+					vcolors.push_back(glm::vec3(this->colorFactory->colors[s].r,
+						this->colorFactory->colors[s].g,
+						this->colorFactory->colors[s].b));
+				else
+					vcolors.push_back(glm::vec3(this->colorFactory->colors[(this->colorFactory->count / 2) + s].r,
+						this->colorFactory->colors[(this->colorFactory->count / 2) + s].g,
+						this->colorFactory->colors[(this->colorFactory->count / 2) + s].b));
+				vtranslations.push_back(glm::vec3((float)i, (float)camera->y1, (float)k));
+				#pragma endregion
 			}
 		}
 
@@ -404,31 +442,42 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 		{
 			for (int k = camera->z0 + 1; k <= camera->z1 - 1; k++)
 			{
-#pragma region Calc
+				#pragma region Calc
 				unsigned int s = 0;
 				s = sim->cellularautomata->getCells()[camera->x0][j][k].getState();
-				colors[index] = glm::vec3(this->colorFactory->colors[s].r, this->colorFactory->colors[s].g, this->colorFactory->colors[s].b);
-				translations[index] = glm::vec3((float)camera->x0, (float)j, (float)k);
-				index++;
-#pragma endregion	
+				if (sim->cellularautomata->getCells()[camera->x0][j][k].getState() <= sim->cellularautomata->nucleons_count + 2)
+					vcolors.push_back(glm::vec3(this->colorFactory->colors[s].r,
+						this->colorFactory->colors[s].g,
+						this->colorFactory->colors[s].b));
+				else
+					vcolors.push_back(glm::vec3(this->colorFactory->colors[(this->colorFactory->count / 2) + s].r,
+						this->colorFactory->colors[(this->colorFactory->count / 2) + s].g,
+						this->colorFactory->colors[(this->colorFactory->count / 2) + s].b));
+				vtranslations.push_back(glm::vec3((float)camera->x0, (float)j, (float)k));
+				#pragma endregion
 			}
 		}
 		for (int j = camera->y0 + 1; j <= camera->x1 - 1; j++)
 		{
 			for (int k = camera->z0 + 1; k <= camera->z1 - 1; k++)
 			{
-#pragma region Calc
+				#pragma region Calc
 				unsigned int s = 0;
-				s = sim->cellularautomata->getCells()[camera->x0][j][k].getState();
-				colors[index] = glm::vec3(this->colorFactory->colors[s].r, this->colorFactory->colors[s].g, this->colorFactory->colors[s].b);
-
-				translations[index] = glm::vec3((float)camera->x1, (float)j, (float)k);
-				index++;
-#pragma endregion	
+				s = sim->cellularautomata->getCells()[camera->x1][j][k].getState();
+				if (sim->cellularautomata->getCells()[camera->x1][j][k].getState() <= sim->cellularautomata->nucleons_count + 2)
+					vcolors.push_back(glm::vec3(this->colorFactory->colors[s].r,
+						this->colorFactory->colors[s].g,
+						this->colorFactory->colors[s].b));
+				else
+					vcolors.push_back(glm::vec3(this->colorFactory->colors[(this->colorFactory->count / 2) + s].r,
+						this->colorFactory->colors[(this->colorFactory->count / 2) + s].g,
+						this->colorFactory->colors[(this->colorFactory->count / 2) + s].b));
+				vtranslations.push_back(glm::vec3((float)camera->x1, (float)j, (float)k));
+				#pragma endregion
 			}
 		}
 	}
-	else*/
+	else
 	{
 		for (int i = 0; i < m; i++)
 		{
@@ -438,37 +487,53 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 				{
 					unsigned int s = 0;
 					s = sim->cellularautomata->getCells()[i][j][k].getState();
-					colors[index] = glm::vec3(this->colorFactory->colors[s].r, this->colorFactory->colors[s].g, this->colorFactory->colors[s].b);
-					translations[index] = glm::vec3((float)i, (float)j, (float)k);
-					index++;
+					if (sim->cellularautomata->getCells()[i][j][k].getState() <= sim->cellularautomata->nucleons_count + 2)
+						vcolors.push_back(glm::vec3(this->colorFactory->colors[s].r,
+							this->colorFactory->colors[s].g,
+							this->colorFactory->colors[s].b));
+					else
+						vcolors.push_back(glm::vec3(this->colorFactory->colors[(this->colorFactory->count / 2) + s].r,
+							this->colorFactory->colors[(this->colorFactory->count / 2) + s].g,
+							this->colorFactory->colors[(this->colorFactory->count / 2) + s].b));
+					vtranslations.push_back(glm::vec3((float)i, (float)j, (float)k));
 				}
 			}
 		}
 	}
 	
+	if (colors) delete[] colors;
+	if (translations) delete[] translations;
+
+	colors = new glm::vec3[vcolors.size()];
+	translations = new glm::vec3[vtranslations.size()];
+	for (int i =0;i<vcolors.size();i++)
+	{
+		colors[i] = vcolors[i];
+		translations[i] = vtranslations[i];
+	}
+
 	//int size = (m*n*o) - (m-1*n-1*o-1);
-	glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * index, &colors[0], GL_DYNAMIC_DRAW); // TODO:: 36 tylko dla Intel
+	glBindBuffer(GL_ARRAY_BUFFER, *colorVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) *vcolors.size(), &colors[0], GL_DYNAMIC_DRAW); // TODO:: 36 tylko dla starych Intel Graphic
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, translationsVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * index, &translations[0], GL_DYNAMIC_DRAW); // TODO:: 36 tylko dla Intel
+	glBindBuffer(GL_ARRAY_BUFFER, *translationsVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vtranslations.size(), &translations[0], GL_DYNAMIC_DRAW); // TODO:: 36 tylko dla Intel dla starych Intel Graphic
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glUseProgram(shaderProgram[shaderIndex]);
 	// seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-	glBindVertexArray(VAO); 
+	glBindVertexArray(*VAO);
 	//glDrawArrays(GL_TRIANGLES, 0, 36);
-	glDrawArraysInstanced(GL_TRIANGLES, 0, 36, index);
+	glDrawArraysInstanced(GL_TRIANGLES, 0, 36, vcolors.size());
 	//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
 	return System::Void();
 }
 
 System::Void GDMwGB::MyForm::OpenGLResize(System::Object ^ sender, System::EventArgs ^ e)
 {
 	glViewport(0, 0, (GLsizei)openGLControl1->Width, (GLsizei)openGLControl1->Height);
-	projection = glm::perspective(45.0f, (GLfloat)this->openGLControl1->Width / this->openGLControl1->Height, 0.1f, 100000.0f);
+	*projection = glm::perspective(45.0f, (GLfloat)this->openGLControl1->Width / this->openGLControl1->Height, 0.1f, 100000.0f);
 	return System::Void();
 }
 
@@ -552,8 +617,12 @@ System::Void GDMwGB::MyForm::NewMenuButton(System::Object ^ sender, System::Even
 	int	m = this->simulation->cellularautomata->getSize()[0],
 		n = this->simulation->cellularautomata->getSize()[1],
 		o = this->simulation->cellularautomata->getSize()[2];
+	if (this->colorFactory->count < (n*m*o))
+	{
+		this->colorFactory->generate(n*m*o);
+	}
+	
 
-	this->colorFactory->generate(m*n*o);
 	//TODO:: Intel Graphic nie obsluguje per instance
 	// Tablica bufora kolorow
 
@@ -591,24 +660,27 @@ System::Void GDMwGB::MyForm::NewMenuButton(System::Object ^ sender, System::Even
 			}
 		}
 	}
-
+	
 	///Powiekszenie buforow na kracie graf.
+	//glDeleteVertexArrays(1, VAO);
 	// Usuwanie starego buffora
-	glDeleteBuffers(1, &translationsVBO);
-	glDeleteBuffers(1, &colorVBO);
+	//glDeleteBuffers(1, VBO);
+	//glDeleteBuffers(1, colorVBO);
+	//glDeleteBuffers(1, translationsVBO);
+	
 
+	
+	//this->OpenGLInit(nullptr, nullptr);
 	// Tworzenie nowych bufforow
-	glGenBuffers(1, &translationsVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, translationsVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * n * m * o, &translations[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glGenBuffers(1, translationsVBO);
+	//glBindBuffer(GL_ARRAY_BUFFER, *translationsVBO);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * n * m * o, &translations[0], GL_STATIC_DRAW);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glGenBuffers(1, &colorVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * n * m * o, &colors[0], GL_DYNAMIC_DRAW); // TODO:: 36 tylko dla Intel
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	this->comboBoxNeighborhood->SelectedIndex = 0;
+	////glGenBuffers(1, colorVBO);
+	//glBindBuffer(GL_ARRAY_BUFFER, *colorVBO);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * n * m * o, &colors[0], GL_DYNAMIC_DRAW); // TODO:: 36 tylko dla Intel
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	return System::Void();
 }
@@ -711,14 +783,22 @@ System::Void GDMwGB::MyForm::nucleationButton_Click(System::Object ^ sender, Sys
 	return System::Void();
 }
 
+System::Void GDMwGB::MyForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
+{
+	MyNewForm form;
+	form.ShowDialog();
+	return System::Void();
+}
+
 System::Void GDMwGB::MyForm::MainForm_Load(System::Object ^ sender, System::EventArgs ^ e)
 {
 	// no smaller than design time size
-	
+
 	this->MinimumSize = System::Drawing::Size(640, 480);
 
 	// no larger than screen size
 	this->MaximumSize = System::Drawing::Size(Screen::PrimaryScreen->Bounds.Width, Screen::PrimaryScreen->Bounds.Width);
 		//System::Drawing::Size(Screen::PrimaryScreen::Bounds::Width, Screen.PrimaryScreen.Bounds.Height, (int)System.Windows.SystemParameters.PrimaryScreenHeight);
+	this->colorFactory->generate(300*300*300);
 	return System::Void();
 }

@@ -9,7 +9,7 @@ PentagonalNeighborhood::PentagonalNeighborhood()
 {
 }
 
-std::vector<class Cell> PentagonalNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> PentagonalNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	int v = rand() % 6;
 	if (v == 0) return this->getFront(cellularautomata, x, y, z);
@@ -18,12 +18,12 @@ std::vector<class Cell> PentagonalNeighborhood::get(CellularAutomata * cellulara
 	else if (v == 3) return this->getRight(cellularautomata, x, y, z);
 	else if (v == 4) return this->getTop(cellularautomata, x, y, z);
 	else if (v == 5) return this->getBottom(cellularautomata, x, y, z);
-	return std::vector<class Cell>();
+	return std::vector<class Cell*>();
 }
 
-std::vector<class Cell> PentagonalNeighborhood::getFront(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> PentagonalNeighborhood::getFront(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	std::vector<Cell> neighborhood;
+	std::vector<Cell*> neighborhood;
 	int m = cellularautomata->getSize()[0],
 		n = cellularautomata->getSize()[1],
 		o = cellularautomata->getSize()[2];
@@ -43,7 +43,7 @@ std::vector<class Cell> PentagonalNeighborhood::getFront(CellularAutomata * cell
 							if ((i != 0) || (j != 0) || (k != 0))
 							{
 								if (cellularautomata->getCells()[x + i][y + j][z + k].getState() != 0)
-									neighborhood.push_back(cellularautomata->getCells()[x + i][y + j][z + k]);
+									neighborhood.push_back(&cellularautomata->getCells()[x + i][y + j][z + k]);
 							}
 						}
 						else
@@ -66,9 +66,9 @@ std::vector<class Cell> PentagonalNeighborhood::getFront(CellularAutomata * cell
 	return neighborhood;
 }
 
-std::vector<class Cell> PentagonalNeighborhood::getBack(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> PentagonalNeighborhood::getBack(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	std::vector<Cell> neighborhood;
+	std::vector<Cell*> neighborhood;
 	int m = cellularautomata->getSize()[0],
 		n = cellularautomata->getSize()[1],
 		o = cellularautomata->getSize()[2];
@@ -88,7 +88,7 @@ std::vector<class Cell> PentagonalNeighborhood::getBack(CellularAutomata * cellu
 							if ((i != 0) || (j != 0) || (k != 0))
 							{
 								if (cellularautomata->getCells()[x + i][y + j][z + k].getState() != 0)
-									neighborhood.push_back(cellularautomata->getCells()[x + i][y + j][z + k]);
+									neighborhood.push_back(&cellularautomata->getCells()[x + i][y + j][z + k]);
 							}
 						}
 						else
@@ -111,9 +111,9 @@ std::vector<class Cell> PentagonalNeighborhood::getBack(CellularAutomata * cellu
 	return neighborhood;
 }
 
-std::vector<class Cell> PentagonalNeighborhood::getTop(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> PentagonalNeighborhood::getTop(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	std::vector<Cell> neighborhood;
+	std::vector<Cell*> neighborhood;
 	int m = cellularautomata->getSize()[0],
 		n = cellularautomata->getSize()[1],
 		o = cellularautomata->getSize()[2];
@@ -133,7 +133,7 @@ std::vector<class Cell> PentagonalNeighborhood::getTop(CellularAutomata * cellul
 							if ((i != 0) || (j != 0) || (k != 0))
 							{
 								if (cellularautomata->getCells()[x + i][y + j][z + k].getState() != 0)
-									neighborhood.push_back(cellularautomata->getCells()[x + i][y + j][z + k]);
+									neighborhood.push_back(&cellularautomata->getCells()[x + i][y + j][z + k]);
 							}
 						}
 						else
@@ -156,9 +156,9 @@ std::vector<class Cell> PentagonalNeighborhood::getTop(CellularAutomata * cellul
 	return neighborhood;
 }
 
-std::vector<class Cell> PentagonalNeighborhood::getBottom(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> PentagonalNeighborhood::getBottom(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	std::vector<Cell> neighborhood;
+	std::vector<Cell*> neighborhood;
 	int m = cellularautomata->getSize()[0],
 		n = cellularautomata->getSize()[1],
 		o = cellularautomata->getSize()[2];
@@ -178,7 +178,7 @@ std::vector<class Cell> PentagonalNeighborhood::getBottom(CellularAutomata * cel
 							if ((i != 0) || (j != 0) || (k != 0))
 							{
 								if (cellularautomata->getCells()[x + i][y + j][z + k].getState() != 0)
-									neighborhood.push_back(cellularautomata->getCells()[x + i][y + j][z + k]);
+									neighborhood.push_back(&cellularautomata->getCells()[x + i][y + j][z + k]);
 							}
 						}
 						else
@@ -201,9 +201,9 @@ std::vector<class Cell> PentagonalNeighborhood::getBottom(CellularAutomata * cel
 	return neighborhood;
 }
 
-std::vector<class Cell> PentagonalNeighborhood::getLeft(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> PentagonalNeighborhood::getLeft(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	std::vector<Cell> neighborhood;
+	std::vector<Cell*> neighborhood;
 	int m = cellularautomata->getSize()[0],
 		n = cellularautomata->getSize()[1],
 		o = cellularautomata->getSize()[2];
@@ -223,7 +223,7 @@ std::vector<class Cell> PentagonalNeighborhood::getLeft(CellularAutomata * cellu
 							if ((i != 0) || (j != 0) || (k != 0))
 							{
 								if (cellularautomata->getCells()[x + i][y + j][z + k].getState() != 0)
-									neighborhood.push_back(cellularautomata->getCells()[x + i][y + j][z + k]);
+									neighborhood.push_back(&cellularautomata->getCells()[x + i][y + j][z + k]);
 							}
 						}
 						else
@@ -246,9 +246,9 @@ std::vector<class Cell> PentagonalNeighborhood::getLeft(CellularAutomata * cellu
 	return neighborhood;
 }
 
-std::vector<class Cell> PentagonalNeighborhood::getRight(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> PentagonalNeighborhood::getRight(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	std::vector<Cell> neighborhood;
+	std::vector<Cell*> neighborhood;
 	int m = cellularautomata->getSize()[0],
 		n = cellularautomata->getSize()[1],
 		o = cellularautomata->getSize()[2];
@@ -268,7 +268,7 @@ std::vector<class Cell> PentagonalNeighborhood::getRight(CellularAutomata * cell
 							if ((i != 0) || (j != 0) || (k != 0))
 							{
 								if (cellularautomata->getCells()[x + i][y + j][z + k].getState() != 0)
-									neighborhood.push_back(cellularautomata->getCells()[x + i][y + j][z + k]);
+									neighborhood.push_back(&cellularautomata->getCells()[x + i][y + j][z + k]);
 							}
 						}
 						else

@@ -7,7 +7,7 @@ public:
 	Simulation();
 
 	virtual bool step();
-	void start();
+	virtual void start();
 
 	class CellularAutomata * cellularautomata;
 	class CRule * rule;

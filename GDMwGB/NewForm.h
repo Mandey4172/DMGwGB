@@ -142,7 +142,7 @@ namespace GDMwGB {
 			this->XNumericUpDown->Name = L"XNumericUpDown";
 			this->XNumericUpDown->Size = System::Drawing::Size(40, 20);
 			this->XNumericUpDown->TabIndex = 7;
-			this->XNumericUpDown->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10, 0, 0, 0 });
+			this->XNumericUpDown->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 50, 0, 0, 0 });
 			// 
 			// YNumericUpDown
 			// 
@@ -152,7 +152,7 @@ namespace GDMwGB {
 			this->YNumericUpDown->Name = L"YNumericUpDown";
 			this->YNumericUpDown->Size = System::Drawing::Size(40, 20);
 			this->YNumericUpDown->TabIndex = 8;
-			this->YNumericUpDown->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10, 0, 0, 0 });
+			this->YNumericUpDown->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 50, 0, 0, 0 });
 			// 
 			// ZNumericUpDown
 			// 
@@ -162,7 +162,7 @@ namespace GDMwGB {
 			this->ZNumericUpDown->Name = L"ZNumericUpDown";
 			this->ZNumericUpDown->Size = System::Drawing::Size(40, 20);
 			this->ZNumericUpDown->TabIndex = 9;
-			this->ZNumericUpDown->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10, 0, 0, 0 });
+			this->ZNumericUpDown->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 50, 0, 0, 0 });
 			// 
 			// NewForm
 			// 

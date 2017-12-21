@@ -10,6 +10,6 @@ CRule::~CRule()
 {
 }
 
-void CRule::step(Cell * cell, std::vector<class Cell> neighborhood)
+void CRule::step(Cell * cell, std::vector<class Cell*> neighborhood)
 {
 }

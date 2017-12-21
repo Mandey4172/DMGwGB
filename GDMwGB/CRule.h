@@ -7,6 +7,9 @@ class CRule
 public:
 	CRule();
 	~CRule();
-	virtual void step(class Cell * cell, class std::vector<class Cell> neighborhood);
+
+	int grain_count = 0;
+
+	virtual void step(class Cell * cell, class std::vector<class Cell*> neighborhood);
 };
 

@@ -14,13 +14,31 @@ GrainGrowthRule::~GrainGrowthRule()
 {
 }
 
-void GrainGrowthRule::step(Cell * cell, std::vector<class Cell> neighborhood)
+void GrainGrowthRule::step(Cell * cell, std::vector<class Cell*> neighborhood)
 {
-	std::vector<int> cell_state;
-	std::vector<int> cell_state_count;
-	for (Cell n : neighborhood)
+	cell->setCheck(false);
+	if (cell->getState() > 0)
 	{
-		if (n.getState() != 1)
+		for (Cell * n : neighborhood)
+		{
+			if (n->getState() == 0)
+			{
+				n->setState(cell->getState());
+				n->setCheck(true);
+				this->queue->push_back(n);
+			}
+		}
+	}
+	else
+	{
+		cell->setCheck(false);
+	}
+
+	/*std::vector<int> cell_state;
+	std::vector<int> cell_state_count;*/
+	/*for (Cell n : neighborhood)
+	{
+		if (n.getState() != 0)
 		{
 			bool exist = false;
 			for (int s = 0; s < cell_state.size(); ++s)
@@ -51,5 +69,5 @@ void GrainGrowthRule::step(Cell * cell, std::vector<class Cell> neighborhood)
 			}
 		}
 		cell->setState(cell_state[index]);
-	}
+	}*/
 }

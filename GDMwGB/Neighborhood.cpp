@@ -12,7 +12,7 @@ Neighborhood::~Neighborhood()
 {
 }
 
-std::vector<class Cell> Neighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell *> Neighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	return std::vector<class Cell>();
+	return std::vector<class Cell *>();
 }

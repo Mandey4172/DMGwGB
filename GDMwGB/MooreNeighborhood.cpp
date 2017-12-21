@@ -11,9 +11,9 @@ MooreNeighborhood::~MooreNeighborhood()
 {
 }
 
-std::vector<class Cell> MooreNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<class Cell*> MooreNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	std::vector<Cell> neighborhood;
+	std::vector<Cell*> neighborhood;
 	int m = cellularautomata->getSize()[0],
 		n = cellularautomata->getSize()[1],
 		o = cellularautomata->getSize()[2];
@@ -32,8 +32,7 @@ std::vector<class Cell> MooreNeighborhood::get(CellularAutomata * cellularautoma
 						{
 							if ((i != 0) || (j != 0) || (k != 0))
 							{
-								if (cellularautomata->getCells()[x + i][y + j][z + k].getState() != 0)
-									neighborhood.push_back(cellularautomata->getCells()[x + i][y + j][z + k]);
+								neighborhood.push_back(&cellularautomata->getCells()[x + i][y + j][z + k]);
 							}
 						}
 						else
