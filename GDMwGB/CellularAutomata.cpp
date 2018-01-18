@@ -22,7 +22,7 @@ CellularAutomata::CellularAutomata(unsigned int nm, unsigned int nn, unsigned in
 			this->cells[i][j] = new Cell[this->o];
 			for (int k = 0; k < this->o; k++)
 			{
-				this->cells[i][j][k].position = new SPoint(i, j, k);
+				this->cells[i][j][k].position = SPoint(i, j, k);
 			}
 		}
 	}
@@ -44,12 +44,7 @@ CellularAutomata::CellularAutomata(CellularAutomata & ca)
 			this->cells[i][j] = new Cell[this->o];
 			for (int k = 0; k < this->o; k++)
 			{
-				this->cells[i][j][k].setState(ca.getCells()[i][j][k].getState());
-				this->cells[i][j][k].setCheck(ca.getCells()[i][j][k].Check());
-				SPoint * p = ca.getCells()[i][j][k].position;
-				this->cells[i][j][k].position = new SPoint(	ca.getCells()[i][j][k].position->x,
-															ca.getCells()[i][j][k].position->y, 
-															ca.getCells()[i][j][k].position->z);
+				this->cells[i][j][k] = Cell(ca.getCells()[i][j][k]);
 			}
 		}
 	}
@@ -69,6 +64,32 @@ CellularAutomata::~CellularAutomata()
 	}
 	delete[] this->cells;
 }
+
+void CellularAutomata::copy(CellularAutomata & ca)
+{
+	this->m = ca.getSize()[0];
+	this->n = ca.getSize()[1];
+	this->o = ca.getSize()[2];
+
+	for (int i = 0; i < this->m; i++)
+	{
+		for (int j = 0; j < this->n; j++)
+		{
+			for (int k = 0; k < this->o; k++)
+			{
+				this->cells[i][j][k].setState(ca.getCells()[i][j][k].getState());
+				this->cells[i][j][k].setCheck(ca.getCells()[i][j][k].Check());
+				this->cells[i][j][k].position = SPoint(ca.getCells()[i][j][k].position.x,
+					ca.getCells()[i][j][k].position.y,
+					ca.getCells()[i][j][k].position.z);
+				this->cells[i][j][k].neighborhoods = std::vector<unsigned int>(ca.getCells()[i][j][k].neighborhoods);
+
+			}
+		}
+	}
+	this->nucleons_count = ca.nucleons_count;
+}
+
 /*	Pobieranie komórek	*/
 Cell *** CellularAutomata::getCells()
 {

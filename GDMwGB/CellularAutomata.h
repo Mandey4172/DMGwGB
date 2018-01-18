@@ -10,6 +10,8 @@ public:
 	CellularAutomata(unsigned int m = 1, unsigned int n = 1, unsigned int o = 1);
 	CellularAutomata(CellularAutomata & ca);
 	~CellularAutomata();
+
+	void copy(CellularAutomata & ca);
 	//Pobieranie komórek
 	Cell *** getCells();
 	std::vector<unsigned int> getSize(unsigned int n = 0);

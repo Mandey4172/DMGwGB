@@ -148,11 +148,14 @@ System::Void GDMwGB::MyForm::OpenGLInit(System::Object ^ sender, System::EventAr
 	{
 
 	}
-	Simulation * sim = new Simulation(*this->simulation);
+	GDMwGB::MyForm::mut->WaitOne();
+	ca = new CellularAutomata(*this->simulation->cellularautomata);
+	GDMwGB::MyForm::mut->ReleaseMutex();
 
-	int	m = sim->cellularautomata->getSize()[0],
-		n = sim->cellularautomata->getSize()[1],
-		o = sim->cellularautomata->getSize()[2];
+	int	m = ca->getSize()[0],
+		n = ca->getSize()[1],
+		o = ca->getSize()[2];
+
 	if (!this->colorFactory)
 	{
 		this->colorFactory->generate(n*m*o);
@@ -313,8 +316,6 @@ System::Void GDMwGB::MyForm::OpenGLInit(System::Object ^ sender, System::EventAr
 
 System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::EventArgs ^ e)
 {
-	Simulation * sim = new Simulation(*this->simulation);
-
 	std::vector<glm::vec3> vcolors;
 	std::vector<glm::vec3> vtranslations;
 
@@ -323,16 +324,16 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//Kamera
 	this->camera->x0 = 0;
-	this->camera->x1 = sim->cellularautomata->getSize()[0] - 1;
+	this->camera->x1 = ca->getSize()[0] - 1;
 	this->camera->y0 = 0;
-	this->camera->y1 = sim->cellularautomata->getSize()[1] - 1;
+	this->camera->y1 = ca->getSize()[1] - 1;
 	this->camera->z0 = 0;
-	this->camera->z1 = sim->cellularautomata->getSize()[2] - 1;
+	this->camera->z1 = ca->getSize()[2] - 1;
 
 
-	int	m = sim->cellularautomata->getSize()[0],
-		n = sim->cellularautomata->getSize()[1],
-		o = sim->cellularautomata->getSize()[2];
+	int	m = ca->getSize()[0],
+		n = ca->getSize()[1],
+		o = ca->getSize()[2];
 
 	float radius = m;
 	if (n > radius) radius = n;
@@ -362,30 +363,30 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 		{
 			for (int j = camera->y0; j <= camera->y1; j++)
 			{
-				#pragma region Calc
+#pragma region Calc
 				unsigned int s = 0;
-				s = sim->cellularautomata->getCells()[i][j][camera->z0].getState();
-				if(sim->cellularautomata->getCells()[i][j][camera->z0].getState() <= sim->cellularautomata->nucleons_count + 2)
+				s = ca->getCells()[i][j][camera->z0].getState();
+				if (ca->getCells()[i][j][camera->z0].getState() <= ca->nucleons_count)
 					vcolors.push_back(glm::vec3(this->colorFactory->colors[s].r,
-												this->colorFactory->colors[s].g, 
-												this->colorFactory->colors[s].b));
+						this->colorFactory->colors[s].g,
+						this->colorFactory->colors[s].b));
 				else
-					vcolors.push_back(glm::vec3(this->colorFactory->colors[(this->colorFactory->count/2) + s].r,
-												this->colorFactory->colors[(this->colorFactory->count / 2) + s].g,
-												this->colorFactory->colors[(this->colorFactory->count / 2) + s].b));
+					vcolors.push_back(glm::vec3(this->colorFactory->colors[(this->colorFactory->count / 2) + s].r,
+						this->colorFactory->colors[(this->colorFactory->count / 2) + s].g,
+						this->colorFactory->colors[(this->colorFactory->count / 2) + s].b));
 
 				vtranslations.push_back(glm::vec3((float)i, (float)j, (float)camera->z0));
-				#pragma endregion
+#pragma endregion
 			}
 		}
 		for (int i = camera->x0; i <= camera->x1; i++)
 		{
 			for (int j = camera->y0; j <= camera->y1; j++)
 			{
-				#pragma region Calc
+#pragma region Calc
 				unsigned int s = 0;
-				s = sim->cellularautomata->getCells()[i][j][camera->z1].getState();
-				if (sim->cellularautomata->getCells()[i][j][camera->z1].getState() <= sim->cellularautomata->nucleons_count + 2)
+				s = ca->getCells()[i][j][camera->z1].getState();
+				if (ca->getCells()[i][j][camera->z1].getState() <= ca->nucleons_count)
 					vcolors.push_back(glm::vec3(this->colorFactory->colors[s].r,
 						this->colorFactory->colors[s].g,
 						this->colorFactory->colors[s].b));
@@ -394,7 +395,7 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 						this->colorFactory->colors[(this->colorFactory->count / 2) + s].g,
 						this->colorFactory->colors[(this->colorFactory->count / 2) + s].b));
 				vtranslations.push_back(glm::vec3((float)i, (float)j, (float)camera->z1));
-				#pragma endregion
+#pragma endregion
 			}
 		}
 
@@ -402,10 +403,10 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 		{
 			for (int k = camera->z0; k <= camera->z1; k++)
 			{
-				#pragma region Calc
+#pragma region Calc
 				unsigned int s = 0;
-				s = sim->cellularautomata->getCells()[i][camera->y0][k].getState();
-				if (sim->cellularautomata->getCells()[i][camera->y0][k].getState() <= sim->cellularautomata->nucleons_count + 2)
+				s = ca->getCells()[i][camera->y0][k].getState();
+				if (ca->getCells()[i][camera->y0][k].getState() <= ca->nucleons_count)
 					vcolors.push_back(glm::vec3(this->colorFactory->colors[s].r,
 						this->colorFactory->colors[s].g,
 						this->colorFactory->colors[s].b));
@@ -414,18 +415,18 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 						this->colorFactory->colors[(this->colorFactory->count / 2) + s].g,
 						this->colorFactory->colors[(this->colorFactory->count / 2) + s].b));
 
-				vtranslations.push_back( glm::vec3((float)i, (float)camera->y0, (float)k));
-				#pragma endregion
+				vtranslations.push_back(glm::vec3((float)i, (float)camera->y0, (float)k));
+#pragma endregion
 			}
 		}
 		for (int i = camera->x0; i <= camera->x1; i++)
 		{
 			for (int k = camera->z0; k < camera->z1; k++)
 			{
-				#pragma region Calc
+#pragma region Calc
 				unsigned int s = 0;
-				s = sim->cellularautomata->getCells()[i][camera->y1][k].getState();
-				if (sim->cellularautomata->getCells()[i][camera->y1][k].getState() <= sim->cellularautomata->nucleons_count + 2)
+				s = ca->getCells()[i][camera->y1][k].getState();
+				if (ca->getCells()[i][camera->y1][k].getState() <= ca->nucleons_count)
 					vcolors.push_back(glm::vec3(this->colorFactory->colors[s].r,
 						this->colorFactory->colors[s].g,
 						this->colorFactory->colors[s].b));
@@ -434,7 +435,7 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 						this->colorFactory->colors[(this->colorFactory->count / 2) + s].g,
 						this->colorFactory->colors[(this->colorFactory->count / 2) + s].b));
 				vtranslations.push_back(glm::vec3((float)i, (float)camera->y1, (float)k));
-				#pragma endregion
+#pragma endregion
 			}
 		}
 
@@ -442,10 +443,10 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 		{
 			for (int k = camera->z0 + 1; k <= camera->z1 - 1; k++)
 			{
-				#pragma region Calc
+#pragma region Calc
 				unsigned int s = 0;
-				s = sim->cellularautomata->getCells()[camera->x0][j][k].getState();
-				if (sim->cellularautomata->getCells()[camera->x0][j][k].getState() <= sim->cellularautomata->nucleons_count + 2)
+				s = ca->getCells()[camera->x0][j][k].getState();
+				if (ca->getCells()[camera->x0][j][k].getState() <= ca->nucleons_count)
 					vcolors.push_back(glm::vec3(this->colorFactory->colors[s].r,
 						this->colorFactory->colors[s].g,
 						this->colorFactory->colors[s].b));
@@ -454,17 +455,17 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 						this->colorFactory->colors[(this->colorFactory->count / 2) + s].g,
 						this->colorFactory->colors[(this->colorFactory->count / 2) + s].b));
 				vtranslations.push_back(glm::vec3((float)camera->x0, (float)j, (float)k));
-				#pragma endregion
+#pragma endregion
 			}
 		}
 		for (int j = camera->y0 + 1; j <= camera->x1 - 1; j++)
 		{
 			for (int k = camera->z0 + 1; k <= camera->z1 - 1; k++)
 			{
-				#pragma region Calc
+#pragma region Calc
 				unsigned int s = 0;
-				s = sim->cellularautomata->getCells()[camera->x1][j][k].getState();
-				if (sim->cellularautomata->getCells()[camera->x1][j][k].getState() <= sim->cellularautomata->nucleons_count + 2)
+				s = ca->getCells()[camera->x1][j][k].getState();
+				if (ca->getCells()[camera->x1][j][k].getState() <= ca->nucleons_count)
 					vcolors.push_back(glm::vec3(this->colorFactory->colors[s].r,
 						this->colorFactory->colors[s].g,
 						this->colorFactory->colors[s].b));
@@ -473,7 +474,7 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 						this->colorFactory->colors[(this->colorFactory->count / 2) + s].g,
 						this->colorFactory->colors[(this->colorFactory->count / 2) + s].b));
 				vtranslations.push_back(glm::vec3((float)camera->x1, (float)j, (float)k));
-				#pragma endregion
+#pragma endregion
 			}
 		}
 	}
@@ -486,8 +487,8 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 				for (int k = 0; k < o; k++) //for (int l = 0;l < 36; l++) // TODO:: petla wylacznie dla Intel
 				{
 					unsigned int s = 0;
-					s = sim->cellularautomata->getCells()[i][j][k].getState();
-					if (sim->cellularautomata->getCells()[i][j][k].getState() <= sim->cellularautomata->nucleons_count + 2)
+					s = ca->getCells()[i][j][k].getState();
+					if (ca->getCells()[i][j][k].getState() <= ca->nucleons_count)
 						vcolors.push_back(glm::vec3(this->colorFactory->colors[s].r,
 							this->colorFactory->colors[s].g,
 							this->colorFactory->colors[s].b));
@@ -500,13 +501,13 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 			}
 		}
 	}
-	
+
 	if (colors) delete[] colors;
 	if (translations) delete[] translations;
 
 	colors = new glm::vec3[vcolors.size()];
 	translations = new glm::vec3[vtranslations.size()];
-	for (int i =0;i<vcolors.size();i++)
+	for (int i = 0;i<vcolors.size();i++)
 	{
 		colors[i] = vcolors[i];
 		translations[i] = vtranslations[i];
@@ -527,6 +528,7 @@ System::Void GDMwGB::MyForm::OpenGLRender(System::Object ^ sender, System::Event
 	//glDrawArrays(GL_TRIANGLES, 0, 36);
 	glDrawArraysInstanced(GL_TRIANGLES, 0, 36, vcolors.size());
 	//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	
 	return System::Void();
 }
 
@@ -587,6 +589,8 @@ System::Void GDMwGB::MyForm::MainForm_Resize(System::Object ^ sender, System::Ev
 
 System::Void GDMwGB::MyForm::Simulate_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
+	simulateButton->Enabled = false;
+	backgroundWorker1->RunWorkerAsync();
 	c->simulation = this->simulation;
 	if (this->calculationThread)
 	{
@@ -661,6 +665,10 @@ System::Void GDMwGB::MyForm::NewMenuButton(System::Object ^ sender, System::Even
 		}
 	}
 	
+	GDMwGB::MyForm::mut->WaitOne();
+	ca = new CellularAutomata(*this->simulation->cellularautomata);
+	GDMwGB::MyForm::mut->ReleaseMutex();
+
 	///Powiekszenie buforow na kracie graf.
 	//glDeleteVertexArrays(1, VAO);
 	// Usuwanie starego buffora
@@ -780,6 +788,11 @@ System::Void GDMwGB::MyForm::nucleationButton_Click(System::Object ^ sender, Sys
 	int c = 0;
 	int::TryParse(this->dataGridView1->Rows[0]->Cells[1]->Value->ToString(), c);
 	NucleonGenerator::random(this->simulation->cellularautomata,c);
+
+	GDMwGB::MyForm::mut->WaitOne();
+	ca = new CellularAutomata(*this->simulation->cellularautomata);
+	GDMwGB::MyForm::mut->ReleaseMutex();
+
 	return System::Void();
 }
 
@@ -787,6 +800,23 @@ System::Void GDMwGB::MyForm::button1_Click(System::Object ^ sender, System::Even
 {
 	MyNewForm form;
 	form.ShowDialog();
+	return System::Void();
+}
+
+System::Void GDMwGB::MyForm::DoWork(System::Object ^ sender, System::ComponentModel::DoWorkEventArgs ^ e)
+{
+	while (!this->calculationThread->Join(20))
+	{
+		/*GDMwGB::MyForm::mut->WaitOne();
+		ca = new CellularAutomata(*this->simulation->cellularautomata);
+		GDMwGB::MyForm::mut->ReleaseMutex();*/
+	}
+	this->simulateButton->Enabled = true;
+
+	GDMwGB::MyForm::mut->WaitOne();
+	ca = new CellularAutomata(*this->simulation->cellularautomata);
+	GDMwGB::MyForm::mut->ReleaseMutex();
+
 	return System::Void();
 }
 

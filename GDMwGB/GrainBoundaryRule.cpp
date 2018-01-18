@@ -22,7 +22,7 @@ void GrainBoundaryRule::step(Cell * cell, std::vector<Cell*> neighborhood)
 	std::vector<int> cell_state_count;
 	for (Cell * n : neighborhood)
 	{
-		if (n->getState() > 1)
+		if (n->getState() > 0 && n->getState() <= this->grain_count)
 		{
 			bool exist = false;
 			for (int s = 0; s < cell_state.size(); ++s)
@@ -56,9 +56,10 @@ void GrainBoundaryRule::step(Cell * cell, std::vector<Cell*> neighborhood)
 						exist = false;
 					}
 				}
-				if (exist)
+				if (exist && cell)
 				{
 					cell->setState(b.state);
+					//cell->setState(this->grain_count + 1);
 					return;
 				}
 			}
@@ -68,8 +69,11 @@ void GrainBoundaryRule::step(Cell * cell, std::vector<Cell*> neighborhood)
 		{
 			nnode.neighborhood_states.push_back(c);
 		}
-		nnode.state = this->grain_count + this->boundary_states.size();
-		cell->setState(nnode.state);
+		nnode.state = this->grain_count + 1 + this->boundary_states.size();
 		this->boundary_states.push_back(nnode);
+		if(cell)
+			cell->setState(nnode.state);
+		//cell->setState(this->grain_count + 1);
+		
 	}
 }

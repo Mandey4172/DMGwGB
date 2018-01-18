@@ -38,6 +38,8 @@ namespace GDMwGB {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Threading;
+
 	/// <summary>
 	/// Summary for MyForm
 	/// </summary>
@@ -61,9 +63,11 @@ namespace GDMwGB {
 
 			this->oldWindowSize = this->Size;
 
+
 			c = gcnew Calculations();
 			c->simulation = this->simulation;
-
+			this->mut = gcnew Mutex();
+			this->ca = new CellularAutomata(*this->simulation->cellularautomata);
 			this->shaderProgram = new int[3];
 			this->projection = new glm::mat4();
 			this->view = new glm::mat4();
@@ -120,6 +124,7 @@ namespace GDMwGB {
 	private: ColorFactory * colorFactory;
 	//Kontrolka OpenGL
 
+	public: static Mutex^ mut;
 	//Kontrola MainWindow
 	private: System::Drawing::Size oldWindowSize;
 	private: System::Threading::Thread ^ calculationThread;
@@ -127,6 +132,7 @@ namespace GDMwGB {
 	private: Calculations ^ c;
 	//
 	private: Simulation* simulation;
+	private: CellularAutomata * ca;
 	private: System::Threading::Thread^ thread;
 	private: System::Windows::Forms::Button^  simulateButton;
 
@@ -156,6 +162,7 @@ namespace GDMwGB {
 	private: System::Windows::Forms::FlowLayoutPanel^  flowLayoutPanel1;
 	private: System::Windows::Forms::Button^  button1;
 	private: Zolver::OpenGLControl^  openGLControl1;
+private: System::ComponentModel::BackgroundWorker^  backgroundWorker1;
 
 
 
@@ -207,6 +214,7 @@ namespace GDMwGB {
 			this->flowLayoutPanel1 = (gcnew System::Windows::Forms::FlowLayoutPanel());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->openGLControl1 = (gcnew Zolver::OpenGLControl());
+			this->backgroundWorker1 = (gcnew System::ComponentModel::BackgroundWorker());
 			this->menuStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
@@ -446,6 +454,10 @@ namespace GDMwGB {
 			this->openGLControl1->OpenGLRender += gcnew System::EventHandler(this, &MyForm::OpenGLRender);
 			this->openGLControl1->OpenGLInit += gcnew System::EventHandler(this, &MyForm::OpenGLInit);
 			// 
+			// backgroundWorker1
+			// 
+			this->backgroundWorker1->DoWork += gcnew System::ComponentModel::DoWorkEventHandler(this, &MyForm::DoWork);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -503,5 +515,6 @@ namespace GDMwGB {
 	private: System::Void comboBoxNucleation_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void nucleationButton_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
+	private: System::Void DoWork(System::Object^  sender, System::ComponentModel::DoWorkEventArgs^  e);
 };
 }

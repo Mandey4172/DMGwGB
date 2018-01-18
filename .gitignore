@@ -29,3 +29,15 @@
 *.nupkg
 *.resources
 *.db
+!Debug/ColorFragmentShader.fragmentshader
+!Debug/NoGrainBoundaryFragmentShader.fragmentshader
+!Debug/NoGrainFragmentShader.fragmentshader
+!Debug/TransformVertexShader.vertexshader
+Debug/ColorFragmentShader.fragmentshader
+Debug/NoGrainBoundaryFragmentShader.fragmentshader
+Debug/NoGrainFragmentShader.fragmentshader
+Debug/TransformVertexShader.vertexshader
+Release/ColorFragmentShader.fragmentshader
+Release/NoGrainBoundaryFragmentShader.fragmentshader
+Release/NoGrainFragmentShader.fragmentshader
+Release/TransformVertexShader.vertexshader

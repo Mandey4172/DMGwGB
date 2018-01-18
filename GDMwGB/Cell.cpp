@@ -11,29 +11,36 @@ Cell::Cell()
 	//srand(time(NULL));
 	//this->state = rand() % 3;
 	this->state = 0;
-	this->fill = 0;
 	this->check = false;
-	this->position = nullptr;
+	this->position = SPoint(0,0,0);
+	this->neighborhoods = std::vector<unsigned int>();
+}
+
+Cell::Cell(Cell & c)
+{
+	this->state = c.state;
+	this->position = c.position;
+	for (unsigned int n : c.neighborhoods)
+	{
+		this->neighborhoods.push_back(n);
+	}
 }
 
 
 Cell::~Cell()
 {
+	this->neighborhoods.clear();
 }
 
 void Cell::setState(unsigned int nstate)
 {
-	this->state = nstate;
+	if(this)
+		this->state = nstate;
 }
 
 void Cell::setCheck(bool ncheck)
 {
 	this->check = ncheck;
-}
-
-void Cell::Fill()
-{
-	this->fill++;
 }
 
 unsigned int Cell::getState()

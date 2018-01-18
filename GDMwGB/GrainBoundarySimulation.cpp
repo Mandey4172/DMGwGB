@@ -9,7 +9,7 @@
 #include "GrainBoundaryRule.h"
 #include "GrainGrowthSimulation.h"
 
-
+#include "MainForm.h"
 
 
 GrainBoundarySimulation::GrainBoundarySimulation()
@@ -29,22 +29,33 @@ GrainBoundarySimulation::~GrainBoundarySimulation()
 
 bool GrainBoundarySimulation::step()
 {
+	
+
 	bool isComplete = true;
 
 	GrainGrowthSimulation GrainGrowth;
 	GrainGrowth.neighborhood = this->neighborhood;
+
 	GrainGrowth.cellularautomata = new CellularAutomata(*this->cellularautomata);
-
-	while (!GrainGrowth.step())
+	
+	
+	/*while (!GrainGrowth.step())
 	{
+		GDMwGB::MyForm::mut->WaitOne();
 		this->cellularautomata = new CellularAutomata(*GrainGrowth.cellularautomata);
-	}
+		GDMwGB::MyForm::mut->ReleaseMutex();
+	}*/
+	GrainGrowth.start();
+	this->cellularautomata = new CellularAutomata(*GrainGrowth.cellularautomata);
 	CellularAutomata * newcellularautomata = new CellularAutomata( *this->cellularautomata );
-	CellularAutomata * graincellularautomata = new CellularAutomata(	newcellularautomata->getSize()[0], 
-																		newcellularautomata->getSize()[1], 
-																		newcellularautomata->getSize()[2]);
-	this->rule->grain_count = this->cellularautomata->nucleons_count;
 
+	GrainGrowthSimulation GrainGrowth2;
+
+	GrainGrowth2.cellularautomata = new CellularAutomata(	newcellularautomata->getSize()[0],
+															newcellularautomata->getSize()[1],
+															newcellularautomata->getSize()[2]);
+
+	this->rule->grain_count = this->cellularautomata->nucleons_count;
 	for (int i = 0; i < this->cellularautomata->getSize()[0]; i++)
 	{
 		for (int j = 0; j < this->cellularautomata->getSize()[1]; j++)
@@ -52,24 +63,23 @@ bool GrainBoundarySimulation::step()
 			for (int k = 0; k < this->cellularautomata->getSize()[2]; k++)
 			{
 				MooreNeighborhood n;
-				this->rule->step(&newcellularautomata->getCells()[i][j][k], n.get(this->cellularautomata, i, j, k));
-				if (newcellularautomata->getCells()[i][j][k].getState() > this->cellularautomata->nucleons_count)
+				this->rule->step(&this->cellularautomata->getCells()[i][j][k], n.get(this->cellularautomata, i, j, k));
+				if (this->cellularautomata->getCells()[i][j][k].getState() > this->cellularautomata->nucleons_count)
 				{
-					graincellularautomata->getCells()[i][j][k].setState(newcellularautomata->getCells()[i][j][k].getState());
+					GrainGrowth2.cellularautomata->getCells()[i][j][k].setState(this->cellularautomata->getCells()[i][j][k].getState());
 				}
 			}
 		}
 	}
-	this->cellularautomata = newcellularautomata;
-	this->cellularautomata->boundarys_count = ((GrainBoundaryRule *)rule)->boundary_states.size();
-
-	GrainGrowth.neighborhood = this->neighborhoodGrainBoundary;
-	GrainGrowth.cellularautomata = graincellularautomata;
-
-	int k = floor(((float)this->grainSize - 1) / 2);
-	for (int i=0 ; i < k ; i++)
+	GrainGrowth2.cellularautomata->boundarys_count = ((GrainBoundaryRule *)rule)->boundary_states.size();
+	GrainGrowth2.neighborhood = this->neighborhoodGrainBoundary;
+	
+	if (grainSize > 1)
 	{
-		GrainGrowth.step();
+		for (int i = 0; i < grainSize + 1; i++)
+		{
+			GrainGrowth2.step();
+		}
 	}
 	for (int i = 0; i < this->cellularautomata->getSize()[0]; i++)
 	{
@@ -77,14 +87,15 @@ bool GrainBoundarySimulation::step()
 		{
 			for (int k = 0; k < this->cellularautomata->getSize()[2]; k++)
 			{
-				if (GrainGrowth.cellularautomata->getCells()[i][j][k].getState() == 1)
+				int s = GrainGrowth2.cellularautomata->getCells()[i][j][k].getState();
+				if (s > this->cellularautomata->nucleons_count)
 				{
-					this->cellularautomata->getCells()[i][j][k].setState(1);
+					this->cellularautomata->getCells()[i][j][k].setState(GrainGrowth2.cellularautomata->getCells()[i][j][k].getState());
 				}
 			}
 		}
 	}
-
+	
 	return isComplete;
 }
 
@@ -100,5 +111,8 @@ void GrainBoundarySimulation::start()
 			}
 		}
 	}
+	if (this->rule)
+		delete this->rule;
+	this->rule = new GrainBoundaryRule();
 	while (!step());
 }

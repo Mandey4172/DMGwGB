@@ -63,7 +63,6 @@ void GDMwGB::ColorFactory::generate(int n)
 	
 
 	GDMwGB::ColorFactory::colors[0] = GDMwGB::Color(255, 255, 255);
-	GDMwGB::ColorFactory::colors[1] = GDMwGB::Color(20, 20, 20);
 
 	for (int i = 0; i < n; ++i)
 	{

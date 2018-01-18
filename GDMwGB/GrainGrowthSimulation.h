@@ -14,5 +14,6 @@ public:
 	virtual bool step();
 	virtual void start();
 	std::vector<class Cell *> queue;
+	int steps;
 };
 

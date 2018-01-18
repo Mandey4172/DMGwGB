@@ -23,7 +23,7 @@ void NucleonGenerator::random(CellularAutomata * ca,  int quantity)
 	int * seed_y = new int[quantity];
 	int * seed_z = new int[quantity];
 
-	for (int i = 0; i < quantity; i++)
+	for (int i = 0; i <= quantity; i++)
 	{
 		seed_x[i] = rand() % ca->getSize()[0];
 		seed_y[i] = rand() % ca->getSize()[1];
@@ -43,7 +43,7 @@ void NucleonGenerator::random(CellularAutomata * ca,  int quantity)
 		int x = seed_x[i],
 			y = seed_y[i],
 			z = seed_z[i];
-		ca->getCells()[x][y][z].setState(ca->nucleons_count + 2 );
+		ca->getCells()[x][y][z].setState(ca->nucleons_count + 1 );
 		ca->nucleons_count++;
 		//this->tool->select(world, x, y, z);
 	}
