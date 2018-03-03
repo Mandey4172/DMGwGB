@@ -29,6 +29,10 @@
 *.nupkg
 *.resources
 *.db
+.vs/
+Debug/
+GDMwGB/Debug/
+GDMwGB/x64/
 !Debug/ColorFragmentShader.fragmentshader
 !Debug/NoGrainBoundaryFragmentShader.fragmentshader
 !Debug/NoGrainFragmentShader.fragmentshader
