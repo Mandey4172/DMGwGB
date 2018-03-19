@@ -1,9 +1,0 @@
-﻿  GrainBoundarySimulation.cpp
-g:\source\c++\gdmwgb\gdmwgb\grainboundarysimulation.cpp(55): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-g:\source\c++\gdmwgb\gdmwgb\grainboundarysimulation.cpp(57): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-g:\source\c++\gdmwgb\gdmwgb\grainboundarysimulation.cpp(59): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-g:\source\c++\gdmwgb\gdmwgb\grainboundarysimulation.cpp(75): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-g:\source\c++\gdmwgb\gdmwgb\grainboundarysimulation.cpp(80): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-g:\source\c++\gdmwgb\gdmwgb\grainboundarysimulation.cpp(82): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-g:\source\c++\gdmwgb\gdmwgb\grainboundarysimulation.cpp(84): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-LINK : fatal error LNK1561: punkt wejścia musi być zdefiniowany
