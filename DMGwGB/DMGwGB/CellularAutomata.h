@@ -24,5 +24,7 @@ private:
 	unsigned int o;	//Z
 	//Komórki
 	unsigned short *** cells;
+public:
+	bool *** front;
 };
 

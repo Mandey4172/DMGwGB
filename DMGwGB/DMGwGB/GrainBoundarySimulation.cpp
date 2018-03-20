@@ -42,10 +42,12 @@ bool GrainBoundarySimulation::step()
 	GrainGrowth2.cellularautomata = new CellularAutomata(x,y,z);
 
 	this->rule->grain_count = this->cellularautomata->nucleons_count;
+	#pragma omp parallel
 	for (int i = 0; i < this->cellularautomata->getSize()[0]; i++)
 	{
 		for (int j = 0; j < this->cellularautomata->getSize()[1]; j++)
 		{
+			#pragma omp for 
 			for (int k = 0; k < this->cellularautomata->getSize()[2]; k++)
 			{
 				MooreNeighborhood n;

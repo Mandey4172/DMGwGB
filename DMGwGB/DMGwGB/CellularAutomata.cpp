@@ -14,19 +14,23 @@ CellularAutomata::CellularAutomata(unsigned int nm, unsigned int nn, unsigned in
 	else				this->o = 1;
 	//Twoznie komórek
 	this->cells = new unsigned short ** [this->m];
+	this->front = new bool **[this->m];
 	//this->cells.resize(this->m);
 	for (int i = 0 ; i < this->m; i ++)
 	{
 		this->cells[i] = new unsigned short *[this->n];
+		this->front[i] = new bool *[this->n];
 		//this->cells[i].resize(this->n);
 		for (int j = 0; j < this->n; j++)
 		{
 			this->cells[i][j] = new unsigned short[this->o];
+			this->front[i][j] = new bool[this->o];
 			//this->cells[i][j].resize(this->o);
 			for (int k = 0; k < this->o; k++)
 			{
 				//this->cells[i][j][k].position = SPoint(i, j, k);
 				this->cells[i][j][k] = 0;
+				this->front[i][j][k] = true;
 			}
 		}
 	}
@@ -40,19 +44,23 @@ CellularAutomata::CellularAutomata(CellularAutomata & ca)
 	this->o = ca.getSize()[2];
 
 	this->cells = new unsigned short ** [this->m];
+	this->front = new bool **[this->m];
 	//this->cells.resize(this->m);
 	for (int i = 0; i < this->m; i++)
 	{
 		this->cells[i] = new unsigned short *[this->n];
+		this->front[i] = new bool *[this->n];
 		//this->cells[i].resize(this->n);
 		for (int j = 0; j < this->n; j++)
 		{
 			this->cells[i][j] = new unsigned short[this->o];
+			this->front[i][j] = new bool[this->o];
 			//this->cells[i][j].resize(this->o);
 			for (int k = 0; k < this->o; k++)
 			{
 				//this->cells[i][j][k].position = SPoint(i, j, k);
 				this->cells[i][j][k] = ca.cells[i][j][k];
+				this->front[i][j][k] = false;
 			}
 		}
 	}
