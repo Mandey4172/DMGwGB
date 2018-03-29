@@ -25,49 +25,53 @@ GrainGrowthSimulation::~GrainGrowthSimulation()
 
 bool GrainGrowthSimulation::step()
 {
-	bool exit = true;
 	CellularAutomata cca = *this->cellularautomata;
-	//#pragma omp parallel num_threads(4) 
+	int n = this->cellularautomata->getSize()[0];
+	int m = this->cellularautomata->getSize()[1];
+	int	o = this->cellularautomata->getSize()[2];
+	bool exit = true;
+	//pragma omp parallel num_threads(4) 
 	#pragma omp parallel
-	for (int i = 0; i < this->cellularautomata->getSize()[0]; i++)
+	for (int i = 0; i < n; i++)
 	{
-		for (int j = 0; j < this->cellularautomata->getSize()[1]; j++)
+		int x = 0;
+		for (int j = 0; j < m; j++)
 		{
-			#pragma omp for 
-			for (int k = 0; k < this->cellularautomata->getSize()[2]; k++)
+			#pragma omp for schedule(dynamic)
+			for (int k = 0; k < o; k++)
 			{
 				if (this->cellularautomata->getCells()[i][j][k] == 0 && this->cellularautomata->front[i][j][k])
 				{
 					this->rule->step(&this->cellularautomata->getCells()[i][j][k], this->neighborhood->get(&cca, i, j, k));
 					if (this->cellularautomata->getCells()[i][j][k] != 0)
 					{
-						//int val = this->cellularautomata->getCells()[i][j][k];
 						exit = false;
 					}
 				}
 			}
 		}
 	}
-	
 	this->cellularautomata->front = cca.front;
 	return exit;
 }
 
 void GrainGrowthSimulation::start()
 {
-	//this->queue.clear();
-	for (int  i= 0; i < this->cellularautomata->getSize()[0]; i++)
+	//Lokalna kopi przyspiesza kod
+	int n = this->cellularautomata->getSize()[0],
+		m = this->cellularautomata->getSize()[1],
+		o = this->cellularautomata->getSize()[2];
+	for (int  i= 0; i < n; i++)
 	{
-		for (int j = 0; j < this->cellularautomata->getSize()[1]; j++)
+		for (int j = 0; j < n; j++)
 		{
-			for (int k = 0; k< this->cellularautomata->getSize()[2]; k++)
+			for (int k = 0; k < o; k++)
 			{
-				//this->cellularautomata->getCells()[i][j][k].setCheck(true);
-				//this->queue.push_back(&this->cellularautomata->getCells()[i][j][k]);
 				this->cellularautomata->front[i][j][k] = true;
 			}
 		}
 	}
+	int xa = 500;
 	int start = 0;
 	while (!step());
 	int stop = 0;

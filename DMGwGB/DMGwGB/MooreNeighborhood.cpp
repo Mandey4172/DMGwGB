@@ -40,21 +40,10 @@ std::vector<unsigned short> MooreNeighborhood::get(CellularAutomata * cellularau
 								}
 							}
 						}
-						else
-						{
-							continue;
-						}
+
 					}
 				}
-				else
-				{
-					continue;
-				}
 			}
-		}
-		else
-		{
-			continue;
 		}
 	}
 	return neighborhood;

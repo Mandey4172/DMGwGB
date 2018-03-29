@@ -19,9 +19,9 @@ Simulation::Simulation()
 
 Simulation::~Simulation()
 {
-	if (this->cellularautomata) delete cellularautomata;
+	/*if (this->cellularautomata) delete cellularautomata;
 	if (this->neighborhood) delete this->neighborhood;
-	if (this->rule)				delete this->rule;
+	if (this->rule)				delete this->rule;*/
 }
 
 bool Simulation::step()

@@ -6,8 +6,8 @@ class GrainBoundarySimulation :
 public:
 	GrainBoundarySimulation();
 
-	Neighborhood * neighborhoodGrainBoundary;
 	unsigned int grainSize;
+	unsigned int clearIterations;
 
 	virtual bool step();
 	virtual void start();

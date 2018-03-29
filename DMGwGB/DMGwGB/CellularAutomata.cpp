@@ -70,17 +70,20 @@ CellularAutomata::CellularAutomata(CellularAutomata & ca)
 CellularAutomata::~CellularAutomata()
 {
 	//Usuwanie komórek
-	for (int i = 0; i < this->m; i++)
-	{
-		for (int j = 0; j < this->n; j++)
-		{
-			delete[] this->cells[i][j];
-			//this->cells[i][j].clear();
-		}
-		delete[] this->cells[i];
-		//this->cells[i].clear();
-	}
-	delete[] this->cells;
+	//for (int i = 0; i < this->m; i++)
+	//{
+	//	for (int j = 0; j < this->n; j++)
+	//	{
+	//		if(this->cells[i][j])
+	//			delete[] this->cells[i][j];
+	//		//this->cells[i][j].clear();
+	//	}
+	//	if (this->cells[i])
+	//		delete[] this->cells[i];
+	//	//this->cells[i].clear();
+	//}
+	//if (this->cells)
+	//	delete[] this->cells;
 	//this->cells.clear();
 }
 

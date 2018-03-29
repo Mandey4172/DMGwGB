@@ -7,6 +7,10 @@ Neighborhood::Neighborhood()
 {
 }
 
+Neighborhood::Neighborhood(const Neighborhood & o)
+{
+}
+
 
 Neighborhood::~Neighborhood()
 {
@@ -17,9 +21,6 @@ std::vector<unsigned short> Neighborhood::get(CellularAutomata * cellularautomat
 	return std::vector<unsigned short>();
 }
 
-std::vector<unsigned short> Neighborhood::fget(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z, std::vector<std::array<int, 3>> & queue)
-{
-	return std::vector<unsigned short>();
-}
+
 
 
