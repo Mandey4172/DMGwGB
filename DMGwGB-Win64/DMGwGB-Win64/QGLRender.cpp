@@ -35,8 +35,8 @@ QGLRender::~QGLRender()
 
 void QGLRender::setCA(CellularAutomata * ca)
 {
-	//if (this->ca) delete this->ca;
-    this->ca = ca;
+	if (this->ca) delete this->ca;
+    this->ca = new CellularAutomata(*ca);
     updateTextures();
 }
 
@@ -702,18 +702,22 @@ void QGLRender::paintGL()
 
 void QGLRender::updateTextures()
 {
-	int m = ca->getSize()[0],
-		n = ca->getSize()[1],
-		o = ca->getSize()[2];
+	int m = ca->getSize()[0] ,
+		n = ca->getSize()[1] ,
+		o = ca->getSize()[2] ;
 
 	QImage	TexturesData[6];
 
 	TexturesData[0] = QImage(QSize(n, o), QImage::Format_RGB32);
 	TexturesData[1] = QImage(QSize(n, o), QImage::Format_RGB32);
+
 	TexturesData[2] = QImage(QSize(m, o), QImage::Format_RGB32);
 	TexturesData[3] = QImage(QSize(m, o), QImage::Format_RGB32);
+
 	TexturesData[4] = QImage(QSize(m, n), QImage::Format_RGB32);
 	TexturesData[5] = QImage(QSize(m, n), QImage::Format_RGB32);
+
+	float min = 0.f, max = 1.f;
 
 	///X
 	for (int j = 0; j < n; j++)
@@ -724,40 +728,32 @@ void QGLRender::updateTextures()
 			QColor newColorB = QColor();
 			int s1 = this->ca->getCells()[0][j][k];
 			int s2 = this->ca->getCells()[m - 1][j][k];
-			if (s1 > this->ca->nucleons_count) s1 += (500 * 500) / 2 + 10;
-			if (s2 > this->ca->nucleons_count) s2 += (500 * 500) / 2 + 10;
-			newColorA.setRgbF(colorGenerator.colors[s1][0],
-				colorGenerator.colors[s1][1],
-				colorGenerator.colors[s1][2]);
-			newColorB.setRgbF(colorGenerator.colors[s2][0],
-				colorGenerator.colors[s2][1],
-				colorGenerator.colors[s2][2]);
+			if (s1 > this->ca->nucleons_count - 1) s1 += ((500 * 500) / 2) + 1;
+			if (s2 > this->ca->nucleons_count - 1) s2 += ((500 * 500) / 2) + 1;
+			
+			if (colorGenerator.colors[s1][0] > max) colorGenerator.colors[s1][0] = max;
+			else if (colorGenerator.colors[s1][0] < min) colorGenerator.colors[s1][0] = min;
+			if (colorGenerator.colors[s1][1] > max) colorGenerator.colors[s1][1] = max;
+			else if (colorGenerator.colors[s1][1] < min) colorGenerator.colors[s1][1] = min;
+			if (colorGenerator.colors[s1][2] > max) colorGenerator.colors[s1][2] = max;
+			else if (colorGenerator.colors[s1][2] < min) colorGenerator.colors[s1][2] = min;
 
-			//if (this->ca->getCells()[0][j][k] <= this->ca->nucleons_count)
-			//{
-			//	newColorA.setRgbF(colorGenerator.colors[this->ca->getCells()[0][j][k]][0],
-			//		colorGenerator.colors[this->ca->getCells()[0][j][k]][1],
-			//		colorGenerator.colors[this->ca->getCells()[0][j][k]][2]);
-			//}
-			//else
-			//{
-			//	newColorA.setRgbF(colorGenerator.colors[this->ca->getCells()[0][j][k] + 1 + ((500 * 500) / 2)][0],
-			//		colorGenerator.colors[this->ca->getCells()[0][j][k] + 1 + ((500 * 500) / 2)][1],
-			//		colorGenerator.colors[this->ca->getCells()[0][j][k] + 1 + ((500 * 500) / 2)][2]);
-			//}
-			//	
-			//if (this->ca->getCells()[m - 1][j][k] <= this->ca->nucleons_count) //(this->ca->getCells()[m - 1][j][k] == 0) || (
-			//{
-			//	newColorB.setRgbF(colorGenerator.colors[this->ca->getCells()[m - 1][j][k]][0],
-			//		colorGenerator.colors[this->ca->getCells()[m - 1][j][k]][1],
-			//		colorGenerator.colors[this->ca->getCells()[m - 1][j][k]][2]);
-			//}
-			//else
-			//{
-			//	newColorA.setRgbF(colorGenerator.colors[this->ca->getCells()[m - 1][j][k] + 1 + ((500 * 500) / 2)][0],
-			//		colorGenerator.colors[this->ca->getCells()[m - 1][j][k] + 1 + ((500 * 500) / 2)][1],
-			//		colorGenerator.colors[this->ca->getCells()[m - 1][j][k] + 1 + ((500 * 500) / 2)][2]);
-			//}
+			if (colorGenerator.colors[s2][0] > max) colorGenerator.colors[s2][0] = max;
+			else if (colorGenerator.colors[s2][0] < min) colorGenerator.colors[s2][0] = min;
+			if (colorGenerator.colors[s2][1] > max) colorGenerator.colors[s2][1] = max;
+			else if (colorGenerator.colors[s2][1] < min) colorGenerator.colors[s2][1] = min;
+			if (colorGenerator.colors[s2][2] > max) colorGenerator.colors[s2][2] = max;
+			else if (colorGenerator.colors[s2][2] < min) colorGenerator.colors[s2][2] = min;
+
+			qreal r, g, b;
+			r = colorGenerator.colors[s1][0];
+			g = colorGenerator.colors[s1][1];
+			b = colorGenerator.colors[s1][2];
+			newColorA.setRgbF(r, g, b);
+			r = colorGenerator.colors[s2][0];
+			g = colorGenerator.colors[s2][1];
+			b = colorGenerator.colors[s2][2];
+			newColorB.setRgbF(r, g, b);
 
 			TexturesData[0].setPixelColor(QPoint(j, k), newColorA);
 			TexturesData[1].setPixelColor(QPoint(j, k), newColorB);
@@ -772,42 +768,33 @@ void QGLRender::updateTextures()
 			QColor newColorB = QColor();
 			int s1 = this->ca->getCells()[i][0][k];
 			int s2 = this->ca->getCells()[i][n - 1][k];
-			if (s1 > this->ca->nucleons_count) s1 += (500 * 500) / 2 + 10;
-			if (s2 > this->ca->nucleons_count) s2 += (500 * 500) / 2 + 10;
-			newColorA.setRgbF(colorGenerator.colors[s1][0],
-				colorGenerator.colors[s1][1],
-				colorGenerator.colors[s1][2]);
-			newColorB.setRgbF(colorGenerator.colors[s2][0],
-				colorGenerator.colors[s2][1],
-				colorGenerator.colors[s2][2]);
+			if (s1 > this->ca->nucleons_count) s1 += ((500 * 500) / 2) + 1;
+			if (s2 > this->ca->nucleons_count) s2 += ((500 * 500) / 2) + 1;
 
-			/*	if (this->ca->getCells()[i][0][k] == 0 || this->ca->getCells()[i][0][k] <= this->ca->nucleons_count)
-			{
-			newColorA.setRgbF(colorGenerator.colors[this->ca->getCells()[i][0][k]][0],
-			colorGenerator.colors[this->ca->getCells()[i][0][k]][1],
-			colorGenerator.colors[this->ca->getCells()[i][0][k]][2]);
-			}
-			else
-			{
-			newColorA.setRgbF(colorGenerator.colors[this->ca->getCells()[i][0][k] + ((500 * 500) / 2)][0],
-			colorGenerator.colors[this->ca->getCells()[i][0][k] + ((500 * 500) / 2)][1],
-			colorGenerator.colors[this->ca->getCells()[i][0][k] + ((500 * 500) / 2)][2]);
-			}
+			if (colorGenerator.colors[s1][0] > max) colorGenerator.colors[s1][0] = max;
+			else if (colorGenerator.colors[s1][0] < min) colorGenerator.colors[s1][0] = min;
+			if (colorGenerator.colors[s1][1] > max) colorGenerator.colors[s1][1] = max;
+			else if (colorGenerator.colors[s1][1] < min) colorGenerator.colors[s1][1] = min;
+			if (colorGenerator.colors[s1][2] > max) colorGenerator.colors[s1][2] = max;
+			else if (colorGenerator.colors[s1][2] < min) colorGenerator.colors[s1][2] = min;
 
-			if (this->ca->getCells()[i][n - 1][k] == 0 || this->ca->getCells()[i][n - 1][k] <= this->ca->nucleons_count)
-			{
-			newColorB.setRgbF(colorGenerator.colors[this->ca->getCells()[i][n - 1][k]][0],
-			colorGenerator.colors[this->ca->getCells()[i][n - 1][k]][1],
-			colorGenerator.colors[this->ca->getCells()[i][n - 1][k]][2]);
-			}
-			else
-			{
-			newColorA.setRgbF(colorGenerator.colors[this->ca->getCells()[i][n - 1][k] + ((500 * 500) / 2)][0],
-			colorGenerator.colors[this->ca->getCells()[i][n - 1][k] + ((500 * 500) / 2)][1],
-			colorGenerator.colors[this->ca->getCells()[i][n - 1][k] + ((500 * 500) / 2)][2]);
-			}
+			if (colorGenerator.colors[s2][0] > max) colorGenerator.colors[s2][0] = max;
+			else if (colorGenerator.colors[s2][0] < min) colorGenerator.colors[s2][0] = min;
+			if (colorGenerator.colors[s2][1] > max) colorGenerator.colors[s2][1] = max;
+			else if (colorGenerator.colors[s2][1] < min) colorGenerator.colors[s2][1] = min;
+			if (colorGenerator.colors[s2][2] > max) colorGenerator.colors[s2][2] = max;
+			else if (colorGenerator.colors[s2][2] < min) colorGenerator.colors[s2][2] = min;
 
-			*/
+			qreal r, g, b;
+			r = colorGenerator.colors[s1][0];
+			g = colorGenerator.colors[s1][1];
+			b = colorGenerator.colors[s1][2];
+			newColorA.setRgbF(r, g, b);
+			r = colorGenerator.colors[s2][0];
+			g = colorGenerator.colors[s2][1];
+			b = colorGenerator.colors[s2][2];
+			newColorB.setRgbF(r, g, b);
+
 			TexturesData[2].setPixelColor(QPoint(i, k), newColorA);
 			TexturesData[3].setPixelColor(QPoint(i, k), newColorB);
 		}
@@ -817,45 +804,36 @@ void QGLRender::updateTextures()
 	{
 		for (int j = 0; j < n; j++)
 		{
-			int val = this->ca->getCells()[i][j][0];
 			QColor newColorA = QColor();
 			QColor newColorB = QColor();
 			int s1 = this->ca->getCells()[i][j][0];
 			int s2 = this->ca->getCells()[i][j][o - 1];
-			if (s1 > this->ca->nucleons_count) s1 += (500 * 500) / 2 + 10;
-			if (s2 > this->ca->nucleons_count) s2 += (500 * 500) / 2 + 10;
-			newColorA.setRgbF(colorGenerator.colors[s1][0],
-				colorGenerator.colors[s1][1],
-				colorGenerator.colors[s1][2]);
-			newColorB.setRgbF(colorGenerator.colors[s2][0],
-				colorGenerator.colors[s2][1],
-				colorGenerator.colors[s2][2]);
-			/*if (this->ca->getCells()[i][j][0] == 0 || this->ca->getCells()[i][j][0] <= this->ca->nucleons_count)
-			{
-			newColorA.setRgbF(colorGenerator.colors[this->ca->getCells()[i][j][0]][0],
-			colorGenerator.colors[this->ca->getCells()[i][j][0]][1],
-			colorGenerator.colors[this->ca->getCells()[i][j][0]][2]);
-			}
-			else
-			{
-			newColorA.setRgbF(colorGenerator.colors[this->ca->getCells()[i][j][0] + ((500 * 500) / 2)][0],
-			colorGenerator.colors[this->ca->getCells()[i][j][0] + ((500 * 500) / 2)][1],
-			colorGenerator.colors[this->ca->getCells()[i][j][0] + ((500 * 500) / 2)][2]);
-			}
+			if (s1 > this->ca->nucleons_count) s1 += ((500 * 500) / 2) + 1;
+			if (s2 > this->ca->nucleons_count) s2 += ((500 * 500) / 2) + 1;
 
-			if (this->ca->getCells()[i][j][o - 1] == 0 || this->ca->getCells()[i][j][o - 1] <= this->ca->nucleons_count)
-			{
-			newColorB.setRgbF(colorGenerator.colors[this->ca->getCells()[i][j][o - 1]][0],
-			colorGenerator.colors[this->ca->getCells()[i][j][o - 1]][1],
-			colorGenerator.colors[this->ca->getCells()[i][j][o - 1]][2]);
-			}
-			else
-			{
-			newColorA.setRgbF(colorGenerator.colors[this->ca->getCells()[i][j][o - 1] + ((500 * 500) / 2)][0],
-			colorGenerator.colors[this->ca->getCells()[i][j][o - 1] + ((500 * 500) / 2)][1],
-			colorGenerator.colors[this->ca->getCells()[i][j][o - 1] + ((500 * 500) / 2)][2]);
-			}*/
+			if (colorGenerator.colors[s1][0] > max) colorGenerator.colors[s1][0] = max;
+			else if (colorGenerator.colors[s1][0] < min) colorGenerator.colors[s1][0] = min;
+			if (colorGenerator.colors[s1][1] > max) colorGenerator.colors[s1][1] = max;
+			else if (colorGenerator.colors[s1][1] < min) colorGenerator.colors[s1][1] = min;
+			if (colorGenerator.colors[s1][2] > max) colorGenerator.colors[s1][2] = max;
+			else if (colorGenerator.colors[s1][2] < min) colorGenerator.colors[s1][2] = min;
 
+			if (colorGenerator.colors[s2][0] > max) colorGenerator.colors[s2][0] = max;
+			else if (colorGenerator.colors[s2][0] < min) colorGenerator.colors[s2][0] = min;
+			if (colorGenerator.colors[s2][1] > max) colorGenerator.colors[s2][1] = max;
+			else if (colorGenerator.colors[s2][1] < min) colorGenerator.colors[s2][1] = min;
+			if (colorGenerator.colors[s2][2] > max) colorGenerator.colors[s2][2] = max;
+			else if (colorGenerator.colors[s2][2] < min) colorGenerator.colors[s2][2] = min;
+
+			qreal r, g, b;
+			r = colorGenerator.colors[s1][0];
+			g = colorGenerator.colors[s1][1];
+			b = colorGenerator.colors[s1][2];
+			newColorA.setRgbF(r, g, b);
+			r = colorGenerator.colors[s2][0];
+			g = colorGenerator.colors[s2][1];
+			b = colorGenerator.colors[s2][2];
+			newColorB.setRgbF(r, g, b);
 
 			TexturesData[5].setPixelColor(QPoint(j, i), newColorA);
 			TexturesData[4].setPixelColor(QPoint(j, i), newColorB);
@@ -868,15 +846,5 @@ void QGLRender::updateTextures()
 	Textures[3] = new QOpenGLTexture(TexturesData[3].mirrored(false, false));
 	Textures[4] = new QOpenGLTexture(TexturesData[4].mirrored(false, false));
 	Textures[5] = new QOpenGLTexture(TexturesData[5].mirrored(false, true));
-
-	//for (int i = 0; i < 6; i++)
-	//{
-	//	//if (Textures[i]) delete Textures[i];
-	//	if (((i + 1) % 2) == 0)
-	//		Textures[i] = new QOpenGLTexture(TexturesData[i].mirrored());
-	//	else
-	//		Textures[i] = new QOpenGLTexture(TexturesData[i]);
-	//	
-	//}
 
 }

@@ -4,8 +4,9 @@
 
 #include <algorithm>    
 #include <vector>
-
+#include <omp.h>
 bool sortfunction(int i, int j) { return (i<j); }
+
 
 GrainBoundaryRule::GrainBoundaryRule()
 {
@@ -76,6 +77,8 @@ void GrainBoundaryRule::step(unsigned short * cell, std::vector<unsigned short> 
 		int xa = this->boundary_states.max_size();
 #pragma omp critical
 		{
+			int thread_count = omp_get_num_threads();
+			int thread_num = omp_get_thread_num();
 			this->boundary_states.push_back(*nnode);
 		}
 		*cell = nnode->state;

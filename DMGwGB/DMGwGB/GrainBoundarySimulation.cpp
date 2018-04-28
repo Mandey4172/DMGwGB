@@ -17,6 +17,7 @@
 #include "GrainGrowthSimulation.h"
 
 
+
 GrainBoundarySimulation::GrainBoundarySimulation()
 {
 	this->cellularautomata = new CellularAutomata(50, 50, 50);
@@ -34,26 +35,28 @@ bool GrainBoundarySimulation::step()
 
 	GrainGrowthSimulation GrainGrowth;
 	GrainGrowth.neighborhood = this->neighborhood;
-
 	GrainGrowth.cellularautomata = new CellularAutomata(*this->cellularautomata);
 	GrainGrowth.start();
 
+	if (this->cellularautomata) delete this->cellularautomata;
 	this->cellularautomata = new CellularAutomata(*GrainGrowth.cellularautomata);
 	unsigned int m = this->cellularautomata->getSize()[0],
 				 n = this->cellularautomata->getSize()[1],
 				 o = this->cellularautomata->getSize()[2];
+
+
 	GrainGrowthSimulation GrainGrowth2;
 	
 	GrainGrowth2.cellularautomata = new CellularAutomata(m,n,o);
 
 	this->rule->grain_count = this->cellularautomata->nucleons_count;
 	static_cast<GrainBoundaryRule *>(this->rule)->boundary_states.clear();
-	#pragma omp parallel
+//	#pragma omp parallel 
 	for (int i = 0; i < m; i++)
 	{
 		for (int j = 0; j < n; j++)
 		{
-			#pragma omp for 
+//			#pragma omp for 
 			for (int k = 0; k < o; k++)
 			{
 				MooreNeighborhood n;

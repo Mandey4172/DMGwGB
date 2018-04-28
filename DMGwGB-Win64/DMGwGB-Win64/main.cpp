@@ -1,5 +1,9 @@
 #include "MainWindow.h"
 #include <QApplication>
+#include <QGLFormat>
+//#define _CRTDBG_MAP_ALLOC
+//#include <stdlib.h>
+//#include <crtdbg.h>
 
 int main(int argc, char *argv[])
 {
@@ -7,5 +11,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    return a.exec();
+	//_CrtDumpMemoryLeaks();
+
+	return a.exec();
 }

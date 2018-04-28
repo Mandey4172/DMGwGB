@@ -2,11 +2,10 @@
 #include"CellularAutomata.h"
 
 #include<array>
-
+#include<list>
 MooreNeighborhood::MooreNeighborhood()
 {
 }
-
 
 MooreNeighborhood::~MooreNeighborhood()
 {
@@ -49,7 +48,7 @@ std::vector<unsigned short> MooreNeighborhood::get(CellularAutomata * cellularau
 	return neighborhood;
 }
 
-std::vector<unsigned short> MooreNeighborhood::fget(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z, std::vector<std::array<int, 3>> &queue)
+std::vector<unsigned short> MooreNeighborhood::fget(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z, std::list<std::array<int, 3>> &queue)
 {
 	std::vector<unsigned short> neighborhood;
 	int m = cellularautomata->getSize()[0],

@@ -15,25 +15,6 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-	int x = omp_get_max_threads();
-
-	int nthreads, tid;
-	omp_set_num_threads(4);
-	/* Fork a team of threads giving them their own copies of variables */
-#pragma omp parallel private(nthreads, tid) num_threads(4)
-	{
-		/* Obtain thread number */
-		tid = omp_get_thread_num();
-		printf("Hello World from thread = %d\n", tid);
-
-		/* Only master thread does this */
-		if (tid == 0)
-		{
-			nthreads = omp_get_num_threads();
-			printf("Number of threads = %d\n", nthreads);
-		}
-
-	}  /* All threads join master thread and disband */
 
     this->calculationsThread = new CalculationsThread();
 
@@ -69,10 +50,14 @@ MainWindow::MainWindow(QWidget *parent)
     //resize(800, 600);
     resize(640, 480);
 
+	if (this->calculationsThread->simulation->cellularautomata)
+		delete  this->calculationsThread->simulation->cellularautomata;
     this->calculationsThread->simulation->cellularautomata = new CellularAutomata(30, 30, 30);
 
     connect(this->calculationsThread, &CalculationsThread::updateVal, this, &MainWindow::updateRender);
-    //connect(this->calculationsThread, &CalculationsThread::finished, this, &MainWindow::updateRender);
+	connect(this->calculationsThread, &CalculationsThread::updateDeb, this, &MainWindow::updateDebug);
+	//connect(this->calculationsThread, &CalculationsThread::finished, this, &MainWindow::updateRender);
+	show();
 }
 
 MainWindow::~MainWindow()
@@ -123,6 +108,9 @@ void MainWindow::createSimulationMenu()
     simulationStartButton = new QPushButton(tr(" Start "));
     connect(simulationStartButton, SIGNAL(released()), this, SLOT(startSimulation()));
 
+	debugLabel = new QLabel(tr("DEBUG "));
+	nucleonsLabel->setMaximumHeight(50);
+
     layout->addWidget(nucleonsLabel, 0, 0, 1, 2);
     layout->addWidget(nucleonsNumberSpinBox, 0, 2, 1, 2);
     layout->addWidget(nubcleonsGenerateButton, 1, 0, 1, 4);
@@ -131,6 +119,8 @@ void MainWindow::createSimulationMenu()
     layout->addWidget(neightborhoodComboBox, 3, 0, 1, 4);
 
     layout->addWidget(simulationStartButton, 4, 0, 1, 4);
+
+	layout->addWidget(debugLabel, 5, 0, 1, 4);
 
     layout->setRowMinimumHeight(0, 20);
     layout->setRowMinimumHeight(1, 20);
@@ -155,6 +145,7 @@ void MainWindow::createOpenGLDisplay()
     openGLDisplay = new QGLRender();
     this->openGLDisplay->setCA(this->calculationsThread->simulation->cellularautomata);
     openGLDisplay->setGeometry(0,0,100, 100);
+	//openGLDisplay->show();
 }
 
 void MainWindow::startSimulation()
@@ -169,7 +160,7 @@ void MainWindow::generateNucleons()
     {
         QTime time = QTime::currentTime();
         qsrand((uint)time.msec());
-        CellularAutomata * ca = new CellularAutomata(*this->calculationsThread->simulation->cellularautomata);
+        CellularAutomata * ca = this->calculationsThread->simulation->cellularautomata;
         for (int i = 0; i < this->nucleonsNumberSpinBox->value(); i++)
         {
             int x, y, z;
@@ -184,6 +175,7 @@ void MainWindow::generateNucleons()
         }
         calculationsThread->simulation->cellularautomata = new CellularAutomata(*ca);
         this->openGLDisplay->setCA(new CellularAutomata(*ca));
+		delete ca;
     }
 
 }
@@ -193,12 +185,18 @@ void MainWindow::updateRender(CellularAutomata * ca)
     this->openGLDisplay->setCA(new CellularAutomata(*ca));
 }
 
+void MainWindow::updateDebug(const QString text)
+{
+	this->debugLabel->setText(text);
+}
+
 void MainWindow::newSimulation()
 {
     newDialog = new QNewDialog(this);
     if (newDialog->exec())
     {
         int x, y, z;
+		delete calculationsThread->simulation->cellularautomata;
         newDialog->getValues(x, y, z);
         this->openGLDisplay->setCA(new CellularAutomata(x, y, z));
         calculationsThread->simulation->cellularautomata = new CellularAutomata(x, y, z);

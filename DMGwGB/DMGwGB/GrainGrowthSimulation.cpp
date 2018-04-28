@@ -42,6 +42,8 @@ bool GrainGrowthSimulation::step()
 			{
 				if (this->cellularautomata->getCells()[i][j][k] == 0 && this->cellularautomata->front[i][j][k])
 				{
+					int thread_count = omp_get_num_threads();
+					int thread_num = omp_get_thread_num();
 					this->rule->step(&this->cellularautomata->getCells()[i][j][k], this->neighborhood->get(&cca, i, j, k));
 					if (this->cellularautomata->getCells()[i][j][k] != 0)
 					{

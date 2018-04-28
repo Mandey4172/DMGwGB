@@ -7,7 +7,7 @@ public:
 
 	void generate(int n);
 
-	float ** colors;
+	double ** colors;
 	int colorCount;;
 };
 

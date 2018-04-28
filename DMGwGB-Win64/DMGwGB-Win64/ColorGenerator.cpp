@@ -17,7 +17,7 @@ ColorGenerator::~ColorGenerator()
 void ColorGenerator::generate(int n)
 {
 	colorCount = n;
-	colors = new float *[n];
+	colors = new double *[n];
 
 	for (int i = 0; i < floor(n / 2); ++i)
 	{
@@ -40,7 +40,7 @@ void ColorGenerator::generate(int n)
 				continue;
 			}
 		}
-		colors[i] = new float[3]{ (float)(r % 100), (float)(g % 100),(float)(155 + (b % 150)) };
+		colors[i] = new double[3]{ (float)(r % 100), (float)(g % 100),(float)(155 + (b % 150)) };
 	}
 	for (int i = floor(n / 2); i < n; ++i)
 	{
@@ -63,13 +63,13 @@ void ColorGenerator::generate(int n)
 				continue;
 			}
 		}
-		colors[i] = colors[i] = new float[3] { (float)(155 + (r % 100)), (float)(g % 80), (float)(b % 80)};
+		colors[i] = colors[i] = new double[3] { (float)(155 + (r % 100)), (float)(g % 80), (float)(b % 80)};
 	}
 
 
-	colors[0] = new float [3] {255.f, 255.f, 255.f};
+	colors[0] = new double[3] {255.f, 255.f, 255.f};
 
-	for (int i = 0; i < n; ++i)
+	for (int i = 0; i < n; i++)
 	{
 		colors[i][0] /= 255;
 		colors[i][1] /= 255;

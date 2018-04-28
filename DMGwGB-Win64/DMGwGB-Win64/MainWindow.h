@@ -58,6 +58,8 @@ private:
     /*OpenGL*/
     QGLRender		*openGLDisplay;
 
+	QLabel			*debugLabel;
+
     CalculationsThread * calculationsThread;
 
     QNewDialog * newDialog;
@@ -67,6 +69,7 @@ private:
     void startSimulation();
     void generateNucleons();
     void updateRender(CellularAutomata * ca);
+	void updateDebug(const QString text);
 };
 
 #endif // MAINWINDOW_H

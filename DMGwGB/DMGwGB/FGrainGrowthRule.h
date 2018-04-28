@@ -2,6 +2,7 @@
 
 #include<unordered_set>
 #include<array>
+#include<list>
 #include<xhash>
 
 #include "CRule.h"
@@ -16,7 +17,7 @@ public:
 	FGrainGrowthRule();
 	~FGrainGrowthRule();
 	//typedef
-	std::vector<std::array<int, 3>> queue;
+	std::list<std::array<int, 3>> queue;
 
 	virtual void step(unsigned short * cell, class std::vector<unsigned short> neighborhood);
 };

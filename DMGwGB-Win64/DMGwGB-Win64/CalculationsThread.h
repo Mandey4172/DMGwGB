@@ -19,5 +19,6 @@ private:
 
 signals:
     void updateVal(CellularAutomata * ca);
+	void updateDeb(const QString text);
 };
 

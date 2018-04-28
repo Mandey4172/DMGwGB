@@ -9,6 +9,6 @@ public:
 	~MooreNeighborhood();
 
 	virtual std::vector<unsigned short> get(class CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z);
-	virtual std::vector<unsigned short> fget(class CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z, std::vector<std::array<int, 3>>  &queue);
+	virtual std::vector<unsigned short> fget(class CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z, std::list<std::array<int, 3>>  &queue);
 };
 
