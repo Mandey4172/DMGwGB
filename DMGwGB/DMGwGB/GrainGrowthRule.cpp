@@ -14,7 +14,7 @@ GrainGrowthRule::~GrainGrowthRule()
 {
 }
 
-void GrainGrowthRule::step(unsigned short * cell, std::vector<unsigned short> neighborhood)
+void GrainGrowthRule::step(unsigned int * cell, std::vector<unsigned int> neighborhood)
 {
 	//if (*cell == 0)
 	//{
@@ -57,7 +57,14 @@ void GrainGrowthRule::step(unsigned short * cell, std::vector<unsigned short> ne
 		}
 	}
 	if (!unique_grain.empty())
+	{
+		if (1000 < unique_grain[max])
+		{
+			int x = 0;
+		}
 		*cell = unique_grain[max];
+	}
+		
 }
 
 
@@ -134,12 +141,12 @@ void GrainGrowthRule::step(unsigned short * cell, std::vector<unsigned short> ne
 	std::vector<int> cell_state_count;*/
 	/*for (Cell n : neighborhood)
 	{
-		if (n.getState() != 0)
+		if (n != 0)
 		{
 			bool exist = false;
 			for (int s = 0; s < cell_state.size(); ++s)
 			{
-				if (cell_state[s] == n.getState())
+				if (cell_state[s] == n)
 				{
 					cell_state_count[s]++;
 					exist = true;
@@ -147,7 +154,7 @@ void GrainGrowthRule::step(unsigned short * cell, std::vector<unsigned short> ne
 			}
 			if (!exist)
 			{
-				cell_state.push_back(n.getState());
+				cell_state.push_back(n);
 				cell_state_count.push_back(1);
 			}
 		}

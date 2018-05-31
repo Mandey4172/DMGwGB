@@ -19,6 +19,6 @@ public:
 	//typedef
 	std::list<std::array<int, 3>> queue;
 
-	virtual void step(unsigned short * cell, class std::vector<unsigned short> neighborhood);
+	virtual void step(unsigned int * cell, class std::vector<unsigned int> neighborhood);
 };
 

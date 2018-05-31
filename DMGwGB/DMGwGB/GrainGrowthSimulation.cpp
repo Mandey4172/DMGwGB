@@ -15,6 +15,9 @@ GrainGrowthSimulation::GrainGrowthSimulation()
 {
 	this->cellularautomata = new CellularAutomata(10, 10, 10);
 	this->neighborhood = new MooreNeighborhood();
+	//new VonNeummanNeighborhood();
+	//new HexagonalNeighborhood();
+	//new PentagonalNeighborhood();
 	this->rule = new GrainGrowthRule();
 }
 
@@ -25,10 +28,10 @@ GrainGrowthSimulation::~GrainGrowthSimulation()
 
 bool GrainGrowthSimulation::step()
 {
-	CellularAutomata cca = *this->cellularautomata;
-	int n = this->cellularautomata->getSize()[0];
-	int m = this->cellularautomata->getSize()[1];
-	int	o = this->cellularautomata->getSize()[2];
+	CellularAutomata * cca = new CellularAutomata(*this->cellularautomata);
+	int m = this->cellularautomata->getSize()[0] ;
+	int n = this->cellularautomata->getSize()[1] ;
+	int	o = this->cellularautomata->getSize()[2] ;
 	bool exit = true;
 	//pragma omp parallel num_threads(4) 
 	#pragma omp parallel
@@ -40,12 +43,13 @@ bool GrainGrowthSimulation::step()
 			#pragma omp for schedule(dynamic)
 			for (int k = 0; k < o; k++)
 			{
-				if (this->cellularautomata->getCells()[i][j][k] == 0 && this->cellularautomata->front[i][j][k])
+				//if (cca->front[i][j][k])
+				if (cca->getCells()[i][j][k] == 0)
 				{
 					int thread_count = omp_get_num_threads();
 					int thread_num = omp_get_thread_num();
-					this->rule->step(&this->cellularautomata->getCells()[i][j][k], this->neighborhood->get(&cca, i, j, k));
-					if (this->cellularautomata->getCells()[i][j][k] != 0)
+					this->rule->step(&this->cellularautomata->getCells()[i][j][k], this->neighborhood->get(cca, i, j, k));
+					if (this->cellularautomata->getCells()[i][j][k] > 0)
 					{
 						exit = false;
 					}
@@ -53,16 +57,17 @@ bool GrainGrowthSimulation::step()
 			}
 		}
 	}
-	this->cellularautomata->front = cca.front;
+	//this->cellularautomata->front = cca.front;
 	return exit;
 }
 
 void GrainGrowthSimulation::start()
 {
 	//Lokalna kopi przyspiesza kod
-	int n = this->cellularautomata->getSize()[0],
-		m = this->cellularautomata->getSize()[1],
+	int m = this->cellularautomata->getSize()[0],
+		n = this->cellularautomata->getSize()[1],
 		o = this->cellularautomata->getSize()[2];
+	this->neighborhood->isInited = false;
 	for (int  i= 0; i < n; i++)
 	{
 		for (int j = 0; j < n; j++)
@@ -76,5 +81,8 @@ void GrainGrowthSimulation::start()
 	int xa = 500;
 	int start = 0;
 	while (!step());
+	//{
+	//	this->neighborhood->isInited = true;
+	//}
 	int stop = 0;
 }

@@ -10,7 +10,7 @@ CRule::~CRule()
 {
 }
 
-void CRule::step(unsigned short * cell, std::vector<unsigned short> neighborhood)
+void CRule::step(unsigned int * cell, std::vector<unsigned int> neighborhood)
 {
 }
 

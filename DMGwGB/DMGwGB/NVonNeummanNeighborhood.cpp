@@ -11,9 +11,9 @@ NVonNeummanNeighborhood::~NVonNeummanNeighborhood()
 {
 }
 
-//std::vector<class Cell*> NVonNeummanNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+//std::vector<unsigned int> NVonNeummanNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 //{
-//	std::vector<Cell*> neighborhood;
+//	std::vector<unsigned int> neighborhood;
 //	int m = cellularautomata->getSize()[0],
 //		n = cellularautomata->getSize()[1],
 //		o = cellularautomata->getSize()[2];
@@ -28,7 +28,7 @@ NVonNeummanNeighborhood::~NVonNeummanNeighborhood()
 //				{
 //					if(i != 0 && j != 0 && k != 0)
 //					{
-//						if (cellularautomata->getCells()[x + i][y + j][z + k].getState() != 0)
+//						if (cellularautomata->getCells()[x + i][y + j][z + k] != 0)
 //						neighborhood.push_back(&cellularautomata->getCells()[x + i][y + j][z + k]);
 //					}
 //				}

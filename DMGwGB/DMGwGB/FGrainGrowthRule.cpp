@@ -11,7 +11,7 @@ FGrainGrowthRule::~FGrainGrowthRule()
 {
 }
 
-void FGrainGrowthRule::step(unsigned short * cell, std::vector<unsigned short> neighborhood)
+void FGrainGrowthRule::step(unsigned int * cell, std::vector<unsigned int> neighborhood)
 {
 	if (*cell == 0)
 	{
@@ -52,6 +52,8 @@ void FGrainGrowthRule::step(unsigned short * cell, std::vector<unsigned short> n
 			}
 		}
 		if (!unique_grain.empty())
+		{
 			*cell = unique_grain[max];
+		}	
 	}
 }

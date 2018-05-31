@@ -11,7 +11,7 @@ struct GNode
 		this->neighborhood_states = obj.neighborhood_states;
 		this->state = obj.state;
 	}
-	std::vector<int> neighborhood_states;
+	std::vector<unsigned int> neighborhood_states;
 	int state;
 };
 
@@ -24,7 +24,7 @@ public:
 
 	std::list<GNode> boundary_states;
 
-	virtual void step(unsigned short * cell, class std::vector<unsigned short> neighborhood);
-	virtual void clear(unsigned short * cell, class std::vector<unsigned short> neighborhood);
+	virtual void step(unsigned int * cell, class std::vector<unsigned int> neighborhood);
+	virtual void clear(unsigned int * cell, class std::vector<unsigned int> neighborhood);
 };
 

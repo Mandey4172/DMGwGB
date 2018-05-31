@@ -11,48 +11,93 @@ VonNeummanNeighborhood::~VonNeummanNeighborhood()
 {
 }
 
-std::vector<unsigned short> VonNeummanNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> VonNeummanNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	std::vector<unsigned short> neighborhood;
-	/*int m = cellularautomata->getSize()[0],
+	std::vector<unsigned int> neighborhood;
+	int m = cellularautomata->getSize()[0],
 		n = cellularautomata->getSize()[1],
 		o = cellularautomata->getSize()[2];
 
 	for (int i = -1; i <= 1; i++)
 	{
-		if ((x + i >= 0) && (x + i < m))
+		int current_x = x + i;
+		if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_x < 0) || (current_x >= m)))
 		{
-			if (cellularautomata->getCells()[x + i][y][z].getState() != 0)
-			neighborhood.push_back(&cellularautomata->getCells()[x + i][y][z]);
+			continue;
+		}
+		else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+		{
+			if (current_x < 0)
+			{
+				current_x = m + current_x;
+			}
+			else if (current_x >= m)
+			{
+				current_x = current_x - m;
+			}
+		}
+		if (cellularautomata->getCells()[current_x][y][z] != 0)
+		{
+			neighborhood.push_back(cellularautomata->getCells()[current_x][y][z]);
 		}
 		else
 		{
-			continue;
+			cellularautomata->front[current_x][y][z] = true;
 		}
 	}
 	for (int j = -1; j <= 1; j++)
 	{
-		if ((y + j >= 0) && (y + j < n))
+		int current_y = y + j;
+		if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_y < 0 || current_y >= n)))
 		{
-			if (cellularautomata->getCells()[x][y + j][z].getState() != 0)
-				neighborhood.push_back(&cellularautomata->getCells()[x][y + j][z]);
+			continue;
+		}
+		else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+		{
+			if (current_y < 0)
+			{
+				current_y = n + current_y;
+			}
+			else if (current_y >= n)
+			{
+				current_y = current_y - n;
+			}
+		}
+		if (cellularautomata->getCells()[x][current_y][z] != 0)
+		{
+			neighborhood.push_back(cellularautomata->getCells()[x][current_y][z]);
 		}
 		else
 		{
-			continue;
+			cellularautomata->front[x][current_y][z] = true;
 		}
 	}
 	for (int k = -1; k <= 1; k++)
 	{
-		if ((z + k >= 0) && (z + k < o))
-		{
-			if (cellularautomata->getCells()[x][y][z + k].getState() != 0)
-				neighborhood.push_back(&cellularautomata->getCells()[x][y][z + k]);
-		}
-		else
+		int current_z = z + k;
+		if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 		{
 			continue;
 		}
-	}*/
+		else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+		{
+			if (current_z < 0)
+			{
+				current_z = o + current_z ;
+			}
+			else if (current_z >= o)
+			{
+				current_z = current_z - o;
+			}
+		}
+		if (cellularautomata->getCells()[x][y][current_z] != 0)
+		{
+			neighborhood.push_back(cellularautomata->getCells()[x][y][current_z]);
+		}
+		else
+		{
+			cellularautomata->front[x][y][current_z] = true;
+		}
+	}
 	return neighborhood;
 }

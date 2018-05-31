@@ -8,7 +8,10 @@
 #include "QNewDialog.h"
 #include "CalculationsThread.h"
 #include "CellularAutomata.h"
-
+#include "MooreNeighborhood.h"
+#include "HexagonalNeighborhood.h"
+#include "PentagonalNeighborhood.h"
+#include "VonNeummanNeighborhood.h"
 
 #include <omp.h>
 
@@ -103,7 +106,10 @@ void MainWindow::createSimulationMenu()
     neightborhoodLabel = new QLabel(tr(" Neightborhood type: "));
     neightborhoodLabel->setMaximumHeight(50);
     neightborhoodComboBox = new QComboBox;
-    neightborhoodComboBox->addItem(" Lol ");
+    neightborhoodComboBox->addItem(" Moore ");
+	neightborhoodComboBox->addItem(" VonNeumman ");
+	neightborhoodComboBox->addItem(" Pentagonal ");
+	neightborhoodComboBox->addItem(" Hexagonal ");
 
     simulationStartButton = new QPushButton(tr(" Start "));
     connect(simulationStartButton, SIGNAL(released()), this, SLOT(startSimulation()));
@@ -150,6 +156,22 @@ void MainWindow::createOpenGLDisplay()
 
 void MainWindow::startSimulation()
 {
+	if (neightborhoodComboBox->itemText(neightborhoodComboBox->currentIndex()) == " VonNeumman ")
+	{
+		calculationsThread->simulation->neighborhood = new VonNeummanNeighborhood();
+	}
+	else if (neightborhoodComboBox->itemText(neightborhoodComboBox->currentIndex()) == " Pentagonal ")
+	{
+		calculationsThread->simulation->neighborhood = new PentagonalNeighborhood();
+	}
+	else if (neightborhoodComboBox->itemText(neightborhoodComboBox->currentIndex()) == " Hexagonal ")
+	{
+		calculationsThread->simulation->neighborhood = new HexagonalNeighborhood();
+	}
+	else
+	{
+		calculationsThread->simulation->neighborhood = new MooreNeighborhood();
+	}
     connect(this->calculationsThread, &CalculationsThread::updateVal, this, &MainWindow::updateRender);
     calculationsThread->start();
 }
@@ -161,12 +183,15 @@ void MainWindow::generateNucleons()
         QTime time = QTime::currentTime();
         qsrand((uint)time.msec());
         CellularAutomata * ca = this->calculationsThread->simulation->cellularautomata;
+		int m = ca->getSize()[0];
+		int n = ca->getSize()[1];
+		int	o = ca->getSize()[2];
         for (int i = 0; i < this->nucleonsNumberSpinBox->value(); i++)
         {
             int x, y, z;
-            x = qrand() % this->openGLDisplay->ca->getSize()[0];
-            y = qrand() % this->openGLDisplay->ca->getSize()[1];
-            z = qrand() % this->openGLDisplay->ca->getSize()[2];
+            x = qrand() % m;
+            y = qrand() % n;
+            z = qrand() % o;
             if (ca->getCells()[x][y][z] == 0)
             {
                 ca->getCells()[x][y][z] = ca->nucleons_count + 1;
@@ -180,9 +205,9 @@ void MainWindow::generateNucleons()
 
 }
 
-void MainWindow::updateRender(CellularAutomata * ca)
+void MainWindow::updateRender()
 {
-    this->openGLDisplay->setCA(new CellularAutomata(*ca));
+    this->openGLDisplay->setCA(new CellularAutomata(*calculationsThread->simulation->cellularautomata));
 }
 
 void MainWindow::updateDebug(const QString text)

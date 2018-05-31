@@ -18,7 +18,7 @@ private:
 	void run() override;
 
 signals:
-    void updateVal(CellularAutomata * ca);
+    void updateVal();
 	void updateDeb(const QString text);
 };
 

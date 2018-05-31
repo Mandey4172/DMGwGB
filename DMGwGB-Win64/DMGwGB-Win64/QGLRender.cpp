@@ -726,11 +726,27 @@ void QGLRender::updateTextures()
 		{
 			QColor newColorA = QColor();
 			QColor newColorB = QColor();
-			int s1 = this->ca->getCells()[0][j][k];
-			int s2 = this->ca->getCells()[m - 1][j][k];
-			if (s1 > this->ca->nucleons_count - 1) s1 += ((500 * 500) / 2) + 1;
-			if (s2 > this->ca->nucleons_count - 1) s2 += ((500 * 500) / 2) + 1;
+			unsigned int s1 = this->ca->getCells()[0][j][k];
+			unsigned int s2 = this->ca->getCells()[m - 1][j][k];
+		
+			if (s1 > this->ca->nucleons_count)
+			{
+				s1 = s1 + ((500 * 500) / 2) + 1;
+			}
+			if (s2 > this->ca->nucleons_count)
+			{
+				s2 = s2 + ((500 * 500) / 2) + 1;
+			}
 			
+			if (s1 > colorGenerator.colorCount)
+			{
+				s1 = colorGenerator.colorCount - 1;
+			}
+			if (s2 > colorGenerator.colorCount)
+			{
+				s2 = colorGenerator.colorCount - 1;
+			}
+
 			if (colorGenerator.colors[s1][0] > max) colorGenerator.colors[s1][0] = max;
 			else if (colorGenerator.colors[s1][0] < min) colorGenerator.colors[s1][0] = min;
 			if (colorGenerator.colors[s1][1] > max) colorGenerator.colors[s1][1] = max;
@@ -766,10 +782,26 @@ void QGLRender::updateTextures()
 		{
 			QColor newColorA = QColor();
 			QColor newColorB = QColor();
-			int s1 = this->ca->getCells()[i][0][k];
-			int s2 = this->ca->getCells()[i][n - 1][k];
-			if (s1 > this->ca->nucleons_count) s1 += ((500 * 500) / 2) + 1;
-			if (s2 > this->ca->nucleons_count) s2 += ((500 * 500) / 2) + 1;
+			unsigned int s1 = this->ca->getCells()[i][0][k];
+			unsigned int s2 = this->ca->getCells()[i][n - 1][k];
+			
+			if (s1 > this->ca->nucleons_count)
+			{
+				s1 = s1 + ((500 * 500) / 2) + 1;
+			}
+			if (s2 > this->ca->nucleons_count)
+			{
+				s2 = s2 + ((500 * 500) / 2) + 1;
+			}
+
+			if (s1 > colorGenerator.colorCount)
+			{
+				s1 = colorGenerator.colorCount - 1;
+			}
+			if (s2 > colorGenerator.colorCount)
+			{
+				s2 = colorGenerator.colorCount - 1;
+			}
 
 			if (colorGenerator.colors[s1][0] > max) colorGenerator.colors[s1][0] = max;
 			else if (colorGenerator.colors[s1][0] < min) colorGenerator.colors[s1][0] = min;
@@ -806,10 +838,26 @@ void QGLRender::updateTextures()
 		{
 			QColor newColorA = QColor();
 			QColor newColorB = QColor();
-			int s1 = this->ca->getCells()[i][j][0];
-			int s2 = this->ca->getCells()[i][j][o - 1];
-			if (s1 > this->ca->nucleons_count) s1 += ((500 * 500) / 2) + 1;
-			if (s2 > this->ca->nucleons_count) s2 += ((500 * 500) / 2) + 1;
+			unsigned int s1 = this->ca->getCells()[i][j][0];
+			unsigned int s2 = this->ca->getCells()[i][j][o - 1];
+
+			if (s1 > this->ca->nucleons_count)
+			{
+				s1 = s1 + ((500 * 500) / 2) + 1;
+			}
+			if (s2 > this->ca->nucleons_count)
+			{
+				s2 = s2 + ((500 * 500) / 2) + 1;
+			}
+
+			if (s1 > colorGenerator.colorCount)
+			{
+				s1 = colorGenerator.colorCount - 1;
+			}
+			if (s2 > colorGenerator.colorCount)
+			{
+				s2 = colorGenerator.colorCount - 1;
+			}
 
 			if (colorGenerator.colors[s1][0] > max) colorGenerator.colors[s1][0] = max;
 			else if (colorGenerator.colors[s1][0] < min) colorGenerator.colors[s1][0] = min;

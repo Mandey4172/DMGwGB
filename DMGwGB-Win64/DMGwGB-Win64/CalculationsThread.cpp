@@ -31,12 +31,11 @@ void CalculationsThread::run()
 	{
 		emit updateVal(this->simulation->cellularautomata);
 	}*/
+	emit updateVal();
 	QString debug = tr("Time : ");
 	qDebug() << "Simulation time :" << timer.elapsed() << "milliseconds" << "/n";
 	debug += QString::number(timer.elapsed());
 	debug += tr(" milliseconds");
 	emit updateDeb(debug);
-    emit updateVal(this->simulation->cellularautomata);
-
 }
 

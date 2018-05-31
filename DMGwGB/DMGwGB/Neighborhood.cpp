@@ -5,6 +5,7 @@
 
 Neighborhood::Neighborhood()
 {
+	isInited = false;
 }
 
 Neighborhood::Neighborhood(const Neighborhood & o)
@@ -16,9 +17,9 @@ Neighborhood::~Neighborhood()
 {
 }
 
-std::vector<unsigned short> Neighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> Neighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	return std::vector<unsigned short>();
+	return std::vector<unsigned int>();
 }
 
 

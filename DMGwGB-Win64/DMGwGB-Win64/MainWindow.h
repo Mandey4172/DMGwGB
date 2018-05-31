@@ -68,7 +68,7 @@ private:
     void newSimulation();
     void startSimulation();
     void generateNucleons();
-    void updateRender(CellularAutomata * ca);
+    void updateRender();
 	void updateDebug(const QString text);
 };
 

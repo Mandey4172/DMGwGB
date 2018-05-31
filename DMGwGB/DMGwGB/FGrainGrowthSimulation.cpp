@@ -57,7 +57,7 @@ bool FGrainGrowthSimulation::step()
 					int thread_count = omp_get_num_threads();
 					int thread_num = omp_get_thread_num();
 					std::array<int, 3> Point = *it;
-					this->rule->step(&NewCellularAutomata->getCells()[Point[0]][Point[1]][Point[2]], static_cast<MooreNeighborhood *>(this->neighborhood)->fget(this->cellularautomata, Point[0], Point[1], Point[2], static_cast<FGrainGrowthRule *>(this->rule)->queue));
+					//this->rule->step(&NewCellularAutomata->getCells()[Point[0]][Point[1]][Point[2]], static_cast<MooreNeighborhood *>(this->neighborhood)->fget(this->cellularautomata, Point[0], Point[1], Point[2], static_cast<FGrainGrowthRule *>(this->rule)->queue));
 				}
 			}
 		//#pragma omp taskwait
