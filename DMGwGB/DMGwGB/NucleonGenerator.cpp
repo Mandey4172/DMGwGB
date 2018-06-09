@@ -92,7 +92,7 @@ void NucleonGenerator::random(CellularAutomata * ca,  int quantity, int r)
 		int x = seed_x[i],
 			y = seed_y[i],
 			z = seed_z[i];
-		ca->getCells()[x][y][z] = ca->nucleons_count + i + 2;
+		ca->getCells()[x][y][z] = ca->nucleons_count + 1;
 		ca->nucleons_count++;
 		//this->tool->select(world, x, y, z);
 	}
@@ -119,6 +119,7 @@ void NucleonGenerator::regular(CellularAutomata * ca, int quantity_m, int quanti
 	{
 		step_z = 1;
 	}
+	int counter = 0;
 	for (int i = 1; i < (quantity_n + 1); i++)
 	{
 		for (int j = 1; j < (quantity_m + 1); j++)
@@ -128,9 +129,8 @@ void NucleonGenerator::regular(CellularAutomata * ca, int quantity_m, int quanti
 				int x = rest_x + (i * step_x),
 					y = rest_y + (j * step_y),
 					z = rest_z + (k * step_z);
-				ca->getCells()[x][y][z] = ca->nucleons_count + i + 2;
+				ca->getCells()[x][y][z] = ca->nucleons_count + 1;
 				ca->nucleons_count++;
-				//this->tool->select(world, x, y, z);
 			}
 		}
 	}
@@ -143,4 +143,5 @@ void NucleonGenerator::regular(CellularAutomata * ca, int quantity_n_m)
 
 void NucleonGenerator::gradientA(CellularAutomata * ca, int cuts, int delta, int begin, short direction)
 {
+
 }

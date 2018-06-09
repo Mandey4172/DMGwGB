@@ -1,7 +1,5 @@
 #include "Neighborhood.h"
 
-#include"Cell.h"
-
 
 Neighborhood::Neighborhood()
 {

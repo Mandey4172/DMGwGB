@@ -1,6 +1,5 @@
 #include "GrainGrowthRule.h"
 
-#include "Cell.h"
 
 #include <vector>
 
@@ -58,10 +57,6 @@ void GrainGrowthRule::step(unsigned int * cell, std::vector<unsigned int> neighb
 	}
 	if (!unique_grain.empty())
 	{
-		if (1000 < unique_grain[max])
-		{
-			int x = 0;
-		}
 		*cell = unique_grain[max];
 	}
 		

@@ -1,13 +1,13 @@
 #pragma once
 
-#include"Cell.h"
 
 #include<vector>
 
 enum class BoundaryContidionTypes
 {
 	Blocking,
-	Periodic
+	Periodic,
+	Reflecting
 };
 
 class CellularAutomata

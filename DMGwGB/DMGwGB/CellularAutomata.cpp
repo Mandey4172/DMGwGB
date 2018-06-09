@@ -1,6 +1,5 @@
 #include "CellularAutomata.h"
-#include "Cell.h"
-#include "SPoint.h"
+
 
 /*  Konstruktor	*/
 CellularAutomata::CellularAutomata(unsigned int nm, unsigned int nn, unsigned int no)
@@ -59,14 +58,8 @@ CellularAutomata::CellularAutomata(CellularAutomata & ca)
 			//this->cells[i][j].resize(this->o);
 			for (int k = 0; k < this->o; k++)
 			{
-				//this->cells[i][j][k].position = SPoint(i, j, k);
-				if (ca.getCells()[i][j][k] > 1000)
-				{
-					unsigned int a = ca.getCells()[i][j][k];
-					int x = 0;
-				}
 				this->cells[i][j][k] = ca.getCells()[i][j][k];
-				this->front[i][j][k] = false;
+				this->front[i][j][k] = false;//ca.front[i][j][k];
 			}
 		}
 	}

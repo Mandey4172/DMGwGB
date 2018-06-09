@@ -151,11 +151,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Calculations.h" />
-    <ClInclude Include="Cell.h" />
     <ClInclude Include="CellularAutomata.h" />
     <ClInclude Include="CRule.h" />
-    <ClInclude Include="FGrainGrowthRule.h" />
-    <ClInclude Include="FGrainGrowthSimulation.h" />
     <ClInclude Include="GrainBoundaryRule.h" />
     <ClInclude Include="GrainBoundarySimulation.h" />
     <ClInclude Include="GrainGrowthRule.h" />
@@ -174,11 +171,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Calculations.cpp" />
-    <ClCompile Include="Cell.cpp" />
     <ClCompile Include="CellularAutomata.cpp" />
     <ClCompile Include="CRule.cpp" />
-    <ClCompile Include="FGrainGrowthRule.cpp" />
-    <ClCompile Include="FGrainGrowthSimulation.cpp" />
     <ClCompile Include="GrainBoundaryRule.cpp" />
     <ClCompile Include="GrainBoundarySimulation.cpp" />
     <ClCompile Include="GrainGrowthRule.cpp" />

@@ -1,7 +1,5 @@
 #include "GrainBoundaryRule.h"
 
-#include "Cell.h"
-
 #include <algorithm>    
 #include <vector>
 #include <omp.h>

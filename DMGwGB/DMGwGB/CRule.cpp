@@ -1,7 +1,5 @@
 #include "CRule.h"
 
-#include "Cell.h"
-
 CRule::CRule()
 {
 }

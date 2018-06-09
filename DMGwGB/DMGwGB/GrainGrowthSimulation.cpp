@@ -43,11 +43,12 @@ bool GrainGrowthSimulation::step()
 			#pragma omp for schedule(dynamic)
 			for (int k = 0; k < o; k++)
 			{
-				//if (cca->front[i][j][k])
-				if (cca->getCells()[i][j][k] == 0)
+				//if (cca->getCells()[i][j][k] == 0)
+				if (this->cellularautomata->front[i][j][k])
 				{
-					int thread_count = omp_get_num_threads();
-					int thread_num = omp_get_thread_num();
+					//cca->front[i][j][k] = false;
+					//int thread_count = omp_get_num_threads();
+					//int thread_num = omp_get_thread_num();
 					this->rule->step(&this->cellularautomata->getCells()[i][j][k], this->neighborhood->get(cca, i, j, k));
 					if (this->cellularautomata->getCells()[i][j][k] > 0)
 					{
@@ -57,7 +58,7 @@ bool GrainGrowthSimulation::step()
 			}
 		}
 	}
-	//this->cellularautomata->front = cca.front;
+	this->cellularautomata->front = cca->front;
 	return exit;
 }
 
@@ -74,7 +75,10 @@ void GrainGrowthSimulation::start()
 		{
 			for (int k = 0; k < o; k++)
 			{
-				this->cellularautomata->front[i][j][k] = true;
+				if (this->cellularautomata->getCells()[i][j][k] > 0)
+				{
+					this->cellularautomata->front[i][j][k] = true;
+				}
 			}
 		}
 	}

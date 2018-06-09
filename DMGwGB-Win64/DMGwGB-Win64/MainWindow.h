@@ -47,9 +47,23 @@ private:
 
     /*Menu*/
     //Nucleation
-    QLabel			*nucleonsLabel;
-    QSpinBox		*nucleonsNumberSpinBox;
-    QPushButton		*nubcleonsGenerateButton;
+    QLabel			*nucleationLabel;
+    QSpinBox		*nucleationNumberSpinBox;
+	
+	QLabel			*nucleationTypeLabel;
+	QComboBox		*nucleationTypeComboBox;
+
+	QLabel			*nucleationOptionLabel1;
+	QSpinBox		*nucleationOptionTextBox1;
+	QLabel			*nucleationOptionLabel2;
+	QSpinBox		*nucleationOptionTextBox2;
+	QLabel			*nucleationOptionLabel3;
+	QSpinBox		*nucleationOptionTextBox3;
+	QLabel			*nucleationOptionLabel4;
+	QComboBox		*nucleationOptionTextBox4;
+
+	QPushButton		*nucleationGenerateButton;
+
     //Neightborhood
     QLabel			*neightborhoodLabel;
     QComboBox		*neightborhoodComboBox;
@@ -70,6 +84,7 @@ private:
     void generateNucleons();
     void updateRender();
 	void updateDebug(const QString text);
+	void nucleonGenerationTypeChanged(const int & index);
 };
 
 #endif // MAINWINDOW_H
