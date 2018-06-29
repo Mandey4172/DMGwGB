@@ -70,21 +70,45 @@ CellularAutomata::CellularAutomata(CellularAutomata & ca)
 CellularAutomata::~CellularAutomata()
 {
 	//Usuwanie komórek
-	for (int i = 0; i < this->m; i++)
+	if (this->cells)
 	{
-		for (int j = 0; j < this->n; j++)
+		for (int i = 0; i < this->m; i++)
 		{
-			if(this->cells[i][j])
-				delete[] this->cells[i][j];
-			//this->cells[i][j].clear();
+			for (int j = 0; j < this->n; j++)
+			{
+				if (this->cells[i][j])
+				{
+					delete[] this->cells[i][j];
+					delete[] this->front[i][j];
+				}
+			}
+			if (this->cells[i])
+			{
+				delete[] this->cells[i];
+				delete[] this->front[i];
+			}
 		}
-		if (this->cells[i])
-			delete[] this->cells[i];
-		//this->cells[i].clear();
+		delete[] this->cells;
+		delete[] this->front;
 	}
-	//if (this->cells)
-	//	delete[] this->cells;
-	//this->cells.clear();
+	//if (this->front)
+	//{
+	//	for (int i = 0; i < this->m; i++)
+	//	{
+	//		for (int j = 0; j < this->n; j++)
+	//		{
+	//			if (this->front[i][j])
+	//			{
+	//				
+	//			}
+	//		}
+	//		if (this->front[i])
+	//		{
+	//			
+	//		}
+	//	}
+	//	
+	//}
 }
 
 void CellularAutomata::copy(CellularAutomata & ca)

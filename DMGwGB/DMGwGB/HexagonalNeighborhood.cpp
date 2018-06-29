@@ -121,16 +121,13 @@ std::vector<unsigned int> HexagonalNeighborhood::getXA(CellularAutomata * cellul
 							current_z = o - (current_z - o);
 						}
 					}
-					if ((i != 0) || (j != 0) || (k != 0))
+					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 					{
-						if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
-						{
-							neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-						}
-						else
-						{
-							cellularautomata->front[current_x][current_y][current_z] = true;
-						}
+						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+					}
+					else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0)
+					{
+						cellularautomata->front[current_x][current_y][current_z] = true;
 					}
 				}
 			}
@@ -238,16 +235,13 @@ std::vector<unsigned int> HexagonalNeighborhood::getXB(CellularAutomata * cellul
 							current_z = o - (current_z - o);
 						}
 					}
-					if ((i != 0) || (j != 0) || (k != 0))
+					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 					{
-						if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
-						{
-							neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-						}
-						else
-						{
-							cellularautomata->front[current_x][current_y][current_z] = true;
-						}
+						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+					}
+					else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0) 
+					{
+						cellularautomata->front[current_x][current_y][current_z] = true;
 					}
 				}
 			}
@@ -355,18 +349,14 @@ std::vector<unsigned int> HexagonalNeighborhood::getYA(CellularAutomata * cellul
 							current_z = o - (current_z - o);
 						}
 					}
-					if ((i != 0) || (j != 0) || (k != 0))
+					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 					{
-						if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
-						{
-							neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-						}
-						else
-						{
-							cellularautomata->front[current_x][current_y][current_z] = true;
-						}
+						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
 					}
-
+					else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0)
+					{
+						cellularautomata->front[current_x][current_y][current_z] = true;
+					}
 				}
 			}
 		}
@@ -473,16 +463,13 @@ std::vector<unsigned int> HexagonalNeighborhood::getYB(CellularAutomata * cellul
 							current_z = o - (current_z - o);
 						}
 					}
-					if ((i != 0) || (j != 0) || (k != 0))
+					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 					{
-						if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
-						{
-							neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-						}
-						else
-						{
-							cellularautomata->front[current_x][current_y][current_z] = true;
-						}
+						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+					}
+					else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0)
+					{
+						cellularautomata->front[current_x][current_y][current_z] = true;
 					}
 				}
 			}
@@ -590,16 +577,13 @@ std::vector<unsigned int> HexagonalNeighborhood::getZA(CellularAutomata * cellul
 							current_z = o - (current_z - o);
 						}
 					}
-					if ((i != 0) || (j != 0) || (k != 0))
+					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 					{
-						if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
-						{
-							neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-						}
-						else
-						{
-							cellularautomata->front[current_x][current_y][current_z] = true;
-						}
+						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+					}
+					     else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0) 
+					{
+						cellularautomata->front[current_x][current_y][current_z] = true;
 					}
 				}
 			}
@@ -707,16 +691,13 @@ std::vector<unsigned int> HexagonalNeighborhood::getZB(CellularAutomata * cellul
 							current_z = o - (current_z - o);
 						}
 					}
-					if ((i != 0) || (j != 0) || (k != 0))
+					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 					{
-						if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
-						{
-							neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-						}
-						else
-						{
-							cellularautomata->front[current_x][current_y][current_z] = true;
-						}
+						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+					}
+					else if (i != 0 && j != 0 && k != 0)
+					{
+						cellularautomata->front[current_x][current_y][current_z] = true;
 					}
 				}
 			}

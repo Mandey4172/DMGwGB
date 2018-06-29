@@ -31,7 +31,16 @@ QNewDialog::QNewDialog(QWidget *parent)
 
 QNewDialog::~QNewDialog()
 {
+	delete xLabel;
+	delete yLabel;
+	delete zLabel;
 
+	delete xNumberSpinBox;
+	delete yNumberSpinBox;
+	delete zNumberSpinBox;
+
+	delete acceptButton;
+	delete cancelButton;
 }
 
 void QNewDialog::getValues(int & x, int & y, int & z)

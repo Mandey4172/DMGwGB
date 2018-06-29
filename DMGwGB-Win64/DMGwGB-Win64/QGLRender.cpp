@@ -27,7 +27,10 @@ QGLRender::QGLRender(QWidget *parent)
 	scale = 100;
 	colorGenerator.generate(500 * 500);
 	ca = new CellularAutomata(30, 30, 30);
+	for (int i = 0; i < 6; i++)
+		Textures[i] = nullptr;
 }
+	
 
 QGLRender::~QGLRender()
 {
@@ -35,7 +38,7 @@ QGLRender::~QGLRender()
 
 void QGLRender::setCA(CellularAutomata * ca)
 {
-	if (this->ca) delete this->ca;
+	delete this->ca;
     this->ca = new CellularAutomata(*ca);
     updateTextures();
 }
@@ -680,8 +683,11 @@ void QGLRender::paintGL()
 	for (int i = 0; i < 6; i++)
 	{
 		ShaderProgram.setUniformValue("model", model[i]);
-		Textures[i]->setMinMagFilters(QOpenGLTexture::Filter::Nearest, QOpenGLTexture::Filter::Nearest);
-		Textures[i]->bind();
+		if (Textures[i])
+		{
+			Textures[i]->setMinMagFilters(QOpenGLTexture::Filter::Nearest, QOpenGLTexture::Filter::Nearest);
+			Textures[i]->bind();
+		}
 		OpenGL.glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
 	VAO.release();
@@ -888,11 +894,22 @@ void QGLRender::updateTextures()
 		}
 	}
 
+	if (Textures[0])
+		delete Textures[0];
 	Textures[0] = new QOpenGLTexture(TexturesData[0].mirrored(false, false));
+	if (Textures[1])
+		delete Textures[1];
 	Textures[1] = new QOpenGLTexture(TexturesData[1].mirrored(true, false));
+	if (Textures[2])
+		delete Textures[2];
 	Textures[2] = new QOpenGLTexture(TexturesData[2].mirrored(true, false));
+	if (Textures[3])
+		delete Textures[3];
 	Textures[3] = new QOpenGLTexture(TexturesData[3].mirrored(false, false));
+	if (Textures[4])
+		delete Textures[4];
 	Textures[4] = new QOpenGLTexture(TexturesData[4].mirrored(false, false));
+	if (Textures[5])
+		delete Textures[5];
 	Textures[5] = new QOpenGLTexture(TexturesData[5].mirrored(false, true));
-
 }

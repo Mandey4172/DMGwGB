@@ -49,11 +49,11 @@ std::vector<unsigned int> VonNeummanNeighborhood::get(CellularAutomata * cellula
 				current_x = m - (current_x - m) - 1;
 			}
 		}
-		if (cellularautomata->getCells()[current_x][y][z] != 0)
+		if (cellularautomata->getCells()[current_x][y][z] > 0)
 		{
 			neighborhood.push_back(cellularautomata->getCells()[current_x][y][z]);
 		}
-		else
+		else if (cellularautomata->getCells()[current_x][y][z] == 0) 
 		{
 			cellularautomata->front[current_x][y][z] = true;
 		}
@@ -88,11 +88,11 @@ std::vector<unsigned int> VonNeummanNeighborhood::get(CellularAutomata * cellula
 				current_y = n - (current_y - n) - 1;
 			}
 		}
-		if (cellularautomata->getCells()[x][current_y][z] != 0)
+		if (cellularautomata->getCells()[x][current_y][z] > 0)
 		{
 			neighborhood.push_back(cellularautomata->getCells()[x][current_y][z]);
 		}
-		else
+		else if (j != 0)
 		{
 			cellularautomata->front[x][current_y][z] = true;
 		}
@@ -127,11 +127,11 @@ std::vector<unsigned int> VonNeummanNeighborhood::get(CellularAutomata * cellula
 				current_z = o - (current_z - o);
 			}
 		}
-		if (cellularautomata->getCells()[x][y][current_z] != 0)
+		if (cellularautomata->getCells()[x][y][current_z] > 0)
 		{
 			neighborhood.push_back(cellularautomata->getCells()[x][y][current_z]);
 		}
-		else
+		else if (cellularautomata->getCells()[x][y][current_z] == 0)
 		{
 			cellularautomata->front[x][y][current_z] = true;
 		}

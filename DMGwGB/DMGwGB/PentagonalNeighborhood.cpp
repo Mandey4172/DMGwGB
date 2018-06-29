@@ -117,16 +117,13 @@ std::vector<unsigned int> PentagonalNeighborhood::getFront(CellularAutomata * ce
 						current_z = o - (current_z - o);
 					}
 				}
-				if ((i != 0) || (j != 0) || (k != 0))
+				if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 				{
-					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
-					{
-						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-					}
-					else
-					{
-						cellularautomata->front[current_x][current_y][current_z] = true;
-					}
+					neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+				}
+				     else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0) 
+				{
+					cellularautomata->front[current_x][current_y][current_z] = true;
 				}
 			}
 		}
@@ -231,16 +228,13 @@ std::vector<unsigned int> PentagonalNeighborhood::getBack(CellularAutomata * cel
 						current_z = o - (current_z - o);
 					}
 				}
-				if ((i != 0) || (j != 0) || (k != 0))
+				if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 				{
-					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
-					{
-						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-					}
-					else
-					{
-						cellularautomata->front[current_x][current_y][current_z] = true;
-					}
+					neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+				}
+				     else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0) 
+				{
+					cellularautomata->front[current_x][current_y][current_z] = true;
 				}
 			}
 		}
@@ -345,16 +339,13 @@ std::vector<unsigned int> PentagonalNeighborhood::getTop(CellularAutomata * cell
 						current_z = o - (current_z - o);
 					}
 				}
-				if ((i != 0) || (j != 0) || (k != 0))
+				if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 				{
-					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
-					{
-						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-					}
-					else
-					{
-						cellularautomata->front[current_x][current_y][current_z] = true;
-					}
+					neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+				}
+				     else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0) 
+				{
+					cellularautomata->front[current_x][current_y][current_z] = true;
 				}
 			}
 		}
@@ -459,16 +450,13 @@ std::vector<unsigned int> PentagonalNeighborhood::getBottom(CellularAutomata * c
 						current_z = o - (current_z - o);
 					}
 				}
-				if ((i != 0) || (j != 0) || (k != 0))
+				if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 				{
-					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
-					{
-						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-					}
-					else
-					{
-						cellularautomata->front[current_x][current_y][current_z] = true;
-					}
+					neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+				}
+				     else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0) 
+				{
+					cellularautomata->front[current_x][current_y][current_z] = true;
 				}
 			}
 		}
@@ -573,16 +561,13 @@ std::vector<unsigned int> PentagonalNeighborhood::getLeft(CellularAutomata * cel
 						current_z = o - (current_z - o);
 					}
 				}
-				if ((i != 0) || (j != 0) || (k != 0))
+				if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 				{
-					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
-					{
-						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-					}
-					else
-					{
-						cellularautomata->front[current_x][current_y][current_z] = true;
-					}
+					neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+				}
+				     else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0) 
+				{
+					cellularautomata->front[current_x][current_y][current_z] = true;
 				}
 			}
 		}
@@ -687,16 +672,13 @@ std::vector<unsigned int> PentagonalNeighborhood::getRight(CellularAutomata * ce
 						current_z = o - (current_z - o);
 					}
 				}
-				if ((i != 0) || (j != 0) || (k != 0))
+				if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 				{
-					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
-					{
-						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-					}
-					else
-					{
-						cellularautomata->front[current_x][current_y][current_z] = true;
-					}
+					neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+				}
+				     else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0) 
+				{
+					cellularautomata->front[current_x][current_y][current_z] = true;
 				}
 			}
 		}

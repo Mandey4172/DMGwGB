@@ -24,7 +24,7 @@ GrainBoundarySimulation::GrainBoundarySimulation()
 	this->neighborhood = new MooreNeighborhood();
 
 	this->rule = new GrainBoundaryRule();
-	this->clearIterations = 2;
+	this->clearIterations = 0;
 	this->grainSize = 1;
 }
 
@@ -40,10 +40,10 @@ bool GrainBoundarySimulation::step()
 
 	if (this->cellularautomata) delete this->cellularautomata;
 	this->cellularautomata = new CellularAutomata(*GrainGrowth.cellularautomata);
-	unsigned int m = this->cellularautomata->getSize()[0] ,
-				 n = this->cellularautomata->getSize()[1] ,
-				 o = this->cellularautomata->getSize()[2] ;
 
+	int m = static_cast<int>(cellularautomata->getSize()[0]),
+		n = static_cast<int>(cellularautomata->getSize()[1]),
+		o = static_cast<int>(cellularautomata->getSize()[2]);
 
 	GrainGrowthSimulation GrainGrowth2;
 	
@@ -52,7 +52,6 @@ bool GrainBoundarySimulation::step()
 	
 
 	this->rule->grain_count = this->cellularautomata->nucleons_count;
-	static_cast<GrainBoundaryRule *>(this->rule)->boundary_states.clear();
 	#pragma omp parallel 
 	for (int i = 0; i < m; i++)
 	{
@@ -99,24 +98,8 @@ bool GrainBoundarySimulation::step()
 	}
 	#pragma omp barrier
 
-	CellularAutomata* cca = new CellularAutomata(*this->cellularautomata);
-	#pragma omp parallel 
-	for (int x = 0; x < this->clearIterations; x++)
-	{
-		for (int i = 0; i < this->cellularautomata->getSize()[0]; i++)
-		{
-			#pragma omp for 
-			for (int j = 0; j < this->cellularautomata->getSize()[1]; j++)
-			{
-				for (int k = 0; k < this->cellularautomata->getSize()[2]; k++)
-				{
-					static_cast<GrainBoundaryRule *>(this->rule)->clear(&this->cellularautomata->getCells()[i][j][k], this->neighborhood->get(cca, i, j, k));
-				}
-			}
-		}
-	}
-	#pragma omp barrier
-	delete cca;
+	static_cast<GrainBoundaryRule *>(this->rule)->boundary_states.clear();
+
 	return isComplete;
 }
 

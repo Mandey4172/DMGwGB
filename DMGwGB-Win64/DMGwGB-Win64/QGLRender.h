@@ -44,7 +44,7 @@ protected:
     QOpenGLShaderProgram		ShaderProgram;
     QOpenGLVertexArrayObject	VAO;
     QOpenGLBuffer				VBO;
-    QOpenGLTexture				*Textures[6];
+    QOpenGLTexture*				Textures[6];
     /*QImage						*TexturesData[6];*/
     //QOpenGLBuffer				translationsVBO;
     //QOpenGLBuffer				colorVBO;

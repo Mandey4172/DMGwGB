@@ -21,7 +21,7 @@ void GrainBoundaryRule::step(unsigned int * cell, std::vector<unsigned int> neig
 
 
 	//unsigned int numberOfBoundarys = 0;
-	GNode * nnode = new GNode();
+	GNode new_node;
 
 	for (unsigned int n : neighborhood)
 	{
@@ -70,11 +70,12 @@ void GrainBoundaryRule::step(unsigned int * cell, std::vector<unsigned int> neig
 		{
 			nnode->neighborhood_states.push_back(c);
 		}*/
-		nnode->neighborhood_states = cell_state;
-		nnode->state = this->grain_count + 1 + this->boundary_states.size();
+		new_node.neighborhood_states = cell_state;
+		new_node.state = this->grain_count + 1 + this->boundary_states.size();
+		*cell = new_node.state;
 #pragma omp critical
 		{
-			this->boundary_states.push_back(*nnode);
+			this->boundary_states.push_back(new_node);
 		}
 	}
 }
@@ -85,7 +86,7 @@ void GrainBoundaryRule::clear(unsigned int * cell, std::vector<unsigned int> nei
 	std::vector<unsigned int > cell_state_count;
 
 	unsigned int numberOfBoundarys = 0;
-	unsigned int boundarysLinit = neighborhood.size() - static_cast<unsigned int>(std::floor(static_cast<double>(1) / 8 * static_cast<double>(neighborhood.size())));
+	unsigned int boundarysLinit = neighborhood.size() - static_cast<unsigned int>(std::floor(static_cast<double>(1) / 83 * static_cast<double>(neighborhood.size())));
 	for (unsigned int n : neighborhood)
 	{
 		if (n > this->grain_count) // Dlaczego <= ?? Poniewa¿ stany rozpoczynaja sie od 1 i koncza na grain-count.

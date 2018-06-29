@@ -3,7 +3,7 @@
 
 Neighborhood::Neighborhood()
 {
-	isInited = false;
+
 }
 
 Neighborhood::Neighborhood(const Neighborhood & o)

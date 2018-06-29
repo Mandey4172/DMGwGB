@@ -1,6 +1,9 @@
 #include "MainWindow.h"
 
 #include <QGlobal.h>
+#include <Qfile.h>
+#include <QFileDialog.h>
+#include <QMessageBox.h>
 #include <QTime>
 #include <limits>
 
@@ -13,6 +16,7 @@
 #include "PentagonalNeighborhood.h"
 #include "VonNeummanNeighborhood.h"
 #include "NucleonGenerator.h"
+#include "GrainBoundarySimulation.h"
 
 #include <omp.h>
 
@@ -71,22 +75,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::createMenuBar()
 {
-
-    //Create actions
-    newAction = new QAction(tr("&New"));
-    newAction->setShortcuts(QKeySequence::New);
-    newAction->setStatusTip(tr("Star new simulation"));
-
     //Create menus
     menuB = new QMenuBar();
     fileMenu = menuB->addMenu(tr("&File"));
 
     newAction = fileMenu->addAction(tr("N&ew"));
+	saveAction = fileMenu->addAction(tr("S&ave"));
     exitAction = fileMenu->addAction(tr("E&xit"));
     menuB->addMenu(fileMenu);
 
     //Connect actions
     connect(exitAction, SIGNAL(triggered()), this, SLOT(accept()));
+	connect(saveAction, &QAction::triggered, this, &MainWindow::saveFile);
     connect(newAction, &QAction::triggered, this, &MainWindow::newSimulation);
 }
  
@@ -138,6 +138,12 @@ void MainWindow::createSimulationMenu()
     connect(nucleationGenerateButton, SIGNAL(released()), this, SLOT(generateNucleons()));
     //nubcleonsGenerateButton->setGeometry(QRect(QPoint(0, 0),QSize(200, 50)));
 
+	boundaryConditionsLabel = new QLabel(tr("Boundary Conditions:"));
+	boundaryConditionsComboBox = new QComboBox;
+	boundaryConditionsComboBox->addItem(" Blocking ");
+	boundaryConditionsComboBox->addItem(" Periodic ");
+	boundaryConditionsComboBox->addItem(" Reflectiong ");
+
     neightborhoodLabel = new QLabel(tr(" Neightborhood type: "));
     neightborhoodLabel->setMaximumHeight(50);
     neightborhoodComboBox = new QComboBox;
@@ -145,6 +151,10 @@ void MainWindow::createSimulationMenu()
 	neightborhoodComboBox->addItem(" VonNeumman ");
 	neightborhoodComboBox->addItem(" Pentagonal ");
 	neightborhoodComboBox->addItem(" Hexagonal ");
+
+	grainBoundarySizeLabel = new QLabel(tr(" Grain boundary size: "));
+	grainBoundarySizeTextBox = new QSpinBox;
+	grainBoundarySizeTextBox->setMinimum(1);
 
     simulationStartButton = new QPushButton(tr(" Start "));
     connect(simulationStartButton, SIGNAL(released()), this, SLOT(startSimulation()));
@@ -169,14 +179,18 @@ void MainWindow::createSimulationMenu()
 
     layout->addWidget(nucleationGenerateButton, 6, 0, 1, 4);
 	
-	
+	layout->addWidget(boundaryConditionsLabel, 7, 0, 1, 4);
+	layout->addWidget(boundaryConditionsComboBox, 8, 0, 1, 4);
 
-    layout->addWidget(neightborhoodLabel, 7, 0, 1, 4);
-    layout->addWidget(neightborhoodComboBox, 8, 0, 1, 4);
+    layout->addWidget(neightborhoodLabel, 9, 0, 1, 4);
+    layout->addWidget(neightborhoodComboBox, 10, 0, 1, 4);
 
-    layout->addWidget(simulationStartButton, 9, 0, 1, 4);
+	layout->addWidget(grainBoundarySizeLabel, 11, 0, 1, 4);
+	layout->addWidget(grainBoundarySizeTextBox, 12, 0, 1, 4);
 
-	layout->addWidget(debugLabel, 10, 0, 1, 4);
+    layout->addWidget(simulationStartButton, 13, 0, 1, 4);
+
+	layout->addWidget(debugLabel, 14, 0, 1, 4);
 
  //   layout->setRowMinimumHeight(0, 20);
  //   layout->setRowMinimumHeight(1, 20);
@@ -234,6 +248,24 @@ void MainWindow::startSimulation()
 	{
 		calculationsThread->simulation->neighborhood = new MooreNeighborhood();
 	}
+
+	if (boundaryConditionsComboBox->itemText(boundaryConditionsComboBox->currentIndex()) == " Blocking ")
+	{
+		calculationsThread->simulation->cellularautomata->boundary_contidion = BoundaryContidionTypes::Blocking;
+	}
+	else if (boundaryConditionsComboBox->itemText(boundaryConditionsComboBox->currentIndex()) == " Periodic ")
+	{
+		calculationsThread->simulation->cellularautomata->boundary_contidion = BoundaryContidionTypes::Periodic;
+	}
+	else if (boundaryConditionsComboBox->itemText(boundaryConditionsComboBox->currentIndex()) == " Reflectiong ")
+	{
+		calculationsThread->simulation->cellularautomata->boundary_contidion = BoundaryContidionTypes::Reflecting;
+	}
+
+	unsigned int grainSize = static_cast<unsigned int>(grainBoundarySizeTextBox->value());
+	static_cast<GrainBoundarySimulation *>(this->calculationsThread->simulation)->grainSize = grainSize;
+
+
     connect(this->calculationsThread, &CalculationsThread::updateVal, this, &MainWindow::updateRender);
     calculationsThread->start();
 }
@@ -272,9 +304,11 @@ void MainWindow::generateNucleons()
                 ca->nucleons_count++;
             }
         }*/
+		CellularAutomata * temp = calculationsThread->simulation->cellularautomata;
         calculationsThread->simulation->cellularautomata = new CellularAutomata(*ca);
         this->openGLDisplay->setCA(new CellularAutomata(*ca));
 		delete ca;
+		//delete temp;
     }
 
 }
@@ -335,9 +369,43 @@ void MainWindow::nucleonGenerationTypeChanged(const int & index)
 	
 }
 
+void MainWindow::saveFile()
+{
+	QString fileName = QFileDialog::getSaveFileName(this,
+		tr("Save Microstructure"), "File.txt",
+		tr("TextFile (*.txt);;All Files (*)"));
+	if (fileName.isEmpty())
+		return;
+	else {
+		QFile file(fileName);
+		if (!file.open(QIODevice::WriteOnly)) {
+			QMessageBox::information(this, tr("Unable to open file"),
+				file.errorString());
+			return;
+		}
+		QTextStream saveText(&file);
+		int m = static_cast<int>(calculationsThread->simulation->cellularautomata->getSize()[0]),
+			n = static_cast<int>(calculationsThread->simulation->cellularautomata->getSize()[1]),
+			o = static_cast<int>(calculationsThread->simulation->cellularautomata->getSize()[2]);
+
+		for (int i = 0; i < m; i++)
+		{
+			for (int j = 0; j < n; j++)
+			{
+				for (int k = 0; k < o; k++)
+				{
+					saveText << calculationsThread->simulation->cellularautomata->getCells()[i][j][k] << " ";
+				}
+				saveText << endl;
+			}
+			saveText << endl << endl;
+		}
+	}
+}
+
 void MainWindow::newSimulation()
 {
-    newDialog = new QNewDialog(this);
+	QNewDialog * newDialog = new QNewDialog(this);
     if (newDialog->exec())
     {
         int x, y, z;

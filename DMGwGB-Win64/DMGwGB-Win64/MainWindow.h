@@ -41,6 +41,7 @@ private:
     QMenu			*fileMenu;
     /*Menu Actions*/
     QAction			*newAction;
+	QAction			*saveAction;
     QAction			*exitAction;
     /* */
     QGroupBox		*simulationMenuGroupBox;
@@ -67,6 +68,13 @@ private:
     //Neightborhood
     QLabel			*neightborhoodLabel;
     QComboBox		*neightborhoodComboBox;
+
+	QLabel			*boundaryConditionsLabel;
+	QComboBox		*boundaryConditionsComboBox;
+
+	QLabel			*grainBoundarySizeLabel;
+	QSpinBox		*grainBoundarySizeTextBox;
+
     //Simulation
     QPushButton		*simulationStartButton;
     /*OpenGL*/
@@ -76,8 +84,6 @@ private:
 
     CalculationsThread * calculationsThread;
 
-    QNewDialog * newDialog;
-
     private slots:
     void newSimulation();
     void startSimulation();
@@ -85,6 +91,8 @@ private:
     void updateRender();
 	void updateDebug(const QString text);
 	void nucleonGenerationTypeChanged(const int & index);
+
+	void saveFile();
 };
 
 #endif // MAINWINDOW_H

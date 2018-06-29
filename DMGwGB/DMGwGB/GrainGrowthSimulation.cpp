@@ -29,9 +29,11 @@ GrainGrowthSimulation::~GrainGrowthSimulation()
 bool GrainGrowthSimulation::step()
 {
 	CellularAutomata * cca = new CellularAutomata(*this->cellularautomata);
-	int m = this->cellularautomata->getSize()[0] ;
-	int n = this->cellularautomata->getSize()[1] ;
-	int	o = this->cellularautomata->getSize()[2] ;
+
+	int m = static_cast<int>(cellularautomata->getSize()[0]),
+		n = static_cast<int>(cellularautomata->getSize()[1]),
+		o = static_cast<int>(cellularautomata->getSize()[2]);
+
 	bool exit = true;
 	//pragma omp parallel num_threads(4) 
 	#pragma omp parallel
@@ -58,17 +60,22 @@ bool GrainGrowthSimulation::step()
 			}
 		}
 	}
+	bool *** swap = this->cellularautomata->front;
 	this->cellularautomata->front = cca->front;
+	cca->front = swap;
+
+	delete cca;
+
 	return exit;
 }
 
 void GrainGrowthSimulation::start()
 {
 	//Lokalna kopi przyspiesza kod
-	int m = this->cellularautomata->getSize()[0],
-		n = this->cellularautomata->getSize()[1],
-		o = this->cellularautomata->getSize()[2];
-	this->neighborhood->isInited = false;
+	int m = static_cast<int>(cellularautomata->getSize()[0]),
+		n = static_cast<int>(cellularautomata->getSize()[1]),
+		o = static_cast<int>(cellularautomata->getSize()[2]);
+
 	for (int  i= 0; i < n; i++)
 	{
 		for (int j = 0; j < n; j++)
@@ -85,8 +92,5 @@ void GrainGrowthSimulation::start()
 	int xa = 500;
 	int start = 0;
 	while (!step());
-	//{
-	//	this->neighborhood->isInited = true;
-	//}
 	int stop = 0;
 }
