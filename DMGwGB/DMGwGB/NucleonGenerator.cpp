@@ -2,12 +2,14 @@
 #include "CellularAutomata.h"
 
 #include<vector>
+#include<array>
 #include<stdlib.h>
 #include<stdio.h>
 #include<time.h>
 
 NucleonGenerator::NucleonGenerator()
 {
+	srand((unsigned)time(NULL));
 }
 
 
@@ -15,46 +17,47 @@ NucleonGenerator::~NucleonGenerator()
 {
 }
 
-void NucleonGenerator::random(CellularAutomata * ca,  int quantity)
+void NucleonGenerator::random(CellularAutomata * ca,const unsigned int quantity, unsigned int grain_count)
 {
-	srand((unsigned)time(NULL));
-	srand((unsigned)time(NULL));
-	int * seed_x = new int[quantity];
-	int * seed_y = new int[quantity];
-	int * seed_z = new int[quantity];
+	std::vector<unsigned int> seed_x;
+	std::vector<unsigned int> seed_y;
+	std::vector<unsigned int> seed_z;
+
 	ca->nucleons_count = 0;
-	for (int i = 0; i <= quantity; i++)
+
+	for (int i = 0; i < quantity; i++)
 	{
-		seed_x[i] = rand() % ca->getSize()[0];
-		seed_y[i] = rand() % ca->getSize()[1];
-		seed_z[i] = rand() % ca->getSize()[2];
+		seed_x.push_back(rand() % ca->getSize()[0]);
+		seed_y.push_back(rand() % ca->getSize()[1]);
+		seed_z.push_back(rand() % ca->getSize()[2]);
 
 		for (int j = 0; j < i; j++)
 		{
 			if ((seed_x[i] == seed_x[j]) && (seed_y[i] == seed_y[j]) && (seed_z[i] == seed_z[j]))
 			{
 				i--;
+				seed_x.pop_back();
+				seed_y.pop_back();
+				seed_z.pop_back();
 				break;
 			}
 		}
 	}
-	for (int i = 0; i < quantity; i++)
+	for (int i = 0; i < seed_x.size(); i++)
 	{
 		int x = seed_x[i],
 			y = seed_y[i],
 			z = seed_z[i];
-		ca->getCells()[x][y][z] = ca->nucleons_count + 1 ;
+		ca->getCells()[x][y][z] = (ca->nucleons_count + 1);
 		ca->nucleons_count++;
-		//this->tool->select(world, x, y, z);
 	}
 }
 
-void NucleonGenerator::random(CellularAutomata * ca,  int quantity, int r)
+void NucleonGenerator::random(CellularAutomata * ca, unsigned int quantity, unsigned int grain_count, unsigned int r)
 {
-	srand((unsigned)time(NULL));
-	int * seed_x = new int[quantity];
-	int * seed_y = new int[quantity];
-	int * seed_z = new int[quantity];
+	std::vector<unsigned int> seed_x;
+	std::vector<unsigned int> seed_y;
+	std::vector<unsigned int> seed_z;
 
 	int limit = 1000;
 	int seeds = 0;
@@ -68,16 +71,21 @@ void NucleonGenerator::random(CellularAutomata * ca,  int quantity, int r)
 			break;
 		}
 		limit--;
-		seed_x[i] = rand() % ca->getSize()[0];
-		seed_y[i] = rand() % ca->getSize()[1];
-		seed_z[i] = rand() % ca->getSize()[2];
+		seed_x.push_back(rand() % ca->getSize()[0]);
+		seed_y.push_back(rand() % ca->getSize()[1]);
+		seed_z.push_back(rand() % ca->getSize()[2]);
 
 		for (int j = 0; j < i; j++)
 		{
-			int ri = round(sqrt(pow(abs(seed_x[i] - seed_x[j]), 2) + pow(abs(seed_y[i] - seed_y[j]), 2) + pow(abs(seed_z[i] - seed_z[j]), 2)));
+			int ri = round(sqrt(pow( abs( static_cast<int>( seed_x[i] - seed_x[j])), 2) +
+								pow( abs( static_cast<int>( seed_y[i] - seed_y[j])), 2) +
+								pow( abs( static_cast<int>( seed_z[i] - seed_z[j])), 2)));
 			if (ri < r)
 			{
 				--i;
+				seed_x.pop_back();
+				seed_y.pop_back();
+				seed_z.pop_back();
 				success = false;
 				break;
 			}
@@ -92,13 +100,13 @@ void NucleonGenerator::random(CellularAutomata * ca,  int quantity, int r)
 		int x = seed_x[i],
 			y = seed_y[i],
 			z = seed_z[i];
-		ca->getCells()[x][y][z] = ca->nucleons_count + 1;
+		ca->getCells()[x][y][z] = (ca->nucleons_count + 1) % grain_count;
 		ca->nucleons_count++;
 		//this->tool->select(world, x, y, z);
 	}
 }
 
-void NucleonGenerator::regular(CellularAutomata * ca, int quantity_m, int quantity_n, int quantity_o)
+void NucleonGenerator::regular(CellularAutomata * ca, unsigned int quantity_m, unsigned int quantity_n, unsigned int quantity_o, unsigned int grain_count)
 {
 	int step_x = ca->getSize()[0] / (quantity_m + 1),
 		step_y = ca->getSize()[1] / (quantity_n + 1),
@@ -129,19 +137,19 @@ void NucleonGenerator::regular(CellularAutomata * ca, int quantity_m, int quanti
 				int x = rest_x + (i * step_x),
 					y = rest_y + (j * step_y),
 					z = rest_z + (k * step_z);
-				ca->getCells()[x][y][z] = ca->nucleons_count + 1;
+				ca->getCells()[x][y][z] = (ca->nucleons_count + 1) % grain_count;
 				ca->nucleons_count++;
 			}
 		}
 	}
 }
 
-void NucleonGenerator::regular(CellularAutomata * ca, int quantity_n_m)
+void NucleonGenerator::regular(CellularAutomata * ca, unsigned int quantity_n_m_o, unsigned int grain_count)
 {
-	this->regular(ca, quantity_n_m, quantity_n_m, quantity_n_m);
+	this->regular(ca, quantity_n_m_o, quantity_n_m_o, quantity_n_m_o, grain_count);
 }
 
-void NucleonGenerator::gradientA(CellularAutomata * ca, int cuts, int delta, int begin, short direction)
+void NucleonGenerator::gradientA(CellularAutomata * ca, unsigned int grain_count, unsigned int cuts, unsigned int delta, unsigned int begin, short direction)
 {
-
 }
+

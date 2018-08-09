@@ -37,10 +37,10 @@ bool GrainGrowthSimulation::step()
 	bool exit = true;
 	//pragma omp parallel num_threads(4) 
 	#pragma omp parallel
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < m; i++)
 	{
 		int x = 0;
-		for (int j = 0; j < m; j++)
+		for (int j = 0; j < n; j++)
 		{
 			#pragma omp for schedule(dynamic)
 			for (int k = 0; k < o; k++)

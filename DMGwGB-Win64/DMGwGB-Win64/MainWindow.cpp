@@ -7,6 +7,8 @@
 #include <QTime>
 #include <limits>
 
+#include <QDebug>
+
 #include "QGLRender.h"
 #include "QNewDialog.h"
 #include "CalculationsThread.h"
@@ -24,19 +26,10 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
 
-    this->calculationsThread = new CalculationsThread();
+    //this->calculationsThread = new CalculationsThread();
 
     setWindowTitle("DMGwGB");
     this->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
-
-    /*QWidget *widget = new QWidget;
-    setCentralWidget(widget);
-
-    QWidget *topFiller = new QWidget;
-    topFiller->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-    QWidget *bottomFiller = new QWidget;
-    bottomFiller->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);*/
 
     createMenuBar();
     createSimulationMenu();
@@ -45,32 +38,31 @@ MainWindow::MainWindow(QWidget *parent)
     QWidget *mainWidget = new QWidget();
     QGridLayout *mainLayout = new QGridLayout();
 
-    //layout()->setGeometry(QRect(0,0,0,0));
     mainLayout->setMenuBar(menuB);
     mainLayout->addWidget(simulationMenuGroupBox, 0, 0, 3, 2);
     mainLayout->addWidget(openGLDisplay, 0, 2, 10, 10);
     mainLayout->setContentsMargins(20, 20, 20, 20);
-    //mainLayout->setDefaultPositioning();
     mainWidget->setLayout(mainLayout);
 
     setCentralWidget(mainWidget);
     setMinimumSize(640, 480);
-    //resize(800, 600);
-    resize(640, 480);
+    resize(800, 600);
 
-	if (this->calculationsThread->simulation->cellularautomata)
-		delete  this->calculationsThread->simulation->cellularautomata;
-    this->calculationsThread->simulation->cellularautomata = new CellularAutomata(30, 30, 30);
+    connect(&calculationsThread, &CalculationsThread::updateVal, this, &MainWindow::updateRender);
+	connect(&calculationsThread, &CalculationsThread::updateDeb, this, &MainWindow::updateDebug);
 
-    connect(this->calculationsThread, &CalculationsThread::updateVal, this, &MainWindow::updateRender);
-	connect(this->calculationsThread, &CalculationsThread::updateDeb, this, &MainWindow::updateDebug);
-	//connect(this->calculationsThread, &CalculationsThread::finished, this, &MainWindow::updateRender);
 	show();
 }
 
 MainWindow::~MainWindow()
 {
-	delete this->calculationsThread;
+	if (calculationsThread.isRunning())
+	{
+		calculationsThread.terminate();
+		calculationsThread.wait();
+	}
+
+	//delete this->calculationsThread;
 }
 
 void MainWindow::createMenuBar()
@@ -100,6 +92,12 @@ void MainWindow::createSimulationMenu()
     nucleationNumberSpinBox = new QSpinBox();
     nucleationNumberSpinBox->setRange(0, std::numeric_limits<int>::max());
     nucleationNumberSpinBox->setValue(10);
+
+	statesCountLabel = new QLabel(tr("Grain Count: "));
+	statesCountLabel->setMaximumHeight(50);
+	statesCountNumberSpinBox = new QSpinBox();
+	statesCountNumberSpinBox->setRange(0, std::numeric_limits<int>::max());
+	statesCountNumberSpinBox->setValue(10);
     
 	nucleationTypeLabel = new QLabel(tr("Nucelation type: "));
 	nucleationTypeComboBox = new QComboBox;
@@ -165,32 +163,35 @@ void MainWindow::createSimulationMenu()
     layout->addWidget(nucleationLabel, 0, 0, 1, 2);
     layout->addWidget(nucleationNumberSpinBox, 0, 2, 1, 2);
 
-	layout->addWidget(nucleationTypeLabel, 1, 0, 1, 2);
-	layout->addWidget(nucleationTypeComboBox, 1, 2, 1, 2);
+	layout->addWidget(statesCountLabel, 1, 0, 1, 2);
+	layout->addWidget(statesCountNumberSpinBox, 1, 2, 1, 2);\
 
-	layout->addWidget(nucleationOptionLabel1, 2, 0, 1, 2);
-	layout->addWidget(nucleationOptionTextBox1, 2, 2, 1, 2);
-	layout->addWidget(nucleationOptionLabel2, 3, 0, 1, 2);
-	layout->addWidget(nucleationOptionTextBox2, 3, 2, 1, 2);
-	layout->addWidget(nucleationOptionLabel3, 4, 0, 1, 2);
-	layout->addWidget(nucleationOptionTextBox3, 4, 2, 1, 2);
-	layout->addWidget(nucleationOptionLabel4, 5, 0, 1, 2);
-	layout->addWidget(nucleationOptionTextBox4, 5, 2, 1, 2);
+	layout->addWidget(nucleationTypeLabel, 2, 0, 1, 2);
+	layout->addWidget(nucleationTypeComboBox, 2, 2, 1, 2);
 
-    layout->addWidget(nucleationGenerateButton, 6, 0, 1, 4);
+	layout->addWidget(nucleationOptionLabel1, 3, 0, 1, 2);
+	layout->addWidget(nucleationOptionTextBox1, 3, 2, 1, 2);
+	layout->addWidget(nucleationOptionLabel2, 4, 0, 1, 2);
+	layout->addWidget(nucleationOptionTextBox2, 4, 2, 1, 2);
+	layout->addWidget(nucleationOptionLabel3, 5, 0, 1, 2);
+	layout->addWidget(nucleationOptionTextBox3, 5, 2, 1, 2);
+	layout->addWidget(nucleationOptionLabel4, 6, 0, 1, 2);
+	layout->addWidget(nucleationOptionTextBox4, 6, 2, 1, 2);
+
+    layout->addWidget(nucleationGenerateButton, 7, 0, 1, 4);
 	
-	layout->addWidget(boundaryConditionsLabel, 7, 0, 1, 4);
-	layout->addWidget(boundaryConditionsComboBox, 8, 0, 1, 4);
+	layout->addWidget(boundaryConditionsLabel, 8, 0, 1, 4);
+	layout->addWidget(boundaryConditionsComboBox, 9, 0, 1, 4);
 
-    layout->addWidget(neightborhoodLabel, 9, 0, 1, 4);
-    layout->addWidget(neightborhoodComboBox, 10, 0, 1, 4);
+    layout->addWidget(neightborhoodLabel, 10, 0, 1, 4);
+    layout->addWidget(neightborhoodComboBox, 11, 0, 1, 4);
 
-	layout->addWidget(grainBoundarySizeLabel, 11, 0, 1, 4);
-	layout->addWidget(grainBoundarySizeTextBox, 12, 0, 1, 4);
+	layout->addWidget(grainBoundarySizeLabel, 12, 0, 1, 4);
+	layout->addWidget(grainBoundarySizeTextBox, 13, 0, 1, 4);
 
-    layout->addWidget(simulationStartButton, 13, 0, 1, 4);
+    layout->addWidget(simulationStartButton, 14, 0, 1, 4);
 
-	layout->addWidget(debugLabel, 14, 0, 1, 4);
+	layout->addWidget(debugLabel, 15, 0, 1, 4);
 
  //   layout->setRowMinimumHeight(0, 20);
  //   layout->setRowMinimumHeight(1, 20);
@@ -225,7 +226,7 @@ void MainWindow::createSimulationMenu()
 void MainWindow::createOpenGLDisplay()
 {
     openGLDisplay = new QGLRender();
-    this->openGLDisplay->setCA(this->calculationsThread->simulation->cellularautomata);
+    this->openGLDisplay->setCA(calculationsThread.simulation->cellularautomata);
     openGLDisplay->setGeometry(0,0,100, 100);
 	//openGLDisplay->show();
 }
@@ -234,88 +235,83 @@ void MainWindow::startSimulation()
 {
 	if (neightborhoodComboBox->itemText(neightborhoodComboBox->currentIndex()) == " VonNeumman ")
 	{
-		calculationsThread->simulation->neighborhood = new VonNeummanNeighborhood();
+		calculationsThread.simulation->neighborhood = new VonNeummanNeighborhood();
 	}
 	else if (neightborhoodComboBox->itemText(neightborhoodComboBox->currentIndex()) == " Pentagonal ")
 	{
-		calculationsThread->simulation->neighborhood = new PentagonalNeighborhood();
+		calculationsThread.simulation->neighborhood = new PentagonalNeighborhood();
 	}
 	else if (neightborhoodComboBox->itemText(neightborhoodComboBox->currentIndex()) == " Hexagonal ")
 	{
-		calculationsThread->simulation->neighborhood = new HexagonalNeighborhood();
+		calculationsThread.simulation->neighborhood = new HexagonalNeighborhood();
 	}
 	else
 	{
-		calculationsThread->simulation->neighborhood = new MooreNeighborhood();
+		calculationsThread.simulation->neighborhood = new MooreNeighborhood();
 	}
 
 	if (boundaryConditionsComboBox->itemText(boundaryConditionsComboBox->currentIndex()) == " Blocking ")
 	{
-		calculationsThread->simulation->cellularautomata->boundary_contidion = BoundaryContidionTypes::Blocking;
+		calculationsThread.simulation->cellularautomata->boundary_contidion = BoundaryContidionTypes::Blocking;
 	}
 	else if (boundaryConditionsComboBox->itemText(boundaryConditionsComboBox->currentIndex()) == " Periodic ")
 	{
-		calculationsThread->simulation->cellularautomata->boundary_contidion = BoundaryContidionTypes::Periodic;
+		calculationsThread.simulation->cellularautomata->boundary_contidion = BoundaryContidionTypes::Periodic;
 	}
 	else if (boundaryConditionsComboBox->itemText(boundaryConditionsComboBox->currentIndex()) == " Reflectiong ")
 	{
-		calculationsThread->simulation->cellularautomata->boundary_contidion = BoundaryContidionTypes::Reflecting;
+		calculationsThread.simulation->cellularautomata->boundary_contidion = BoundaryContidionTypes::Reflecting;
 	}
 
 	unsigned int grainSize = static_cast<unsigned int>(grainBoundarySizeTextBox->value());
-	static_cast<GrainBoundarySimulation *>(this->calculationsThread->simulation)->grainSize = grainSize;
+	static_cast<GrainBoundarySimulation *>(this->calculationsThread.simulation)->grainSize = grainSize;
 
 
-    connect(this->calculationsThread, &CalculationsThread::updateVal, this, &MainWindow::updateRender);
-    calculationsThread->start();
+    connect(&calculationsThread, &CalculationsThread::updateVal, this, &MainWindow::updateRender);
+    calculationsThread.start();
 }
 
 void MainWindow::generateNucleons()
 {
-    if (!calculationsThread->isRunning())
+    if (!calculationsThread.isRunning())
     {
         QTime time = QTime::currentTime();
         qsrand((uint)time.msec());
 		NucleonGenerator generator;
-        CellularAutomata * ca = this->calculationsThread->simulation->cellularautomata;
-		
+        CellularAutomata * ca = this->calculationsThread.simulation->cellularautomata;
 		if ( nucleationTypeComboBox->itemText(nucleationTypeComboBox->currentIndex()) == " Random " )
 		{
-			generator.random(ca, static_cast<int>(this->nucleationNumberSpinBox->value()));
+			generator.random(ca,
+				static_cast<unsigned int>(this->nucleationNumberSpinBox->value()),
+				static_cast<unsigned int>(this->statesCountNumberSpinBox->value()));
 		}
 		else if (nucleationTypeComboBox->itemText(nucleationTypeComboBox->currentIndex()) == " Random with minimum radius " )
 		{
-			generator.random(ca, static_cast<int>(this->nucleationNumberSpinBox->value()), static_cast<int>(this->nucleationOptionTextBox1->value()) );
+			generator.random(ca, 
+				static_cast<unsigned int>(this->nucleationNumberSpinBox->value()),
+				static_cast<unsigned int>(this->statesCountNumberSpinBox->value()),
+				static_cast<unsigned int>(this->nucleationOptionTextBox1->value()) );
 		}
-		
+		else if (nucleationTypeComboBox->itemText(nucleationTypeComboBox->currentIndex()) == " Regular ")
+		{
+			generator.regular(ca,
+				static_cast<unsigned int>(this->nucleationOptionTextBox1->value()),
+				static_cast<unsigned int>(this->nucleationOptionTextBox2->value()),
+				static_cast<unsigned int>(this->nucleationOptionTextBox3->value()),
+				static_cast<unsigned int>(this->statesCountNumberSpinBox->value()));
+		}
+		else if (nucleationTypeComboBox->itemText(nucleationTypeComboBox->currentIndex()) == " GradientA ")
+		{
 
-		/*int m = ca->getSize()[0];
-		int n = ca->getSize()[1];
-		int	o = ca->getSize()[2];
-        for (int i = 0; i < ; i++)
-        {
-            int x, y, z;
-            x = qrand() % m;
-            y = qrand() % n;
-            z = qrand() % o;
-            if (ca->getCells()[x][y][z] == 0)
-            {
-                ca->getCells()[x][y][z] = ca->nucleons_count + 1;
-                ca->nucleons_count++;
-            }
-        }*/
-		CellularAutomata * temp = calculationsThread->simulation->cellularautomata;
-        calculationsThread->simulation->cellularautomata = new CellularAutomata(*ca);
+		}
         this->openGLDisplay->setCA(new CellularAutomata(*ca));
-		delete ca;
-		//delete temp;
     }
 
 }
 
 void MainWindow::updateRender()
 {
-    this->openGLDisplay->setCA(new CellularAutomata(*calculationsThread->simulation->cellularautomata));
+    this->openGLDisplay->setCA(new CellularAutomata(*calculationsThread.simulation->cellularautomata));
 }
 
 void MainWindow::updateDebug(const QString text)
@@ -384,9 +380,9 @@ void MainWindow::saveFile()
 			return;
 		}
 		QTextStream saveText(&file);
-		int m = static_cast<int>(calculationsThread->simulation->cellularautomata->getSize()[0]),
-			n = static_cast<int>(calculationsThread->simulation->cellularautomata->getSize()[1]),
-			o = static_cast<int>(calculationsThread->simulation->cellularautomata->getSize()[2]);
+		int m = static_cast<int>(calculationsThread.simulation->cellularautomata->getSize()[0]),
+			n = static_cast<int>(calculationsThread.simulation->cellularautomata->getSize()[1]),
+			o = static_cast<int>(calculationsThread.simulation->cellularautomata->getSize()[2]);
 
 		for (int i = 0; i < m; i++)
 		{
@@ -394,7 +390,7 @@ void MainWindow::saveFile()
 			{
 				for (int k = 0; k < o; k++)
 				{
-					saveText << calculationsThread->simulation->cellularautomata->getCells()[i][j][k] << " ";
+					saveText << calculationsThread.simulation->cellularautomata->getCells()[i][j][k] << " ";
 				}
 				saveText << endl;
 			}
@@ -409,10 +405,10 @@ void MainWindow::newSimulation()
     if (newDialog->exec())
     {
         int x, y, z;
-		delete calculationsThread->simulation->cellularautomata;
+		delete calculationsThread.simulation->cellularautomata;
         newDialog->getValues(x, y, z);
         this->openGLDisplay->setCA(new CellularAutomata(x, y, z));
-        calculationsThread->simulation->cellularautomata = new CellularAutomata(x, y, z);
+        calculationsThread.simulation->cellularautomata = new CellularAutomata(x, y, z);
     }
     delete newDialog;
 }

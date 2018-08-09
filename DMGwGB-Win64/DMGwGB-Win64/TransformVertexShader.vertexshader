@@ -28,7 +28,7 @@ void main()
 
 	//Prepare otuput for fragment shader
 	oNormal = normalize(normalMatrix * normal);
-	oColor = vec3(255.f,255.f,255.f);
+	oColor = vec3(1.f,1.f,1.f);
 	oTranslation = vec3(gl_Position.x, gl_Position.y, gl_Position.z);
 	oTextCord = textCord;
 }

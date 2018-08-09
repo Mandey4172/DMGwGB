@@ -36,10 +36,14 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
+
     void initializeGL() override;
     void resizeGL(int w, int h) override;
     void paintGL() override;
+
     void updateTextures();
+	void updateView();
+
 /*	Render	*/
     QOpenGLShaderProgram		ShaderProgram;
     QOpenGLVertexArrayObject	VAO;

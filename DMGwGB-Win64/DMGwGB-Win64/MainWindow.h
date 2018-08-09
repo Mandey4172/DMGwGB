@@ -51,6 +51,9 @@ private:
     QLabel			*nucleationLabel;
     QSpinBox		*nucleationNumberSpinBox;
 	
+	QLabel			*statesCountLabel;
+	QSpinBox		*statesCountNumberSpinBox;
+
 	QLabel			*nucleationTypeLabel;
 	QComboBox		*nucleationTypeComboBox;
 
@@ -82,7 +85,7 @@ private:
 
 	QLabel			*debugLabel;
 
-    CalculationsThread * calculationsThread;
+    CalculationsThread calculationsThread;
 
     private slots:
     void newSimulation();

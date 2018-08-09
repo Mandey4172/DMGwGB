@@ -10,14 +10,12 @@
 CalculationsThread::CalculationsThread()
 {
     this->simulation = new GrainBoundarySimulation();
-	//this->simulation = new GrainGrowthSimulation();
-	//this->simulation = new FGrainGrowthSimulation();
 }
 
 
 CalculationsThread::~CalculationsThread()
 {
-    //delete this->simulation;
+    delete this->simulation;
 }
 
 void CalculationsThread::run()

@@ -12,23 +12,27 @@ uniform vec3 lightPos;
 
 void main()
 {
-
-	vec3 oTranslation = vec3(0.0f,0.0f,0.0f);
+	//vec3 oTranslation = vec3(0.0f,0.0f,0.0f);
 	vec3 lightColor   =	vec3(1.0f,1.0f,1.0f);
-	vec3 xlightPos = vec3(100.f,0.f,0.f);
+	vec3 xlightPos = vec3(0.f,0.f,10.f);
+
 	// ambient
 	float ambientStrength = 0.05;
 	vec3 ambient = ambientStrength * lightColor;
-  	vec3 p = vec3(gl_FragCoord.x, gl_FragCoord.y, gl_FragCoord.z);
+
 	// diffuse 
 	vec3 norm = normalize(oNormal);
-	vec3 lightDir = normalize(lightPos - oTranslation);
+	vec3 lightDir = normalize(xlightPos - oTranslation);
 	float diff = max(dot(norm, lightDir), 0.0);
 	vec3 diffuse = diff * lightColor;
     
-	color = texture2D(texture[0], oTextCord);
+	//color = vec4(oColor, 1.f);
+	//color = vec4(lightDir, 1.f);
+	
+	color = vec4((ambient + diffuse), 1.f) * texture2D(texture[0], oTextCord);
 	//vec3 result = (ambient + diffuse) * oColor;
 	//color = vec4(result, 1.00f);
 	
+	//color = vec4(oTranslation, 1.00f);
 	//color = vec4(oColor, 1.00f);
 }

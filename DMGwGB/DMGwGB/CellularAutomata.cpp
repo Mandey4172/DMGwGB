@@ -37,7 +37,7 @@ CellularAutomata::CellularAutomata(unsigned int nm, unsigned int nn, unsigned in
 	this->nucleons_count = 0;
 }
 
-CellularAutomata::CellularAutomata(CellularAutomata & ca)
+CellularAutomata::CellularAutomata(const CellularAutomata & ca)
 {
 	this->m = ca.getSize()[0];
 	this->n = ca.getSize()[1];
@@ -65,6 +65,11 @@ CellularAutomata::CellularAutomata(CellularAutomata & ca)
 	}
 	nucleons_count = ca.nucleons_count;
 	boundary_contidion = ca.boundary_contidion;
+}
+CellularAutomata& CellularAutomata::operator=(const CellularAutomata & ca)
+{
+	CellularAutomata instance(ca);
+	return instance;
 }
 /*	 Dstruktor	*/
 CellularAutomata::~CellularAutomata()
@@ -136,12 +141,12 @@ void CellularAutomata::copy(CellularAutomata & ca)
 }
 
 /*	Pobieranie komórek	*/
-unsigned int *** CellularAutomata::getCells()
+unsigned int *** CellularAutomata::getCells() const
 {
 	return cells;
 }
 
-std::vector<unsigned int> CellularAutomata::getSize(unsigned int n)
+std::vector<unsigned int> CellularAutomata::getSize(unsigned int n) const
 {
 	std::vector<unsigned int> size;
 	if (n == 0)

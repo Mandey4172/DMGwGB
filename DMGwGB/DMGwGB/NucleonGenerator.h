@@ -8,15 +8,15 @@ public:
 	NucleonGenerator();
 	~NucleonGenerator();
 	//Losowe zarodki
-	static void random(CellularAutomata * ca, int quantity);
+	static void random(CellularAutomata * ca, unsigned int quantity, unsigned int grain_count );
 	//Losowe zarodki z minimalnym odstêpem
-	void random(CellularAutomata * ca, int quantity, int r);
+	void random(CellularAutomata * ca, unsigned int quantity, unsigned int grain_count, unsigned int r);
 
 	//Regularna siatka
-	void regular(CellularAutomata * ca, int quantity_m, int quantity_n, int quantity_o);
-	void regular(CellularAutomata * ca, int quantity_m_n_o);
+	void regular(CellularAutomata * ca, unsigned int quantity_m, unsigned int quantity_n, unsigned int quantity_o, unsigned int grain_count);
+	void regular(CellularAutomata * ca, unsigned int quantity_m_n_o, unsigned int grain_count);
 
 	//Podzia³ na mniejsze obszary
-	void gradientA(CellularAutomata * ca,int cuts, int delta, int begin, short direction);
+	void gradientA(CellularAutomata * ca, unsigned int grain_count, unsigned int cuts, unsigned int delta, unsigned int begin, short direction);
 };
 

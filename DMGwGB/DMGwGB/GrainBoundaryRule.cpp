@@ -19,8 +19,7 @@ void GrainBoundaryRule::step(unsigned int * cell, std::vector<unsigned int> neig
 {
 	std::vector<unsigned int> cell_state;
 
-
-	//unsigned int numberOfBoundarys = 0;
+	unsigned int numberOfBoundarys = 0;
 	GNode new_node;
 
 	for (unsigned int n : neighborhood)
@@ -41,7 +40,7 @@ void GrainBoundaryRule::step(unsigned int * cell, std::vector<unsigned int> neig
 				cell_state.push_back(n);
 			}
 		}
-		//else if (n > this->grain_count) numberOfBoundarys++;
+		else if (n > this->grain_count) numberOfBoundarys++;
 	}
 	std::sort(cell_state.begin(), cell_state.end());
 	if (cell_state.size() > 1)
@@ -78,6 +77,11 @@ void GrainBoundaryRule::step(unsigned int * cell, std::vector<unsigned int> neig
 			this->boundary_states.push_back(new_node);
 		}
 	}
+	//else if(neighborhood.size() > 0)
+	//{
+	//	//int random_boundary = static_cast<int>(rand() * neighborhood.size());
+	//	*cell = neighborhood[0]; // random_boundary];
+	//}
 }
 
 void GrainBoundaryRule::clear(unsigned int * cell, std::vector<unsigned int> neighborhood)

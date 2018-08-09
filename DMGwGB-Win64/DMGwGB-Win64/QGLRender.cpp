@@ -22,9 +22,9 @@ struct Point
 QGLRender::QGLRender(QWidget *parent)
 	: QOpenGLWidget(parent)
 {
-	alpthaRotation = 180;
-	betaRotation = 0;
-	scale = 100;
+	alpthaRotation = 180.f;
+	betaRotation = 0.f;
+	scale = 100.;
 	colorGenerator.generate(500 * 500);
 	ca = new CellularAutomata(30, 30, 30);
 	for (int i = 0; i < 6; i++)
@@ -57,37 +57,35 @@ void QGLRender::mouseMoveEvent(QMouseEvent * event)
     {
         QPoint delta;
         delta = event->pos() - lastMouseClickPoint;
-        if (!((alpthaRotation <= 0) && (delta.x() < 0)) && !((alpthaRotation >= 359) && (delta.x() > 0)))
+		//if (delta.x() != 0)
+		//{
+		//	alpthaRotation -= delta.x();
+		//	while (true)
+		//	{
+		//		if(alpthaRotation < 0) alpthaRotation = 360.f - alpthaRotation;
+		//		else if(alpthaRotation >= 360.f) alpthaRotation -= 360.f;
+		//		else break;
+		//	}
+		//}
+		const float alpthaRotationMin = 0.f;
+		const float alpthaRotationMax = 360.f;
+		const float speedDivider = 2.f;
+
+		alpthaRotation -= (delta.x() / speedDivider);
+		//if (alpthaRotation < alpthaRotationMin) alpthaRotation = alpthaRotationMax - alpthaRotation;
+		//if (alpthaRotation < alpthaRotationMax) alpthaRotation = alpthaRotation - alpthaRotationMax;
+
+		const float betaRotationMin = -89.f;
+		const float betaRotationMax = 89.f;
+
+        if (!((betaRotation <= betaRotationMin) && (delta.y() < 0)) && !((betaRotation >= betaRotationMax) && (delta.y() > 0)))
         {
-            model[0].rotate(delta.x(), 0.f, 1.f, 0.f);
-            model[1].rotate(delta.x(), 0.f, -1.f, 0.f);
-
-            model[2].rotate(delta.x(), 0.f, 0.f, -1.f);
-            model[3].rotate(delta.x(), 0.f, 0.f, 1.f);
-
-            model[4].rotate(delta.x(), 0.f, 1.f, 0.f);
-            model[5].rotate(delta.x(), 0.f, 1.f, 0.f);
-
-            camera.rotate(delta.x(), 0.f, 1.f, 0.f);
-            alpthaRotation += delta.x();
+            betaRotation += (delta.y() / speedDivider);
+			if (betaRotation < betaRotationMin) betaRotation = betaRotationMin;
+			if (betaRotation > betaRotationMax) betaRotation = betaRotationMax;
         }
-        if (!((betaRotation <= -90) && (delta.y() > 0)) && !((betaRotation >= 90) && (delta.y() < 0)))
-        {
-            model[0].rotate(delta.y(), 0.f, 0.f, 1.f);
-            model[1].rotate(delta.y(), 0.f, 0.f, -1.f);
-
-            model[2].rotate(delta.y(), 0.f, 1.f, 0.f);
-            model[3].rotate(delta.y(), 0.f, -1.f, 0.f);
-
-            model[4].rotate(delta.y(), -1.f, 0.f, 0.f);
-            model[5].rotate(delta.y(), 1.f, 0.f, 0.f);
-            /*for (int i = 0; i < 6; i++)
-                model[i].rotate(delta.y(), 0.f, 0.f, 1.f);*/
-            camera.rotate(delta.y(), 0.f, 0.f, 1.f);
-            betaRotation += delta.y();
-        }
-
-        lastMouseClickPoint = event->pos();
+		lastMouseClickPoint = event->pos();
+		updateView();
     }
 }
 
@@ -103,16 +101,17 @@ void QGLRender::wheelEvent(QWheelEvent * event)
         if (event->delta() < 0)
         {
             //model.scale(0.9);
-            view.scale(0.9);
-            scale -= 1;
+            //view.scale(0.9);
+            scale -= 10;
         }
 
         else if (event->delta() > 0)
         {
             //model.scale(1.1);
-            view.scale(1.1);
-            scale += 1;
+            //view.scale(1.1);
+            scale += 10;
         }
+		updateView();
     }
 }
 
@@ -348,17 +347,7 @@ void QGLRender::initializeGL()
 
 	projection.perspective(45.0f, (GLfloat)this->width() / this->height(), 0.1f, 100000.0f);
 
-	/*int max = m;
-	if (max < n) max = n;
-	if (max < o) max = 0;*/
-	float camY = 2 * sin(qDegreesToRadians(betaRotation));
-	float camX = 2 * cos(qDegreesToRadians(betaRotation)) * cos(qDegreesToRadians(alpthaRotation));
-	float camZ = 2 * cos(qDegreesToRadians(betaRotation)) * sin(qDegreesToRadians(alpthaRotation));
-
-	QVector3D v1 = QVector3D(camX, camY, camZ);
-	QVector3D v2 = QVector3D(0, 0, 0);
-	QVector3D v3 = QVector3D(0.0f, 1.0f, 0.0f);
-	view.lookAt(v1, v2, v3);
+	updateView();
 
 	//ShaderProgram.setUniformValue("model", model);
 	ShaderProgram.setUniformValue("view", view);
@@ -368,6 +357,7 @@ void QGLRender::initializeGL()
 
 	GLfloat lp[3] = { (GLfloat)m / 2 + 10, (GLfloat)n / 2, (GLfloat)(2 * o) / 2 };
 	QVector3D v = camera * QVector3D(0, 0, -10);
+	QVector3D lightPosition = QVector3D(10.f,0.5f,0.5f);
 	ShaderProgram.setUniformValue("lightPos", v);
 
 	ShaderProgram.release();
@@ -383,6 +373,8 @@ void QGLRender::initializeGL()
 void QGLRender::resizeGL(int w, int h)
 {
 	this->OpenGL.glViewport(0, 0, w, h);
+	projection = QMatrix4x4();
+	projection.perspective(45.0f, (GLfloat)w / h, 0.1f, 100000.0f);
 }
 
 void QGLRender::paintGL()
@@ -676,8 +668,33 @@ void QGLRender::paintGL()
 
 	ShaderProgram.bind();
 	//ShaderProgram.setUniformValue("model", model);
+
 	ShaderProgram.setUniformValue("view", view);
 	ShaderProgram.setUniformValue("projection", projection);
+
+	for (int i = 0; i < 6; i++) model[i] = QMatrix4x4();
+
+	float			max = static_cast<float>(m);
+	if (max < n)	max = static_cast<float>(n);
+	if (max < o)	max = static_cast<float>(o);
+
+	float	scaleX = m / max,
+			scaleY = n / max,
+			scaleZ = o / max;
+
+	for (int i = 0; i < 6; i++) model[i].scale(scaleZ, scaleY, scaleX);
+
+	model[1].rotate(180.f, 1.f, 0.f, 0.f);
+
+	model[2].rotate(90.f, 1.f, 0.f, 0.f);
+	model[3].rotate(270.f, 1.f, 0.f, 0.f);
+
+	model[4].rotate(270.f, 1.f, 0.f, 0.f);
+	model[5].rotate(270.f, 1.f, 0.f, 0.f);
+	model[4].rotate(90.f, 0.f, 1.f, 0.f);
+	model[5].rotate(270.f, 0.f, 1.f, 0.f);
+
+
 
 	VAO.bind();
 	for (int i = 0; i < 6; i++)
@@ -691,7 +708,6 @@ void QGLRender::paintGL()
 		OpenGL.glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
 	VAO.release();
-
 
 	update();
 
@@ -727,7 +743,7 @@ void QGLRender::updateTextures()
 
 	///X
 	for (int j = 0; j < n; j++)
-	{
+	{ 
 		for (int k = 0; k < o; k++)
 		{
 			QColor newColorA = QColor();
@@ -889,8 +905,8 @@ void QGLRender::updateTextures()
 			b = colorGenerator.colors[s2][2];
 			newColorB.setRgbF(r, g, b);
 
-			TexturesData[5].setPixelColor(QPoint(j, i), newColorA);
-			TexturesData[4].setPixelColor(QPoint(j, i), newColorB);
+			TexturesData[5].setPixelColor(QPoint(i, j), newColorA);
+			TexturesData[4].setPixelColor(QPoint(i, j), newColorB);
 		}
 	}
 
@@ -908,8 +924,24 @@ void QGLRender::updateTextures()
 	Textures[3] = new QOpenGLTexture(TexturesData[3].mirrored(false, false));
 	if (Textures[4])
 		delete Textures[4];
-	Textures[4] = new QOpenGLTexture(TexturesData[4].mirrored(false, false));
+	Textures[4] = new QOpenGLTexture(TexturesData[4].mirrored(false, true));
 	if (Textures[5])
 		delete Textures[5];
-	Textures[5] = new QOpenGLTexture(TexturesData[5].mirrored(false, true));
+	Textures[5] = new QOpenGLTexture(TexturesData[5].mirrored(false, false));
+}
+
+void QGLRender::updateView()
+{
+	float r = 1 + (static_cast<float>(scale) / 100.f);
+
+	float camX = r * qCos(qDegreesToRadians(betaRotation)) * qCos(qDegreesToRadians(alpthaRotation));
+	float camY = r * qCos(qDegreesToRadians(betaRotation)) * qSin(qDegreesToRadians(alpthaRotation));
+	float camZ = r * qSin(qDegreesToRadians(betaRotation));
+
+	QVector3D v1 = QVector3D(camX, camY, camZ);
+	QVector3D v2 = QVector3D(0, 0, 0);
+	QVector3D v3 = QVector3D(0.0f, 0.0f, 1.0f);
+
+	view = QMatrix4x4();
+	view.lookAt(v1, v2, v3);
 }

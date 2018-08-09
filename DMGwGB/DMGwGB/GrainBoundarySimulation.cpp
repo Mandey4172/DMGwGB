@@ -20,7 +20,7 @@
 
 GrainBoundarySimulation::GrainBoundarySimulation()
 {
-	this->cellularautomata = new CellularAutomata(50, 50, 50);
+	this->cellularautomata = new CellularAutomata(100, 100, 100);
 	this->neighborhood = new MooreNeighborhood();
 
 	this->rule = new GrainBoundaryRule();
