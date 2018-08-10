@@ -98,5 +98,5 @@ void QNewDialog::acceptButtoClick()
 
 void QNewDialog::cancelButtoClick()
 {
-	this->rejected();
+	this->reject();
 }

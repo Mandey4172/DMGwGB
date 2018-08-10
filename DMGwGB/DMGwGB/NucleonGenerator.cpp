@@ -48,7 +48,7 @@ void NucleonGenerator::random(CellularAutomata * ca,const unsigned int quantity,
 		int x = seed_x[i],
 			y = seed_y[i],
 			z = seed_z[i];
-		ca->getCells()[x][y][z] = (ca->nucleons_count + 1);
+		ca->getCells()[x][y][z] = ((ca->nucleons_count) % grain_count) + 1;
 		ca->nucleons_count++;
 	}
 }
@@ -100,9 +100,8 @@ void NucleonGenerator::random(CellularAutomata * ca, unsigned int quantity, unsi
 		int x = seed_x[i],
 			y = seed_y[i],
 			z = seed_z[i];
-		ca->getCells()[x][y][z] = (ca->nucleons_count + 1) % grain_count;
+		ca->getCells()[x][y][z] = ((ca->nucleons_count) % grain_count) + 1;
 		ca->nucleons_count++;
-		//this->tool->select(world, x, y, z);
 	}
 }
 
@@ -137,7 +136,7 @@ void NucleonGenerator::regular(CellularAutomata * ca, unsigned int quantity_m, u
 				int x = rest_x + (i * step_x),
 					y = rest_y + (j * step_y),
 					z = rest_z + (k * step_z);
-				ca->getCells()[x][y][z] = (ca->nucleons_count + 1) % grain_count;
+				ca->getCells()[x][y][z] = ((ca->nucleons_count) % grain_count) + 1;
 				ca->nucleons_count++;
 			}
 		}
@@ -151,5 +150,6 @@ void NucleonGenerator::regular(CellularAutomata * ca, unsigned int quantity_n_m_
 
 void NucleonGenerator::gradientA(CellularAutomata * ca, unsigned int grain_count, unsigned int cuts, unsigned int delta, unsigned int begin, short direction)
 {
+
 }
 
