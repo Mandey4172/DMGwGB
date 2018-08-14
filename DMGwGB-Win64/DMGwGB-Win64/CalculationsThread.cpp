@@ -9,7 +9,8 @@
 
 CalculationsThread::CalculationsThread()
 {
-    this->simulation = new GrainBoundarySimulation();
+	this->simulation = new GrainGrowthSimulation();
+    //this->simulation = new GrainBoundarySimulation();
 }
 
 

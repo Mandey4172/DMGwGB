@@ -32,11 +32,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getXA(CellularAutomata * cellul
 	for (int i = -1; i <= 1; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
+		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -47,7 +47,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getXA(CellularAutomata * cellul
 				current_x = current_x - m;
 			}
 		}
-		else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 		{
 			if (current_x < 0)
 			{
@@ -64,11 +64,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getXA(CellularAutomata * cellul
 			if (((i != -1) || (j != -1)) && ((i != 1) || (j != 1)))
 			{
 				int current_y = y + j;
-				if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_y  < 0) || (current_y >= n)))
+				if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y  < 0) || (current_y >= n)))
 				{
 					continue;
 				}
-				else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 				{
 					if (current_y < 0)
 					{
@@ -79,7 +79,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getXA(CellularAutomata * cellul
 						current_y = current_y - n;
 					}
 				}
-				else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 				{
 					if (current_y < 0)
 					{
@@ -94,11 +94,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getXA(CellularAutomata * cellul
 				for (int k = -1; k <= 1; k++)
 				{
 					int current_z = z + k;
-					if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+					if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 					{
 						continue;
 					}
-					else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 					{
 						if (current_z < 0)
 						{
@@ -109,7 +109,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getXA(CellularAutomata * cellul
 							current_z = current_z - o;
 						}
 					}
-					else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 					{
 						if (current_z < 0)
 						{
@@ -124,10 +124,6 @@ std::vector<unsigned int> HexagonalNeighborhood::getXA(CellularAutomata * cellul
 					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 					{
 						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-					}
-					else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0)
-					{
-						cellularautomata->front[current_x][current_y][current_z] = true;
 					}
 				}
 			}
@@ -146,11 +142,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getXB(CellularAutomata * cellul
 	for (int i = -1; i <= 1; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_x  < 0) || (current_x  >= m)))
+		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0) || (current_x  >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -161,7 +157,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getXB(CellularAutomata * cellul
 				current_x = current_x - m;
 			}
 		}
-		else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 		{
 			if (current_x < 0)
 			{
@@ -178,11 +174,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getXB(CellularAutomata * cellul
 			if (((i != -1) || (j != 1)) && ((i != 1) || (j != -1)))
 			{
 				int current_y = y + j;
-				if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_y  < 0)  || (current_y >= n)))
+				if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y  < 0)  || (current_y >= n)))
 				{
 					continue;
 				}
-				else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 				{
 					if (current_y < 0)
 					{
@@ -193,7 +189,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getXB(CellularAutomata * cellul
 						current_y = current_y - n;
 					}
 				}
-				else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 				{
 					if (current_y < 0)
 					{
@@ -208,11 +204,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getXB(CellularAutomata * cellul
 				for (int k = -1; k <= 1; k++)
 				{
 					int current_z = z + k;
-					if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+					if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 					{
 						continue;
 					}
-					else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 					{
 						if (current_z < 0)
 						{
@@ -223,7 +219,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getXB(CellularAutomata * cellul
 							current_z = current_z - o;
 						}
 					}
-					else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 					{
 						if (current_z < 0)
 						{
@@ -238,10 +234,6 @@ std::vector<unsigned int> HexagonalNeighborhood::getXB(CellularAutomata * cellul
 					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 					{
 						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-					}
-					else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0) 
-					{
-						cellularautomata->front[current_x][current_y][current_z] = true;
 					}
 				}
 			}
@@ -260,11 +252,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getYA(CellularAutomata * cellul
 	for (int i = -1; i <= 1; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
+		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -275,7 +267,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getYA(CellularAutomata * cellul
 				current_x = current_x - m;
 			}
 		}
-		else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 		{
 			if (current_x < 0)
 			{
@@ -290,11 +282,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getYA(CellularAutomata * cellul
 		for (int j = -1; j <= 1; j++)
 		{
 			int current_y = y + j;
-			if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_y  < 0)  || (current_y >= n)))
+			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y  < 0)  || (current_y >= n)))
 			{
 				continue;
 			}
-			else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 			{
 				if (current_y < 0)
 				{
@@ -305,7 +297,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getYA(CellularAutomata * cellul
 					current_y = current_y - n;
 				}
 			}
-			else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 			{
 				if (current_y < 0)
 				{
@@ -322,11 +314,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getYA(CellularAutomata * cellul
 				if (((i != -1) || (k != -1)) && ((i != 1) || (k != 1)))
 				{
 					int current_z = z + k;
-					if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+					if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 					{
 						continue;
 					}
-					else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 					{
 						if (current_z < 0)
 						{
@@ -337,7 +329,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getYA(CellularAutomata * cellul
 							current_z = current_z - o;
 						}
 					}
-					else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 					{
 						if (current_z < 0)
 						{
@@ -352,10 +344,6 @@ std::vector<unsigned int> HexagonalNeighborhood::getYA(CellularAutomata * cellul
 					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 					{
 						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-					}
-					else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0)
-					{
-						cellularautomata->front[current_x][current_y][current_z] = true;
 					}
 				}
 			}
@@ -374,11 +362,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getYB(CellularAutomata * cellul
 	for (int i = -1; i <= 1; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
+		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -389,7 +377,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getYB(CellularAutomata * cellul
 				current_x = current_x - m;
 			}
 		}
-		else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 		{
 			if (current_x < 0)
 			{
@@ -404,11 +392,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getYB(CellularAutomata * cellul
 		for (int j = -1; j <= 1; j++)
 		{
 			int current_y = y + j;
-			if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_y  < 0) || (current_y >= n)))
+			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y  < 0) || (current_y >= n)))
 			{
 				continue;
 			}
-			else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 			{
 				if (current_y < 0)
 				{
@@ -419,7 +407,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getYB(CellularAutomata * cellul
 					current_y = current_y - n;
 				}
 			}
-			else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 			{
 				if (current_y < 0)
 				{
@@ -436,11 +424,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getYB(CellularAutomata * cellul
 				if (((i != 1) || (k != -1)) && ((i != -1) || (k != 1)))
 				{
 					int current_z = z + k;
-					if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+					if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 					{
 						continue;
 					}
-					else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 					{
 						if (current_z < 0)
 						{
@@ -451,7 +439,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getYB(CellularAutomata * cellul
 							current_z = current_z - o;
 						}
 					}
-					else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 					{
 						if (current_z < 0)
 						{
@@ -466,10 +454,6 @@ std::vector<unsigned int> HexagonalNeighborhood::getYB(CellularAutomata * cellul
 					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 					{
 						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-					}
-					else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0)
-					{
-						cellularautomata->front[current_x][current_y][current_z] = true;
 					}
 				}
 			}
@@ -488,11 +472,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getZA(CellularAutomata * cellul
 	for (int i = -1; i <= 1; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
+		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -503,7 +487,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getZA(CellularAutomata * cellul
 				current_x = current_x - m;
 			}
 		}
-		else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 		{
 			if (current_x < 0)
 			{
@@ -518,11 +502,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getZA(CellularAutomata * cellul
 		for (int j = -1; j <= 1; j++)
 		{
 			int current_y = y + j;
-			if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_y  < 0)  || (current_y >= n)))
+			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y  < 0)  || (current_y >= n)))
 			{
 				continue;
 			}
-			else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 			{
 				if (current_y < 0)
 				{
@@ -533,7 +517,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getZA(CellularAutomata * cellul
 					current_y = current_y - n;
 				}
 			}
-			else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 			{
 				if (current_y < 0)
 				{
@@ -550,11 +534,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getZA(CellularAutomata * cellul
 				if (((j != -1) || (k != -1)) && ((j != 1) || (k != 1)))
 				{
 					int current_z = z + k;
-					if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+					if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 					{
 						continue;
 					}
-					else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 					{
 						if (current_z < 0)
 						{
@@ -565,7 +549,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getZA(CellularAutomata * cellul
 							current_z = current_z - o;
 						}
 					}
-					else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 					{
 						if (current_z < 0)
 						{
@@ -580,10 +564,6 @@ std::vector<unsigned int> HexagonalNeighborhood::getZA(CellularAutomata * cellul
 					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 					{
 						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-					}
-					     else if (cellularautomata->getCells()[current_x][current_y][current_z] == 0) 
-					{
-						cellularautomata->front[current_x][current_y][current_z] = true;
 					}
 				}
 			}
@@ -602,11 +582,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getZB(CellularAutomata * cellul
 	for (int i = -1; i <= 1; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
+		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -617,7 +597,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getZB(CellularAutomata * cellul
 				current_x = current_x - m;
 			}
 		}
-		else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 		{
 			if (current_x < 0)
 			{
@@ -632,11 +612,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getZB(CellularAutomata * cellul
 		for (int j = -1; j <= 1; j++)
 		{
 			int current_y = y + j;
-			if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_y  < 0)  || (current_y >= n)))
+			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y  < 0)  || (current_y >= n)))
 			{
 				continue;
 			}
-			else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 			{
 				if (current_y < 0)
 				{
@@ -647,7 +627,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getZB(CellularAutomata * cellul
 					current_y = current_y - n;
 				}
 			}
-			else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 			{
 				if (current_y < 0)
 				{
@@ -664,11 +644,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getZB(CellularAutomata * cellul
 				if (((j != 1) || (k != -1)) && ((j != -1) || (k != 1)))
 				{
 					int current_z = z + k;
-					if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+					if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 					{
 						continue;
 					}
-					else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Periodic)
+					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 					{
 						if (current_z < 0)
 						{
@@ -679,7 +659,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getZB(CellularAutomata * cellul
 							current_z = current_z - o;
 						}
 					}
-					else if (cellularautomata->boundary_contidion == BoundaryContidionTypes::Reflecting)
+					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 					{
 						if (current_z < 0)
 						{
@@ -694,10 +674,6 @@ std::vector<unsigned int> HexagonalNeighborhood::getZB(CellularAutomata * cellul
 					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
 					{
 						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-					}
-					else if (i != 0 && j != 0 && k != 0)
-					{
-						cellularautomata->front[current_x][current_y][current_z] = true;
 					}
 				}
 			}

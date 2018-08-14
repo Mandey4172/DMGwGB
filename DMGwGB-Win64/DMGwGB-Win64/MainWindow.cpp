@@ -252,15 +252,15 @@ void MainWindow::startSimulation()
 
 	if (boundaryConditionsComboBox->itemText(boundaryConditionsComboBox->currentIndex()) == " Blocking ")
 	{
-		calculationsThread.simulation->cellularautomata->boundary_contidion = BoundaryContidionTypes::Blocking;
+		calculationsThread.simulation->cellularautomata->setBoundaryContidion(BoundaryContidionTypes::Blocking);
 	}
 	else if (boundaryConditionsComboBox->itemText(boundaryConditionsComboBox->currentIndex()) == " Periodic ")
 	{
-		calculationsThread.simulation->cellularautomata->boundary_contidion = BoundaryContidionTypes::Periodic;
+		calculationsThread.simulation->cellularautomata->setBoundaryContidion(BoundaryContidionTypes::Periodic);
 	}
 	else if (boundaryConditionsComboBox->itemText(boundaryConditionsComboBox->currentIndex()) == " Reflectiong ")
 	{
-		calculationsThread.simulation->cellularautomata->boundary_contidion = BoundaryContidionTypes::Reflecting;
+		calculationsThread.simulation->cellularautomata->setBoundaryContidion(BoundaryContidionTypes::Reflecting);
 	}
 
 	unsigned int grainSize = static_cast<unsigned int>(grainBoundarySizeTextBox->value());

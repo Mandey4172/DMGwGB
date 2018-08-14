@@ -46,11 +46,9 @@ bool GrainBoundarySimulation::step()
 		o = static_cast<int>(cellularautomata->getSize()[2]);
 
 	GrainGrowthSimulation GrainGrowth2;
-	
 	GrainGrowth2.cellularautomata = new CellularAutomata(m,n,o);
 
 	
-
 	this->rule->grain_count = this->cellularautomata->nucleons_count;
 	#pragma omp parallel 
 	for (int i = 0; i < m; i++)
@@ -62,15 +60,10 @@ bool GrainBoundarySimulation::step()
 			{
 				MooreNeighborhood n;
 				this->rule->step(&GrainGrowth2.cellularautomata->getCells()[i][j][k], this->neighborhood->get(this->cellularautomata, i, j, k));
-				//if (GrainGrowth2.cellularautomata->getCells()[i][j][k] > this->cellularautomata->nucleons_count)
-				//{
-				//	this->cellularautomata->getCells()[i][j][k] = GrainGrowth2.cellularautomata->getCells()[i][j][k];
-				//}
 			}
 		}
 	}
 	
-
 	GrainGrowth2.cellularautomata->boundarys_count = ((GrainBoundaryRule *)rule)->boundary_states.size();
 	GrainGrowth2.neighborhood = this->neighborhood;
 	
@@ -89,17 +82,14 @@ bool GrainBoundarySimulation::step()
 			#pragma omp for 
 			for (int k = 0; k < o; k++)
 			{
-				if (GrainGrowth2.cellularautomata->getCells()[i][j][k] > this->cellularautomata->nucleons_count)
+				if (GrainGrowth2.cellularautomata->getCells()[i][j][k] > 0)
 				{
 					this->cellularautomata->getCells()[i][j][k] = GrainGrowth2.cellularautomata->getCells()[i][j][k];
 				}
 			}
 		}
 	}
-	#pragma omp barrier
-
 	static_cast<GrainBoundaryRule *>(this->rule)->boundary_states.clear();
-
 	return isComplete;
 }
 

@@ -13,23 +13,15 @@ CellularAutomata::CellularAutomata(unsigned int nm, unsigned int nn, unsigned in
 	else				this->o = 1;
 	//Twoznie komórek
 	this->cells = new unsigned int ** [this->m];
-	this->front = new bool **[this->m];
-	//this->cells.resize(this->m);
 	for (int i = 0 ; i < this->m; i ++)
 	{
 		this->cells[i] = new unsigned int *[this->n];
-		this->front[i] = new bool *[this->n];
-		//this->cells[i].resize(this->n);
 		for (int j = 0; j < this->n; j++)
 		{
 			this->cells[i][j] = new unsigned int[this->o];
-			this->front[i][j] = new bool[this->o];
-			//this->cells[i][j].resize(this->o);
 			for (int k = 0; k < this->o; k++)
 			{
-				//this->cells[i][j][k].position = SPoint(i, j, k);
 				this->cells[i][j][k] = 0;
-				this->front[i][j][k] = true;
 			}
 		}
 	}
@@ -44,22 +36,18 @@ CellularAutomata::CellularAutomata(const CellularAutomata & ca)
 	this->o = ca.getSize()[2];
 
 	this->cells = new unsigned int ** [this->m];
-	this->front = new bool **[this->m];
 	//this->cells.resize(this->m);
 	for (int i = 0; i < this->m; i++)
 	{
 		this->cells[i] = new unsigned int *[this->n];
-		this->front[i] = new bool *[this->n];
 		//this->cells[i].resize(this->n);
 		for (int j = 0; j < this->n; j++)
 		{
 			this->cells[i][j] = new unsigned int[this->o];
-			this->front[i][j] = new bool[this->o];
 			//this->cells[i][j].resize(this->o);
 			for (int k = 0; k < this->o; k++)
 			{
 				this->cells[i][j][k] = ca.getCells()[i][j][k];
-				this->front[i][j][k] = false;//ca.front[i][j][k];
 			}
 		}
 	}
@@ -84,60 +72,15 @@ CellularAutomata::~CellularAutomata()
 				if (this->cells[i][j])
 				{
 					delete[] this->cells[i][j];
-					delete[] this->front[i][j];
 				}
 			}
 			if (this->cells[i])
 			{
 				delete[] this->cells[i];
-				delete[] this->front[i];
 			}
 		}
 		delete[] this->cells;
-		delete[] this->front;
 	}
-	//if (this->front)
-	//{
-	//	for (int i = 0; i < this->m; i++)
-	//	{
-	//		for (int j = 0; j < this->n; j++)
-	//		{
-	//			if (this->front[i][j])
-	//			{
-	//				
-	//			}
-	//		}
-	//		if (this->front[i])
-	//		{
-	//			
-	//		}
-	//	}
-	//	
-	//}
-}
-
-void CellularAutomata::copy(CellularAutomata & ca)
-{
-	this->m = ca.getSize()[0];
-	this->n = ca.getSize()[1];
-	this->o = ca.getSize()[2];
-
-	for (int i = 0; i < this->m; i++)
-	{
-		for (int j = 0; j < this->n; j++)
-		{
-			for (int k = 0; k < this->o; k++)
-			{
-				
-				//this->cells[i][j][k] = ca->getCells()[i][j][k];
-				/*this->cells[i][j][k].position = SPoint(ca.getCells()[i][j][k].position.x,
-					ca.getCells()[i][j][k].position.y,
-					ca.getCells()[i][j][k].position.z);*/
-			}
-		}
-	}
-	this->nucleons_count = ca.nucleons_count;
-	boundary_contidion = ca.boundary_contidion;
 }
 
 /*	Pobieranie komórek	*/
@@ -146,7 +89,12 @@ unsigned int *** CellularAutomata::getCells() const
 	return cells;
 }
 
-std::vector<unsigned int> CellularAutomata::getSize(unsigned int n) const
+BoundaryContidionTypes CellularAutomata::getBoundatyConditionType()
+{
+	return boundary_contidion;
+}
+
+std::vector<unsigned int> CellularAutomata::getSize(const unsigned int n) const
 {
 	std::vector<unsigned int> size;
 	if (n == 0)

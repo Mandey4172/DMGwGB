@@ -15,10 +15,6 @@ GrainGrowthRule::~GrainGrowthRule()
 
 void GrainGrowthRule::step(unsigned int * cell, std::vector<unsigned int> neighborhood)
 {
-	//if (*cell == 0)
-	//{
-	//	
-	//}
 	std::vector<unsigned int> unique_grain;
 	std::vector<unsigned int> count_grain;
 	//Zliczanie wyst¹pien danego stanu
@@ -59,7 +55,6 @@ void GrainGrowthRule::step(unsigned int * cell, std::vector<unsigned int> neighb
 	{
 		*cell = unique_grain[max];
 	}
-		
 }
 
 
