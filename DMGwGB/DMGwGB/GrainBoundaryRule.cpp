@@ -3,7 +3,6 @@
 #include <algorithm>    
 #include <vector>
 #include <omp.h>
-bool sortfunction(int i, int j) { return (i<j); }
 
 
 GrainBoundaryRule::GrainBoundaryRule()
@@ -15,111 +14,52 @@ GrainBoundaryRule::~GrainBoundaryRule()
 {
 }
 
-void GrainBoundaryRule::step(unsigned int * cell, std::vector<unsigned int> neighborhood)
+/* Regó³a przejœcia dla wyszukiwania granic ziaren */
+void GrainBoundaryRule::step(unsigned int * cell, std::vector<unsigned int> & neighborhood)
 {
-	std::vector<unsigned int> cell_state;
-
-	unsigned int numberOfBoundarys = 0;
-	GNode new_node;
-
-	for (unsigned int n : neighborhood)
+	if (!neighborhood.empty())
 	{
-		if ((n > 0) && (n <= this->grain_count)) // Dlaczego <= ?? 0 - pusta przestrzen, stany rozpoczynaja sie od 1 i koncza na grain-count.
+		std::vector<unsigned int> cell_state;
+		BoundaryNode new_node;
+		//Tworzenie tablicy z unikalnymi stanami
+		for (unsigned int n : neighborhood)
 		{
-			bool exist = false;
-			for (int s = 0; s < cell_state.size(); ++s)
+			if (n <= this->grain_count)
 			{
-				if (cell_state[s] == n)
+				if (std::find(cell_state.begin(), cell_state.end(), n) == cell_state.end())
 				{
-					exist = true;
-					break;
+					cell_state.push_back(n);
 				}
 			}
-			if (!exist)
-			{
-				cell_state.push_back(n);
-			}
 		}
-		else if (n > this->grain_count) numberOfBoundarys++;
-	}
-	std::sort(cell_state.begin(), cell_state.end());
-	if (cell_state.size() > 1)
-	{
-		for (GNode b : this->boundary_states) //Sprawdzanie czy istnieje
+		//Sorkowanie tablicy z unikalnymi stanami otoczenia 
+		std::sort(cell_state.begin(), cell_state.end());
+		//Je¿eli istnieje wiecej ni¿ jeden stan w s¹siedztwie
+		//komórka znajduje sie na granicy
+		if (cell_state.size() > 1)
 		{
-			if (b.neighborhood_states.size() == cell_state.size())
+			if (!this->boundary_states.empty())
 			{
-				bool exist = true;
-				for (int i = 0; i < cell_state.size(); i++)
+				//Sprawdzanie czy granica posiada opis w globalnej liœcie
+				for (BoundaryNode b : this->boundary_states)
 				{
-					if (b.neighborhood_states[i] != cell_state[i])
+					//Czy aktualne otoczenie jest takie samo jak otoczenie elementu z listy
+					if (b.neighborhood_states == cell_state)
 					{
-						exist = false;
-						break;
+						//Jezeli otoczenie jest zgodne przypisz stan i przerwij 
+						*cell = b.state;
+						return;
 					}
 				}
-				if (exist && cell)
-				{
-					*cell = b.state;
-					return;
-				}
 			}
-		}
-		/*for (int c : cell_state)
-		{
-			nnode->neighborhood_states.push_back(c);
-		}*/
-		new_node.neighborhood_states = cell_state;
-		new_node.state = this->grain_count + 1 + this->boundary_states.size();
-		*cell = new_node.state;
-#pragma omp critical
-		{
+			//Gdy nie istnieje opis w globalnej liœcie
+			new_node.neighborhood_states = cell_state;
+			new_node.state = this->grain_count + 1 + this->boundary_states.size();
+			*cell = new_node.state;
+
+			//Dodaj opis
 			this->boundary_states.push_back(new_node);
 		}
 	}
-	//else if(neighborhood.size() > 0)
-	//{
-	//	//int random_boundary = static_cast<int>(rand() * neighborhood.size());
-	//	*cell = neighborhood[0]; // random_boundary];
-	//}
 }
-
-void GrainBoundaryRule::clear(unsigned int * cell, std::vector<unsigned int> neighborhood)
-{
-	std::vector<unsigned int > cell_state;
-	std::vector<unsigned int > cell_state_count;
-
-	unsigned int numberOfBoundarys = 0;
-	unsigned int boundarysLinit = neighborhood.size() - static_cast<unsigned int>(std::floor(static_cast<double>(1) / 83 * static_cast<double>(neighborhood.size())));
-	for (unsigned int n : neighborhood)
-	{
-		if (n > this->grain_count) // Dlaczego <= ?? Poniewa¿ stany rozpoczynaja sie od 1 i koncza na grain-count.
-		{
-			numberOfBoundarys++;
-			bool exist = false;
-			for (int s = 0; s < cell_state.size(); ++s)
-			{
-				if (cell_state[s] == n)
-				{
-					cell_state_count[s]++;
-					exist = true;
-				}
-			}
-			if (!exist)
-			{
-				cell_state.push_back(n);
-				cell_state_count.push_back(1);
-			}
-		}
-	}
-	if (numberOfBoundarys > 0 && boundarysLinit <= numberOfBoundarys)
-	{
-		int max = 0;
-		for (int i = 0; i < cell_state_count.size(); i++)
-		{
-			if (cell_state_count[i] > cell_state_count[max])
-				max = i;
-		}
-		*cell = cell_state[max];
-	}
-}
+	

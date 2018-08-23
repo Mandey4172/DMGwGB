@@ -1,7 +1,7 @@
 #include "CalculationsThread.h"
 
-#include "GrainBoundarySimulation.h"
-#include "GrainGrowthSimulation.h"
+#include "GrainBoundaryGrowthCellularAutomata.h"
+#include "GrainGrowthCellularAutomata.h"
 
 
 #include <QDebug.h>
@@ -9,8 +9,7 @@
 
 CalculationsThread::CalculationsThread()
 {
-	this->simulation = new GrainGrowthSimulation();
-    //this->simulation = new GrainBoundarySimulation();
+    this->simulation = new GrainBoundaryGrowthCellularAutomata();
 }
 
 

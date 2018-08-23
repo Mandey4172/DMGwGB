@@ -8,7 +8,8 @@ CRule::~CRule()
 {
 }
 
-void CRule::step(unsigned int * cell, std::vector<unsigned int> neighborhood)
+void CRule::step(unsigned int * cell, std::vector<unsigned int> & neighborhood)
 {
+
 }
 

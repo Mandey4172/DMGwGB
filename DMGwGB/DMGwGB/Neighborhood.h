@@ -11,6 +11,6 @@ public:
 	~Neighborhood();
 
 	//Pobieranie s¹siadów
-	virtual std::vector<unsigned int> get(class CellularAutomata * cellularautomata,unsigned int x, unsigned int y, unsigned int z);
+	virtual std::vector<unsigned int> get(class CellularAutomataSpace * cellularautomata,unsigned int x, unsigned int y, unsigned int z);
 };
 

@@ -15,9 +15,10 @@ Neighborhood::~Neighborhood()
 {
 }
 
-std::vector<unsigned int> Neighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> Neighborhood::get(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
-	return std::vector<unsigned int>();
+	std::vector<unsigned int> neightborhood;
+	return neightborhood;
 }
 
 

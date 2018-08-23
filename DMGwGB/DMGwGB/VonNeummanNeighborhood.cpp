@@ -1,5 +1,5 @@
 #include "VonNeummanNeighborhood.h"
-#include"CellularAutomata.h"
+#include"CellularAutomataSpace.h"
 
 
 VonNeummanNeighborhood::VonNeummanNeighborhood()
@@ -11,7 +11,7 @@ VonNeummanNeighborhood::~VonNeummanNeighborhood()
 {
 }
 
-std::vector<unsigned int> VonNeummanNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> VonNeummanNeighborhood::get(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
 	int m = static_cast<int>(cellularautomata->getSize()[0]),

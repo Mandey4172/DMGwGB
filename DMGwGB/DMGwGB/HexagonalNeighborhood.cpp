@@ -1,5 +1,5 @@
 #include "HexagonalNeighborhood.h"
-#include "CellularAutomata.h"
+#include "CellularAutomataSpace.h"
 
 
 HexagonalNeighborhood::HexagonalNeighborhood()
@@ -11,7 +11,7 @@ HexagonalNeighborhood::~HexagonalNeighborhood()
 {
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::get(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	int v = rand() % 6;
 	if (v == 0) return this->getXA(cellularautomata, x, y, z);
@@ -22,7 +22,7 @@ std::vector<unsigned int> HexagonalNeighborhood::get(CellularAutomata * cellular
 	return this->getZB(cellularautomata, x, y, z);
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::getXA(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::getXA(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
 	int m = static_cast<int>(cellularautomata->getSize()[0]),
@@ -132,7 +132,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getXA(CellularAutomata * cellul
 	return neighborhood;
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::getXB(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::getXB(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
 	int m = static_cast<int>(cellularautomata->getSize()[0]),
@@ -242,7 +242,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getXB(CellularAutomata * cellul
 	return neighborhood;
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::getYA(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::getYA(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
 	int m = static_cast<int>(cellularautomata->getSize()[0]),
@@ -352,7 +352,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getYA(CellularAutomata * cellul
 	return neighborhood;
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::getYB(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::getYB(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
 	int m = static_cast<int>(cellularautomata->getSize()[0]),
@@ -462,7 +462,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getYB(CellularAutomata * cellul
 	return neighborhood;
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::getZA(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::getZA(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
 	int m = static_cast<int>(cellularautomata->getSize()[0]),
@@ -572,7 +572,7 @@ std::vector<unsigned int> HexagonalNeighborhood::getZA(CellularAutomata * cellul
 	return neighborhood;
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::getZB(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::getZB(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
 	int m = static_cast<int>(cellularautomata->getSize()[0]),

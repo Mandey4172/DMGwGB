@@ -25,7 +25,7 @@ QGLRender::QGLRender(QWidget *parent)
 	betaRotation = 0.f;
 	scale = 100.;
 	colorGenerator.generate(500 * 500);
-	ca = new CellularAutomata(30, 30, 30);
+	ca = new CellularAutomataSpace(30, 30, 30);
 	for (int i = 0; i < 6; i++)
 		Textures[i] = nullptr;
 }
@@ -35,10 +35,10 @@ QGLRender::~QGLRender()
 {
 }
 
-void QGLRender::setCA(CellularAutomata * ca)
+void QGLRender::setCA(CellularAutomataSpace * ca)
 {
 	delete this->ca;
-    this->ca = new CellularAutomata(*ca);
+    this->ca = new CellularAutomataSpace(*ca);
     updateTextures();
 }
 

@@ -1,5 +1,5 @@
 #include "MooreNeighborhood.h"
-#include"CellularAutomata.h"
+#include"CellularAutomataSpace.h"
 
 #include<array>
 #include<list>
@@ -11,7 +11,7 @@ MooreNeighborhood::~MooreNeighborhood()
 {
 }
 
-std::vector<unsigned int> MooreNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> MooreNeighborhood::get(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
 	int m = static_cast<int>(cellularautomata->getSize()[0]),
@@ -124,5 +124,6 @@ std::vector<unsigned int> MooreNeighborhood::get(CellularAutomata * cellularauto
 			}
 		}
 	}
+	if (neighborhood.empty()) return std::vector<unsigned int>();
 	return neighborhood;
 }

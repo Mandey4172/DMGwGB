@@ -16,7 +16,7 @@
 
 #include"ColorGenerator.h"
 
-#include "CellularAutomata.h"
+#include "CellularAutomataSpace.h"
 
 
 class QGLRender : public QOpenGLWidget
@@ -27,9 +27,9 @@ public:
 	QGLRender(QWidget *parent = Q_NULLPTR);
 	~QGLRender();
 
-    QMatrix4x4					camera;
-    CellularAutomata			*ca;
-    void setCA(CellularAutomata	*ca);
+    QMatrix4x4							camera;
+    CellularAutomataSpace				*ca;
+    void setCA(CellularAutomataSpace	*ca);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;

@@ -1,5 +1,5 @@
 #include "NVonNeummanNeighborhood.h"
-#include"CellularAutomata.h"
+#include"CellularAutomataSpace.h"
 
 
 NVonNeummanNeighborhood::NVonNeummanNeighborhood()

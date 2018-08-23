@@ -12,13 +12,13 @@
 #include "QGLRender.h"
 #include "QNewDialog.h"
 #include "CalculationsThread.h"
-#include "CellularAutomata.h"
+#include "CellularAutomataSpace.h"
 #include "MooreNeighborhood.h"
 #include "HexagonalNeighborhood.h"
 #include "PentagonalNeighborhood.h"
 #include "VonNeummanNeighborhood.h"
 #include "NucleonGenerator.h"
-#include "GrainBoundarySimulation.h"
+#include "GrainBoundaryGrowthCellularAutomata.h"
 
 #include <omp.h>
 
@@ -72,12 +72,14 @@ void MainWindow::createMenuBar()
     fileMenu = menuB->addMenu(tr("&File"));
 
     newAction = fileMenu->addAction(tr("N&ew"));
+	loadAction = fileMenu->addAction(tr("L&oad"));
 	saveAction = fileMenu->addAction(tr("S&ave"));
     exitAction = fileMenu->addAction(tr("E&xit"));
     menuB->addMenu(fileMenu);
 
     //Connect actions
     connect(exitAction, SIGNAL(triggered()), this, SLOT(accept()));
+	connect(loadAction, &QAction::triggered, this, &MainWindow::loadFile);
 	connect(saveAction, &QAction::triggered, this, &MainWindow::saveFile);
     connect(newAction, &QAction::triggered, this, &MainWindow::newSimulation);
 }
@@ -264,7 +266,7 @@ void MainWindow::startSimulation()
 	}
 
 	unsigned int grainSize = static_cast<unsigned int>(grainBoundarySizeTextBox->value());
-	static_cast<GrainBoundarySimulation *>(this->calculationsThread.simulation)->grainSize = grainSize;
+	static_cast<GrainBoundaryGrowthCellularAutomata *>(this->calculationsThread.simulation)->grainSize = grainSize;
 
 
     connect(&calculationsThread, &CalculationsThread::updateVal, this, &MainWindow::updateRender);
@@ -278,7 +280,7 @@ void MainWindow::generateNucleons()
         QTime time = QTime::currentTime();
         qsrand((uint)time.msec());
 		NucleonGenerator generator;
-        CellularAutomata * ca = this->calculationsThread.simulation->cellularautomata;
+        CellularAutomataSpace * ca = this->calculationsThread.simulation->cellularautomata;
 		if ( nucleationTypeComboBox->itemText(nucleationTypeComboBox->currentIndex()) == " Random " )
 		{
 			generator.random(ca,
@@ -304,14 +306,14 @@ void MainWindow::generateNucleons()
 		{
 
 		}
-        this->openGLDisplay->setCA(new CellularAutomata(*ca));
+        this->openGLDisplay->setCA(new CellularAutomataSpace(*ca));
     }
 
 }
 
 void MainWindow::updateRender()
 {
-    this->openGLDisplay->setCA(new CellularAutomata(*calculationsThread.simulation->cellularautomata));
+    this->openGLDisplay->setCA(new CellularAutomataSpace(*calculationsThread.simulation->cellularautomata));
 }
 
 void MainWindow::updateDebug(const QString text)
@@ -322,9 +324,9 @@ void MainWindow::updateDebug(const QString text)
 void MainWindow::nucleonGenerationTypeChanged(const int & index)
 {
 	nucleationTypeComboBox->setCurrentIndex(index);
-	int as = nucleationTypeComboBox->currentIndex();
 	if ( nucleationTypeComboBox->itemText(nucleationTypeComboBox->currentIndex()) == " Random ")
 	{
+		nucleationNumberSpinBox->show();
 		nucleationOptionLabel1->hide();
 		nucleationOptionLabel2->hide();
 		nucleationOptionLabel3->hide();
@@ -336,6 +338,7 @@ void MainWindow::nucleonGenerationTypeChanged(const int & index)
 	}
 	else if ( nucleationTypeComboBox->itemText(nucleationTypeComboBox->currentIndex()) == " Random with minimum radius ")
 	{
+		nucleationNumberSpinBox->show();
 		nucleationOptionLabel1->show();
 		nucleationOptionLabel2->hide();
 		nucleationOptionLabel3->hide();
@@ -349,6 +352,7 @@ void MainWindow::nucleonGenerationTypeChanged(const int & index)
 	}
 	else if ( nucleationTypeComboBox->itemText(nucleationTypeComboBox->currentIndex()) == " Regular ")
 	{
+		nucleationNumberSpinBox->hide();
 		nucleationOptionLabel1->show();
 		nucleationOptionLabel2->show();
 		nucleationOptionLabel3->show();
@@ -362,7 +366,29 @@ void MainWindow::nucleonGenerationTypeChanged(const int & index)
 		nucleationOptionLabel2->setText(" Count on Y axis: ");
 		nucleationOptionLabel3->setText(" Count on Z axis: ");
 	}
-	
+}
+
+void MainWindow::loadFile()
+{
+	QString fileName = QFileDialog::getOpenFileName(this,
+		tr("Save Microstructure"), "File.txt",
+		tr("TextFile (*.txt);;All Files (*)"));
+
+	if (fileName.isEmpty())
+		return;
+	else
+	{
+		QFile file(fileName);
+		if (!file.open(QIODevice::ReadOnly)) {
+			QMessageBox::information(this, tr("Unable to open file"),
+				file.errorString());
+			return;
+		}
+		QString data = file.readAll();
+		this->calculationsThread.simulation->cellularautomata->load(data.toStdString());
+		file.close();
+		this->openGLDisplay->setCA(this->calculationsThread.simulation->cellularautomata);
+	}
 }
 
 void MainWindow::saveFile()
@@ -380,22 +406,8 @@ void MainWindow::saveFile()
 			return;
 		}
 		QTextStream saveText(&file);
-		int m = static_cast<int>(calculationsThread.simulation->cellularautomata->getSize()[0]),
-			n = static_cast<int>(calculationsThread.simulation->cellularautomata->getSize()[1]),
-			o = static_cast<int>(calculationsThread.simulation->cellularautomata->getSize()[2]);
-
-		for (int i = 0; i < m; i++)
-		{
-			for (int j = 0; j < n; j++)
-			{
-				for (int k = 0; k < o; k++)
-				{
-					saveText << calculationsThread.simulation->cellularautomata->getCells()[i][j][k] << " ";
-				}
-				saveText << endl;
-			}
-			saveText << endl << endl;
-		}
+		saveText << QString::fromStdString(this->calculationsThread.simulation->cellularautomata->save());
+		file.close();
 	}
 }
 
@@ -407,8 +419,8 @@ void MainWindow::newSimulation()
         int x, y, z;
 		delete calculationsThread.simulation->cellularautomata;
         newDialog->getValues(x, y, z);
-        this->openGLDisplay->setCA(new CellularAutomata(x, y, z));
-        calculationsThread.simulation->cellularautomata = new CellularAutomata(x, y, z);
+        this->openGLDisplay->setCA(new CellularAutomataSpace(x, y, z));
+        calculationsThread.simulation->cellularautomata = new CellularAutomataSpace(x, y, z);
     }
     delete newDialog;
 }

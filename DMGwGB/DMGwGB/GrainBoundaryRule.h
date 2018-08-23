@@ -2,16 +2,19 @@
 #include <list>
 
 #include "CRule.h"
+#include <omp.h>
 
-struct GNode
+struct BoundaryNode
 {
-	GNode() {}
-	GNode(const GNode &obj)
+	BoundaryNode() {}
+	BoundaryNode(const BoundaryNode &obj)
 	{
 		this->neighborhood_states = obj.neighborhood_states;
 		this->state = obj.state;
 	}
+	//Stany w otoczeniu komórki
 	std::vector<unsigned int> neighborhood_states;
+	//Stan granicy ziarna
 	int state;
 };
 
@@ -22,9 +25,8 @@ public:
 	GrainBoundaryRule();
 	~GrainBoundaryRule();
 
-	std::list<GNode> boundary_states;
+	std::vector<BoundaryNode> boundary_states;
 
-	virtual void step(unsigned int * cell, class std::vector<unsigned int> neighborhood);
-	virtual void clear(unsigned int * cell, class std::vector<unsigned int> neighborhood);
+	virtual void step(unsigned int * cell, class std::vector<unsigned int> & neighborhood);
 };
 

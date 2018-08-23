@@ -1,8 +1,8 @@
 #pragma once
 #include <QThread.h>
 
-#include "Simulation.h"
 #include "CellularAutomata.h"
+#include "CellularAutomataSpace.h"
 
 class CalculationsThread : public QThread
 {
@@ -12,7 +12,7 @@ public:
 	CalculationsThread();
 	~CalculationsThread();
 
-    Simulation * simulation;
+    CellularAutomata * simulation;
 
 private:
 	void run() override;

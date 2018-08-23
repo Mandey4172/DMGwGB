@@ -1,6 +1,6 @@
 #pragma once
 
-#include"Simulation.h"
+#include"CellularAutomata.h"
 
 class Calculations
 {
@@ -8,7 +8,7 @@ public:
 	Calculations();
 	~Calculations();
 
-	Simulation * simulation;
+	CellularAutomata * simulation;
 
 	void simulate();
 };

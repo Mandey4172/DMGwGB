@@ -106,6 +106,7 @@
       <ConformanceMode>true</ConformanceMode>
       <OpenMPSupport>true</OpenMPSupport>
       <ExceptionHandling>Sync</ExceptionHandling>
+      <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -141,6 +142,7 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <OpenMPSupport>true</OpenMPSupport>
+      <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -151,19 +153,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Calculations.h" />
-    <ClInclude Include="CellularAutomata.h" />
+    <ClInclude Include="CellularAutomataSpace.h" />
     <ClInclude Include="CRule.h" />
     <ClInclude Include="GrainBoundaryRule.h" />
-    <ClInclude Include="GrainBoundarySimulation.h" />
+    <ClInclude Include="GrainBoundaryGrowthCellularAutomata.h" />
     <ClInclude Include="GrainGrowthRule.h" />
-    <ClInclude Include="GrainGrowthSimulation.h" />
+    <ClInclude Include="GrainGrowthCellularAutomata.h" />
     <ClInclude Include="HexagonalNeighborhood.h" />
     <ClInclude Include="MooreNeighborhood.h" />
     <ClInclude Include="Neighborhood.h" />
     <ClInclude Include="NucleonGenerator.h" />
     <ClInclude Include="NVonNeummanNeighborhood.h" />
     <ClInclude Include="PentagonalNeighborhood.h" />
-    <ClInclude Include="Simulation.h" />
+    <ClInclude Include="CellularAutomata.h" />
     <ClInclude Include="SPoint.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -171,10 +173,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Calculations.cpp" />
-    <ClCompile Include="CellularAutomata.cpp" />
+    <ClCompile Include="CellularAutomataSpace.cpp" />
     <ClCompile Include="CRule.cpp" />
     <ClCompile Include="GrainBoundaryRule.cpp" />
-    <ClCompile Include="GrainBoundarySimulation.cpp" />
+    <ClCompile Include="GrainBoundaryGrowthCellularAutomata.cpp" />
     <ClCompile Include="GrainGrowthRule.cpp" />
     <ClCompile Include="GrainGrowthSimulation.cpp" />
     <ClCompile Include="HexagonalNeighborhood.cpp" />
@@ -183,7 +185,7 @@
     <ClCompile Include="NucleonGenerator.cpp" />
     <ClCompile Include="NVonNeummanNeighborhood.cpp" />
     <ClCompile Include="PentagonalNeighborhood.cpp" />
-    <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="CellularAutomata.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

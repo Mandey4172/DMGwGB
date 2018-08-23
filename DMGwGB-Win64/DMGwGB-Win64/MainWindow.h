@@ -20,7 +20,7 @@
 #include "QNewDialog.h"
 
 #include "CalculationsThread.h"
-#include "CellularAutomata.h"
+//#include "CellularAutomataSpace.h"
 
 class MainWindow : public QMainWindow
 {
@@ -41,6 +41,7 @@ private:
     QMenu			*fileMenu;
     /*Menu Actions*/
     QAction			*newAction;
+	QAction			*loadAction;
 	QAction			*saveAction;
     QAction			*exitAction;
     /* */
@@ -95,6 +96,7 @@ private:
 	void updateDebug(const QString text);
 	void nucleonGenerationTypeChanged(const int & index);
 
+	void loadFile();
 	void saveFile();
 };
 

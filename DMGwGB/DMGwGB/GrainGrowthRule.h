@@ -7,6 +7,6 @@ public:
 	GrainGrowthRule();
 	~GrainGrowthRule();
 	
-	virtual void step(unsigned int * cell, class std::vector<unsigned int > neighborhood);
+	virtual void step(unsigned int * cell, class std::vector<unsigned int > & neighborhood);
 };
 
