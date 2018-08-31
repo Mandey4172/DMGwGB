@@ -25,7 +25,7 @@ public:
 	//Zapisu w obiekcie string
 	std::string save() const;
 	//Wczytaj z obiektu string
-	void load(std::string data);
+	void load(const std::string &data);
 
 	//Pobieranie komórek
 	inline unsigned int *** getCells() const;

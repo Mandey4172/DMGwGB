@@ -73,6 +73,12 @@ private:
     QLabel			*neightborhoodLabel;
     QComboBox		*neightborhoodComboBox;
 
+	QLabel			*neightborhoodRadiusLabel;
+	QSpinBox		*neightborhoodRadiusSpinBox;
+
+	QLabel			*boundaryNeightborhoodLabel;
+	QComboBox		*boundaryNeightborhoodComboBox;
+
 	QLabel			*boundaryConditionsLabel;
 	QComboBox		*boundaryConditionsComboBox;
 

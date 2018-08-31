@@ -13,7 +13,5 @@ public:
 
 	virtual bool step();
 	virtual void start();
-	
-	int steps;
 };
 

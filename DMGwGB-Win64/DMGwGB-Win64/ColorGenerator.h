@@ -8,6 +8,6 @@ public:
 	void generate(int n);
 
 	double ** colors;
-	int colorCount;;
+	unsigned int colorCount;;
 };
 

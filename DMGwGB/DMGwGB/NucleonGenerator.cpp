@@ -79,9 +79,10 @@ void NucleonGenerator::random(CellularAutomataSpace * ca, unsigned int quantity,
 
 		for (unsigned int j = 0; j < i; j++)
 		{
-			unsigned int ri = round(sqrt(pow( abs( static_cast<int>( seed_x[i] - seed_x[j])), 2) +
+			unsigned int ri = static_cast<unsigned int>(
+								round(sqrt(pow( abs( static_cast<int>( seed_x[i] - seed_x[j])), 2) +
 								pow( abs( static_cast<int>( seed_y[i] - seed_y[j])), 2) +
-								pow( abs( static_cast<int>( seed_z[i] - seed_z[j])), 2)));
+								pow( abs( static_cast<int>( seed_z[i] - seed_z[j])), 2))));
 			if (ri < r)
 			{
 				--i;
@@ -117,9 +118,10 @@ void NucleonGenerator::regular(CellularAutomataSpace * ca, unsigned int quantity
 	int step_x = m / (quantity_m + 1),
 		step_y = n / (quantity_n + 1),
 		step_z = o / (quantity_o + 1);
-	int	rest_x = floor((m - (step_x * (quantity_m + 1))) / 2),
-		rest_y = floor((n - (step_y * (quantity_n + 1))) / 2),
-		rest_z = floor((o - (step_z * (quantity_o + 1))) / 2);
+
+	int	rest_x = static_cast<int>(floor((m - (step_x * (quantity_m + 1))) / 2)),
+		rest_y = static_cast<int>(floor((n - (step_y * (quantity_n + 1))) / 2)),
+		rest_z = static_cast<int>(floor((o - (step_z * (quantity_o + 1))) / 2));
 
 
 	if (step_x < 1)
@@ -135,11 +137,11 @@ void NucleonGenerator::regular(CellularAutomataSpace * ca, unsigned int quantity
 		step_z = 1;
 	}
 	int count = 0;
-	for (int i = 1; i < (quantity_n + 1); i++)
+	for (unsigned int i = 1; i < (quantity_n + 1); i++)
 	{
-		for (int j = 1; j < (quantity_m + 1); j++)
+		for (unsigned int j = 1; j < (quantity_m + 1); j++)
 		{
-			for (int k = 1; k < (quantity_o + 1); k++)
+			for (unsigned int k = 1; k < (quantity_o + 1); k++)
 			{
 				int x = rest_x + (i * step_x),
 					y = rest_y + (j * step_y),

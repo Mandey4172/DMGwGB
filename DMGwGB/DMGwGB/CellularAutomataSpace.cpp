@@ -118,7 +118,7 @@ std::string CellularAutomataSpace::save() const
 	return save;
 }
 
-void CellularAutomataSpace::load(std::string data)
+void CellularAutomataSpace::load(const std::string &data)
 {
 	std::vector<std::vector<std::vector<std::string>>> vcells;
 
@@ -128,17 +128,18 @@ void CellularAutomataSpace::load(std::string data)
 	int new_nucleons_count = std::stoi(firstCut[0]);
 	firstCut.erase(firstCut.begin());
 
-	a = firstCut.size();
+	a = static_cast<unsigned int>(firstCut.size());
+
 	for (std::string first : firstCut)
 	{
 		std::vector<std::vector<std::string>> filler;
 		std::vector<std::string> secondCut = split(first, "\n");
-		b = secondCut.size() > b ? secondCut.size() : b;
+		b = static_cast<unsigned int>(secondCut.size() > b ? secondCut.size() : b);
 		for (std::string second : secondCut)
 		{
 			std::vector<std::string> sfiller;
 			std::vector<std::string> thirdCut = split(second, " ");
-			c = thirdCut.size() > c ? thirdCut.size() : c;
+			c = static_cast<unsigned int>(thirdCut.size() > c ? thirdCut.size() : c);
 			for (std::string third : thirdCut)
 			{
 				sfiller.push_back(third);

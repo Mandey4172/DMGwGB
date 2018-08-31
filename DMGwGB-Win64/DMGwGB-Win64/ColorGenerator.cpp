@@ -42,7 +42,7 @@ void ColorGenerator::generate(int n)
 		}
 		colors[i] = new double[3]{ (float)(r % 100), (float)(g % 100),(float)(155 + (b % 150)) };
 	}
-	for (int i = floor(n / 2); i < n; ++i)
+	for (int i = static_cast<int>(floor(n / 2)); i < n; ++i)
 	{
 		int r = rand() % 255,
 			g = rand() % 255,

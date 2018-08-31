@@ -12,7 +12,6 @@ QNewDialog::QNewDialog(QWidget *parent)
 	createDialog();
 	createDialog();
 
-	QWidget *mainWidget = new QWidget();
 	QGridLayout *mainLayout = new QGridLayout();
 
 	acceptButton = new QPushButton(tr("Accept"));

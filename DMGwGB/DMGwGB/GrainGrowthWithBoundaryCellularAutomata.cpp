@@ -1,4 +1,4 @@
-#include "GrainBoundaryGrowthCellularAutomata.h"
+#include "GrainGrowthWithBoundaryCellularAutomata.h"
 
 #include <iostream>
 #include <memory>
@@ -18,17 +18,18 @@
 
 
 
-GrainBoundaryGrowthCellularAutomata::GrainBoundaryGrowthCellularAutomata()
+GrainGrowthWithBoundaryCellularAutomata::GrainGrowthWithBoundaryCellularAutomata()
 {
 	this->cellularautomata = new CellularAutomataSpace(100, 100, 100);
 	this->neighborhood = new MooreNeighborhood();
+	this->boundary_neighborhood = new MooreNeighborhood();
 
 	this->rule = new GrainBoundaryRule();
 	this->grainSize = 1;
 }
 
 
-bool GrainBoundaryGrowthCellularAutomata::step()
+bool GrainGrowthWithBoundaryCellularAutomata::step()
 {
 	bool isComplete = true;
 
@@ -47,10 +48,13 @@ bool GrainBoundaryGrowthCellularAutomata::step()
 	GrainGrowth2.cellularautomata = new CellularAutomataSpace(m,n,o);
 	
 	this->rule->grain_count = this->cellularautomata->nucleons_count;
+
+	#pragma omp parallel
 	for (int i = 0; i < m; i++)
 	{
 		for (int j = 0; j < n; j++)
 		{
+			#pragma omp for schedule(static) nowait
 			for (int k = 0; k < o; k++)
 			{
 				//Pobieranie s¹siedztwa
@@ -63,7 +67,7 @@ bool GrainBoundaryGrowthCellularAutomata::step()
 	}
 
 	GrainGrowth2.cellularautomata->boundarys_count = static_cast<unsigned int>(((GrainBoundaryRule *)rule)->boundary_states.size());
-	GrainGrowth2.neighborhood = this->neighborhood;
+	GrainGrowth2.neighborhood = this->boundary_neighborhood;
 	
 	if (grainSize > 1)
 	{
@@ -77,7 +81,7 @@ bool GrainBoundaryGrowthCellularAutomata::step()
 	{
 		for (int j = 0; j < n; j++)
 		{
-			#pragma omp for schedule(dynamic)
+			#pragma omp for schedule(static) nowait
 			for (int k = 0; k < o; k++)
 			{
 				if (GrainGrowth2.cellularautomata->getCells()[i][j][k] > 0)
@@ -91,7 +95,7 @@ bool GrainBoundaryGrowthCellularAutomata::step()
 	return isComplete;
 }
 
-void GrainBoundaryGrowthCellularAutomata::start()
+void GrainGrowthWithBoundaryCellularAutomata::start()
 {
 	
 	if (this->rule)

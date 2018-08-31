@@ -5,9 +5,11 @@
 #include <QFileDialog.h>
 #include <QMessageBox.h>
 #include <QTime>
-#include <limits>
-
+#include <QDesktopWidget>
+#include <QApplication>
 #include <QDebug>
+
+#include <limits>
 
 #include "QGLRender.h"
 #include "QNewDialog.h"
@@ -18,7 +20,7 @@
 #include "PentagonalNeighborhood.h"
 #include "VonNeummanNeighborhood.h"
 #include "NucleonGenerator.h"
-#include "GrainBoundaryGrowthCellularAutomata.h"
+#include "GrainGrowthWithBoundaryCellularAutomata.h"
 
 #include <omp.h>
 
@@ -43,10 +45,14 @@ MainWindow::MainWindow(QWidget *parent)
     mainLayout->addWidget(openGLDisplay, 0, 2, 10, 10);
     mainLayout->setContentsMargins(20, 20, 20, 20);
     mainWidget->setLayout(mainLayout);
+	
+	QRect monitor = QApplication::desktop()->screenGeometry();
 
-    setCentralWidget(mainWidget);
-    setMinimumSize(640, 480);
-    resize(800, 600);
+	setCentralWidget(mainWidget);
+	setMinimumSize(640, 480);
+
+	if(monitor.width() > 1000 && monitor.height() > 900) resize(1000, 900);
+	else resize(monitor.width(), monitor.height());
 
     connect(&calculationsThread, &CalculationsThread::updateVal, this, &MainWindow::updateRender);
 	connect(&calculationsThread, &CalculationsThread::updateDeb, this, &MainWindow::updateDebug);
@@ -61,7 +67,6 @@ MainWindow::~MainWindow()
 		calculationsThread.terminate();
 		calculationsThread.wait();
 	}
-
 	//delete this->calculationsThread;
 }
 
@@ -152,6 +157,18 @@ void MainWindow::createSimulationMenu()
 	neightborhoodComboBox->addItem(" Pentagonal ");
 	neightborhoodComboBox->addItem(" Hexagonal ");
 
+	neightborhoodRadiusLabel = new QLabel(tr(" Neightborhood radius "));
+	neightborhoodRadiusSpinBox = new QSpinBox;
+	neightborhoodRadiusSpinBox->setMinimum(1);
+
+	boundaryNeightborhoodLabel = new QLabel(tr(" Boundary neightborhood type: "));
+	boundaryNeightborhoodLabel->setMaximumHeight(50);
+	boundaryNeightborhoodComboBox = new QComboBox;
+	boundaryNeightborhoodComboBox->addItem(" Moore ");
+	boundaryNeightborhoodComboBox->addItem(" VonNeumman ");
+	boundaryNeightborhoodComboBox->addItem(" Pentagonal ");
+	boundaryNeightborhoodComboBox->addItem(" Hexagonal ");
+
 	grainBoundarySizeLabel = new QLabel(tr(" Grain boundary size: "));
 	grainBoundarySizeTextBox = new QSpinBox;
 	grainBoundarySizeTextBox->setMinimum(1);
@@ -188,12 +205,18 @@ void MainWindow::createSimulationMenu()
     layout->addWidget(neightborhoodLabel, 10, 0, 1, 4);
     layout->addWidget(neightborhoodComboBox, 11, 0, 1, 4);
 
-	layout->addWidget(grainBoundarySizeLabel, 12, 0, 1, 4);
-	layout->addWidget(grainBoundarySizeTextBox, 13, 0, 1, 4);
+	layout->addWidget(neightborhoodRadiusLabel, 12, 0, 1, 4);
+	layout->addWidget(neightborhoodRadiusSpinBox, 13, 0, 1, 4);
 
-    layout->addWidget(simulationStartButton, 14, 0, 1, 4);
+	layout->addWidget(boundaryNeightborhoodLabel, 14, 0, 1, 4);
+	layout->addWidget(boundaryNeightborhoodComboBox, 15, 0, 1, 4);
 
-	layout->addWidget(debugLabel, 15, 0, 1, 4);
+	layout->addWidget(grainBoundarySizeLabel, 16, 0, 1, 4);
+	layout->addWidget(grainBoundarySizeTextBox, 17, 0, 1, 4);
+
+    layout->addWidget(simulationStartButton, 18, 0, 1, 4);
+
+	layout->addWidget(debugLabel, 19, 0, 1, 4);
 
  //   layout->setRowMinimumHeight(0, 20);
  //   layout->setRowMinimumHeight(1, 20);
@@ -235,6 +258,15 @@ void MainWindow::createOpenGLDisplay()
 
 void MainWindow::startSimulation()
 {
+	unsigned int negihtborhoodRadius = static_cast<unsigned int>(neightborhoodRadiusSpinBox->value());
+	unsigned int grainSize = static_cast<unsigned int>(grainBoundarySizeTextBox->value());
+	
+	this->calculationsThread.simulation->neighborhood->setRadius(negihtborhoodRadius);
+	
+	GrainGrowthWithBoundaryCellularAutomata * simulation = dynamic_cast<GrainGrowthWithBoundaryCellularAutomata *>(this->calculationsThread.simulation);
+	if (simulation) simulation->grainSize = grainSize;
+
+	if (calculationsThread.simulation->neighborhood) delete calculationsThread.simulation->neighborhood;
 	if (neightborhoodComboBox->itemText(neightborhoodComboBox->currentIndex()) == " VonNeumman ")
 	{
 		calculationsThread.simulation->neighborhood = new VonNeummanNeighborhood();
@@ -252,6 +284,28 @@ void MainWindow::startSimulation()
 		calculationsThread.simulation->neighborhood = new MooreNeighborhood();
 	}
 
+	if (simulation)
+	{
+		delete simulation->boundary_neighborhood;
+		if (boundaryNeightborhoodComboBox->itemText(boundaryNeightborhoodComboBox->currentIndex()) == " VonNeumman ")
+		{
+			simulation->boundary_neighborhood = new VonNeummanNeighborhood();
+		}
+		else if (boundaryNeightborhoodComboBox->itemText(boundaryNeightborhoodComboBox->currentIndex()) == " Pentagonal ")
+		{
+			simulation->boundary_neighborhood = new PentagonalNeighborhood();
+		}
+		else if (boundaryNeightborhoodComboBox->itemText(boundaryNeightborhoodComboBox->currentIndex()) == " Hexagonal ")
+		{
+			simulation->boundary_neighborhood = new HexagonalNeighborhood();
+		}
+		else
+		{
+			simulation->boundary_neighborhood = new MooreNeighborhood();
+		}
+	}
+	
+
 	if (boundaryConditionsComboBox->itemText(boundaryConditionsComboBox->currentIndex()) == " Blocking ")
 	{
 		calculationsThread.simulation->cellularautomata->setBoundaryContidion(BoundaryContidionTypes::Blocking);
@@ -265,8 +319,6 @@ void MainWindow::startSimulation()
 		calculationsThread.simulation->cellularautomata->setBoundaryContidion(BoundaryContidionTypes::Reflecting);
 	}
 
-	unsigned int grainSize = static_cast<unsigned int>(grainBoundarySizeTextBox->value());
-	static_cast<GrainBoundaryGrowthCellularAutomata *>(this->calculationsThread.simulation)->grainSize = grainSize;
 
 
     connect(&calculationsThread, &CalculationsThread::updateVal, this, &MainWindow::updateRender);

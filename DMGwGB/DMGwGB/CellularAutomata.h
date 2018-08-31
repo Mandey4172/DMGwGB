@@ -8,7 +8,7 @@ public:
 	virtual ~CellularAutomata();
 
 	virtual bool step();
-	virtual void start();
+	void start();
 
 	class CellularAutomataSpace * cellularautomata;
 	class Neighborhood * neighborhood;

@@ -3,7 +3,7 @@
 
 Neighborhood::Neighborhood()
 {
-
+	radius = 1;
 }
 
 Neighborhood::Neighborhood(const Neighborhood & o)
@@ -19,6 +19,12 @@ std::vector<unsigned int> Neighborhood::get(CellularAutomataSpace * cellularauto
 {
 	std::vector<unsigned int> neightborhood;
 	return neightborhood;
+}
+
+void Neighborhood::setRadius(unsigned int r)
+{
+	if (r == 0) r = 1;
+	radius = static_cast<int>(r);
 }
 
 

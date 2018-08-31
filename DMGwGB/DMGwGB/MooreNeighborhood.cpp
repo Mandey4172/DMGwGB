@@ -18,7 +18,7 @@ std::vector<unsigned int> MooreNeighborhood::get(CellularAutomataSpace * cellula
 		n = static_cast<int>(cellularautomata->getSize()[1]),
 		o = static_cast<int>(cellularautomata->getSize()[2]);
 
-	for (int i = -1; i <= 1; i++)
+	for (int i = -radius; i <= radius; i++)
 	{
 		int current_x = x + i;
 		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking)
@@ -51,7 +51,7 @@ std::vector<unsigned int> MooreNeighborhood::get(CellularAutomataSpace * cellula
 				current_x = m - (current_x - m) - 1;
 			}
 		}
-		for (int j = -1; j <= 1; j++)
+		for (int j = -radius; j <= radius; j++)
 		{
 			int current_y = y + j;
 			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking)
@@ -84,7 +84,7 @@ std::vector<unsigned int> MooreNeighborhood::get(CellularAutomataSpace * cellula
 					current_y = n - (current_y - n) - 1;
 				}
 			}
-			for (int k = -1; k <= 1; k++)
+			for (int k = -radius; k <= radius; k++)
 			{
 				int current_z = z + k;
 				if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking)
@@ -114,7 +114,7 @@ std::vector<unsigned int> MooreNeighborhood::get(CellularAutomataSpace * cellula
 					}
 					else if (current_z >= o)
 					{
-						current_z = o - (current_z - o);
+						current_z = o - (current_z - o) - 1;
 					}
 				}
 				if (cellularautomata->getCells()[current_x][current_y][current_z] > 0)

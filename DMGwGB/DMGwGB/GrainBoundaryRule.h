@@ -15,7 +15,7 @@ struct BoundaryNode
 	//Stany w otoczeniu komórki
 	std::vector<unsigned int> neighborhood_states;
 	//Stan granicy ziarna
-	int state;
+	unsigned int state;
 };
 
 class GrainBoundaryRule :
@@ -28,5 +28,6 @@ public:
 	std::vector<BoundaryNode> boundary_states;
 
 	virtual void step(unsigned int * cell, class std::vector<unsigned int> & neighborhood);
+
 };
 

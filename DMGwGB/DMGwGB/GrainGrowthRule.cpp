@@ -13,23 +13,23 @@ GrainGrowthRule::~GrainGrowthRule()
 {
 }
 
-/* Regó³a przejœcia dla rozrostu ziaren */
+/* Regu³a przejœcia dla rozrostu ziaren */
 void GrainGrowthRule::step(unsigned int * cell, std::vector<unsigned int> & neighborhood)
 {
 	if (!neighborhood.empty())
 	{
-		std::vector<unsigned int> unique_grain;
+		std::vector<unsigned int> unique_grains;
 		std::vector<unsigned int> count_grain;
 		//Zliczanie wyst¹pien danego stanu
 		for (int n : neighborhood)
 		{
 			//Sprawdzanie czy stan w tablicy s¹siadów s¹siedztwa istnieje 
 			bool exist = false;
-			if (!unique_grain.empty())
+			if (!unique_grains.empty())
 			{
-				for (int i = 0; i < unique_grain.size(); i++)
+				for (int i = 0; i < unique_grains.size(); i++)
 				{
-					if (unique_grain[i] == n)
+					if (unique_grains[i] == n)
 					{
 						//Gdy stan istnieje w tablicy z unikalnymi stanami
 						exist = true;
@@ -42,20 +42,20 @@ void GrainGrowthRule::step(unsigned int * cell, std::vector<unsigned int> & neig
 			{
 				//Gdy stan istnieje w tablicy z unikalnymi stanami. 
 				//Dodaj go do tablicy.
-				unique_grain.push_back(n);
+				unique_grains.push_back(n);
 				count_grain.push_back(1);
 			}
 		}
 		//Wybór ziarna które najczêœciej wystêpuje 
 		int max = 0;
-		for (int i = 1; i < unique_grain.size(); i++)
+		for (int i = 1; i < unique_grains.size(); i++)
 		{
 			if (count_grain[max] < count_grain[i])
 			{
 				max = i;
 			}
 		}
-		*cell = unique_grain[max];
+		*cell = unique_grains[max];
 	}
 }
 

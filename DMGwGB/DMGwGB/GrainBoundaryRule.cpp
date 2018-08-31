@@ -14,52 +14,61 @@ GrainBoundaryRule::~GrainBoundaryRule()
 {
 }
 
-/* Regó³a przejœcia dla wyszukiwania granic ziaren */
+/* Regu³a przejœcia dla wyszukiwania granic ziaren */
 void GrainBoundaryRule::step(unsigned int * cell, std::vector<unsigned int> & neighborhood)
 {
 	if (!neighborhood.empty())
 	{
-		std::vector<unsigned int> cell_state;
+		std::vector<unsigned int> unique_grains;
 		BoundaryNode new_node;
 		//Tworzenie tablicy z unikalnymi stanami
 		for (unsigned int n : neighborhood)
 		{
 			if (n <= this->grain_count)
 			{
-				if (std::find(cell_state.begin(), cell_state.end(), n) == cell_state.end())
+				if (std::find(unique_grains.begin(), unique_grains.end(), n) == unique_grains.end())
 				{
-					cell_state.push_back(n);
+					unique_grains.push_back(n);
 				}
 			}
 		}
 		//Sorkowanie tablicy z unikalnymi stanami otoczenia 
-		std::sort(cell_state.begin(), cell_state.end());
+		std::sort(unique_grains.begin(), unique_grains.end());
+		//
+		bool exist = false;
 		//Je¿eli istnieje wiecej ni¿ jeden stan w s¹siedztwie
 		//komórka znajduje sie na granicy
-		if (cell_state.size() > 1)
+		#pragma omp critical 
 		{
-			if (!this->boundary_states.empty())
+			if (unique_grains.size() > 1)
 			{
-				//Sprawdzanie czy granica posiada opis w globalnej liœcie
-				for (BoundaryNode b : this->boundary_states)
+				if (!this->boundary_states.empty())
 				{
-					//Czy aktualne otoczenie jest takie samo jak otoczenie elementu z listy
-					if (b.neighborhood_states == cell_state)
+					//Sprawdzanie czy granica posiada opis w globalnej liœcie
+					for (std::vector<BoundaryNode>::reverse_iterator b = this->boundary_states.rbegin(); b != this->boundary_states.rend(); b++)
 					{
-						//Jezeli otoczenie jest zgodne przypisz stan i przerwij 
-						*cell = b.state;
-						return;
+
+						//Czy aktualne otoczenie jest takie samo jak otoczenie elementu z listy
+						if (b->neighborhood_states == unique_grains)
+						{
+							//Jezeli otoczenie jest zgodne przypisz stan i przerwij 
+							*cell = b->state;
+							exist = true;
+						}
 					}
 				}
-			}
-			//Gdy nie istnieje opis w globalnej liœcie
-			new_node.neighborhood_states = cell_state;
-			new_node.state = this->grain_count + 1 + this->boundary_states.size();
-			*cell = new_node.state;
+				if (!exist)
+				{
+					//Gdy nie istnieje opis w globalnej liœcie
+					new_node.neighborhood_states = unique_grains;
+					new_node.state = static_cast<unsigned int>(this->grain_count + 1 + this->boundary_states.size());
+					*cell = new_node.state;
 
-			//Dodaj opis
-			this->boundary_states.push_back(new_node);
-		}
+					//Dodaj opis
+					this->boundary_states.push_back(new_node);
+				}
+			}
+		}	
 	}
 }
 	

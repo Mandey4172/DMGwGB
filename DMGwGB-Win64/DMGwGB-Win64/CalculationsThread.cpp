@@ -1,6 +1,6 @@
 #include "CalculationsThread.h"
 
-#include "GrainBoundaryGrowthCellularAutomata.h"
+#include "GrainGrowthWithBoundaryCellularAutomata.h"
 #include "GrainGrowthCellularAutomata.h"
 
 
@@ -9,7 +9,8 @@
 
 CalculationsThread::CalculationsThread()
 {
-    this->simulation = new GrainBoundaryGrowthCellularAutomata();
+	//this->simulation = new GrainGrowthCellularAutomata();
+    this->simulation = new GrainGrowthWithBoundaryCellularAutomata();
 }
 
 

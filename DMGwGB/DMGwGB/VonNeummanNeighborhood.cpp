@@ -19,7 +19,7 @@ std::vector<unsigned int> VonNeummanNeighborhood::get(CellularAutomataSpace * ce
 		o = static_cast<int>(cellularautomata->getSize()[2]);
 
 
-	for (int i = -1; i <= 1; i++)
+	for (int i = -radius; i <= radius; i++)
 	{
 		int current_x = x + i;
 		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x < 0) || (current_x >= m)))
@@ -54,7 +54,7 @@ std::vector<unsigned int> VonNeummanNeighborhood::get(CellularAutomataSpace * ce
 			neighborhood.push_back(cellularautomata->getCells()[current_x][y][z]);
 		}
 	}
-	for (int j = -1; j <= 1; j++)
+	for (int j = -radius; j <= radius; j++)
 	{
 		int current_y = y + j;
 		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0 || current_y >= n)))
@@ -89,7 +89,7 @@ std::vector<unsigned int> VonNeummanNeighborhood::get(CellularAutomataSpace * ce
 			neighborhood.push_back(cellularautomata->getCells()[x][current_y][z]);
 		}
 	}
-	for (int k = -1; k <= 1; k++)
+	for (int k = -radius; k <= radius; k++)
 	{
 		int current_z = z + k;
 		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
@@ -116,7 +116,7 @@ std::vector<unsigned int> VonNeummanNeighborhood::get(CellularAutomataSpace * ce
 			}
 			else if (current_z >= o)
 			{
-				current_z = o - (current_z - o);
+				current_z = o - (current_z - o) - 1;
 			}
 		}
 		if (cellularautomata->getCells()[x][y][current_z] > 0)

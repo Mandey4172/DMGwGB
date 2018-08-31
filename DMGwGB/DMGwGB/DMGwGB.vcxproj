@@ -156,7 +156,7 @@
     <ClInclude Include="CellularAutomataSpace.h" />
     <ClInclude Include="CRule.h" />
     <ClInclude Include="GrainBoundaryRule.h" />
-    <ClInclude Include="GrainBoundaryGrowthCellularAutomata.h" />
+    <ClInclude Include="GrainGrowthWithBoundaryCellularAutomata.h" />
     <ClInclude Include="GrainGrowthRule.h" />
     <ClInclude Include="GrainGrowthCellularAutomata.h" />
     <ClInclude Include="HexagonalNeighborhood.h" />
@@ -176,7 +176,7 @@
     <ClCompile Include="CellularAutomataSpace.cpp" />
     <ClCompile Include="CRule.cpp" />
     <ClCompile Include="GrainBoundaryRule.cpp" />
-    <ClCompile Include="GrainBoundaryGrowthCellularAutomata.cpp" />
+    <ClCompile Include="GrainGrowthWithBoundaryCellularAutomata.cpp" />
     <ClCompile Include="GrainGrowthRule.cpp" />
     <ClCompile Include="GrainGrowthSimulation.cpp" />
     <ClCompile Include="HexagonalNeighborhood.cpp" />
