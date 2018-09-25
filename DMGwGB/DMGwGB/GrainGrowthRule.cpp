@@ -14,7 +14,7 @@ GrainGrowthRule::~GrainGrowthRule()
 }
 
 /* Regu³a przejœcia dla rozrostu ziaren */
-void GrainGrowthRule::step(unsigned int * cell, std::vector<unsigned int> & neighborhood)
+void GrainGrowthRule::check(unsigned int * cell, std::vector<unsigned int> & neighborhood)
 {
 	if (!neighborhood.empty())
 	{

@@ -14,6 +14,6 @@ public:
 	class Neighborhood * neighborhood;
 
 protected:
-	class CRule * rule;
+	class CellularAutomataRule * rule;
 };
 

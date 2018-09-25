@@ -8,7 +8,7 @@
 
 #include "CellularAutomataSpace.h"
 #include "Neighborhood.h"
-#include "CRule.h"
+#include "CellularAutomataRule.h"
 
 #include "MooreNeighborhood.h"
 #include "VonNeummanNeighborhood.h"
@@ -26,6 +26,7 @@ GrainGrowthWithBoundaryCellularAutomata::GrainGrowthWithBoundaryCellularAutomata
 
 	this->rule = new GrainBoundaryRule();
 	this->grainSize = 1;
+	bFuseAfterSimulation = true;
 }
 
 
@@ -61,7 +62,7 @@ bool GrainGrowthWithBoundaryCellularAutomata::step()
 				MooreNeighborhood n;
 				std::vector<unsigned int> neightborhood = n.get(this->cellularautomata, i, j, k);
 
-				this->rule->step(&GrainGrowth2.cellularautomata->getCells()[i][j][k], neightborhood);
+				this->rule->check(&GrainGrowth2.cellularautomata->getCells()[i][j][k], neightborhood);
 			}
 		}
 	}
@@ -76,21 +77,26 @@ bool GrainGrowthWithBoundaryCellularAutomata::step()
 			GrainGrowth2.step();
 		}
 	}
-	#pragma omp parallel 
-	for (int i = 0; i < m; i++)
+	if (bFuseAfterSimulation)
 	{
-		for (int j = 0; j < n; j++)
+		#pragma omp parallel 
+		for (int i = 0; i < m; i++)
 		{
-			#pragma omp for schedule(static) nowait
-			for (int k = 0; k < o; k++)
+			for (int j = 0; j < n; j++)
 			{
-				if (GrainGrowth2.cellularautomata->getCells()[i][j][k] > 0)
+				#pragma omp for schedule(static) nowait
+				for (int k = 0; k < o; k++)
 				{
-					this->cellularautomata->getCells()[i][j][k] = GrainGrowth2.cellularautomata->getCells()[i][j][k];
+					if (GrainGrowth2.cellularautomata->getCells()[i][j][k] > 0)
+					{
+						this->cellularautomata->getCells()[i][j][k] = GrainGrowth2.cellularautomata->getCells()[i][j][k];
+					}
 				}
 			}
 		}
 	}
+	else
+		this->cellularautomata = GrainGrowth2.cellularautomata;
 	static_cast<GrainBoundaryRule *>(this->rule)->boundary_states.clear();
 	return isComplete;
 }

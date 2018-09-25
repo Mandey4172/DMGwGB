@@ -9,6 +9,8 @@
 #include <QSpinBox.h>
 #include <QPushButton.h>
 #include <QLabel.h>
+#include <QCheckBox.h>
+#include <QLineEdit.h>
 #include <QDialogButtonBox.h>
 #include <QGridLayout.h>
 #include <QFormLayout.h>
@@ -31,8 +33,10 @@ public:
     ~MainWindow();
 
 private:
-    //Ui::DMGwGBWin64Class ui;
+
     void createMenuBar();
+	void createNewMenu();
+	void createNucleationMenu();
     void createSimulationMenu();
     void createOpenGLDisplay();
 
@@ -44,16 +48,18 @@ private:
 	QAction			*loadAction;
 	QAction			*saveAction;
     QAction			*exitAction;
-    /* */
-    QGroupBox		*simulationMenuGroupBox;
-
+    
     /*Menu*/
-    //Nucleation
-    QLabel			*nucleationLabel;
+		//New 
+	QGroupBox		*newMenuGroupBox;
+	QPushButton		*newMicrostructureButton;
+	QPushButton		*loadMicrostructureButton;
+
+		//Nucleation
+	QGroupBox		*nucleationMenuGroupBox;
+
+	QLabel			*nucleationLabel;
     QSpinBox		*nucleationNumberSpinBox;
-	
-	QLabel			*statesCountLabel;
-	QSpinBox		*statesCountNumberSpinBox;
 
 	QLabel			*nucleationTypeLabel;
 	QComboBox		*nucleationTypeComboBox;
@@ -69,7 +75,9 @@ private:
 
 	QPushButton		*nucleationGenerateButton;
 
-    //Neightborhood
+		//Simulation
+	QGroupBox		*simulationMenuGroupBox;
+
     QLabel			*neightborhoodLabel;
     QComboBox		*neightborhoodComboBox;
 
@@ -84,23 +92,38 @@ private:
 
 	QLabel			*grainBoundarySizeLabel;
 	QSpinBox		*grainBoundarySizeTextBox;
+	
+	QLabel			*fuseAfterSimulationLabel;
+	QCheckBox		*fuseAfterSimulationChechBox;
 
-    //Simulation
     QPushButton		*simulationStartButton;
-    /*OpenGL*/
+	QLabel			*debugLabel;
+
+	/*OpenGL*/
+	QGroupBox		*displayMenuGroupBox;
     QGLRender		*openGLDisplay;
 
-	QLabel			*debugLabel;
+	QLabel			*showGrainBoundariesLabel;
+	QCheckBox		*showGrainBoundariesChechBox;
+
+	QLabel			*hidenGrainsLabel;
+	QLineEdit		*hidenGrainsLineEdit;
 
     CalculationsThread calculationsThread;
 
     private slots:
     void newSimulation();
+
     void startSimulation();
+
     void generateNucleons();
+	void nucleonGenerationTypeChanged(const int & index);
+	void showGrainBoundariesStateChanged(bool state);
+	void hidenGrainsStateChanged(const QString &text);
+	void hidenGrainsEditEnded();
+
     void updateRender();
 	void updateDebug(const QString text);
-	void nucleonGenerationTypeChanged(const int & index);
 
 	void loadFile();
 	void saveFile();

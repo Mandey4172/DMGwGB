@@ -102,70 +102,75 @@ CellularAutomataSpace::~CellularAutomataSpace()
 std::string CellularAutomataSpace::save() const
 {
 	std::string save;
-	save = std::to_string(this->nucleons_count) + "\n\n";
+	//save = std::to_string(this->nucleons_count) + "\n\n";
 	for (unsigned int i = 0; i < m; i++)
 	{
 		for (unsigned int j = 0; j < n; j++)
 		{
 			for (unsigned int k = 0; k < o; k++)
 			{
-				save += std::to_string(cells[i][j][k]) + " ";
+				save += std::to_string(i) + " " +
+					std::to_string(j) + " " +
+					std::to_string(k) + " " +
+					std::to_string(cells[i][j][k]) + "\n";
 			}
-			save += "\n";
 		}
-		save += "\n";
 	}
 	return save;
 }
 
 void CellularAutomataSpace::load(const std::string &data)
 {
-	std::vector<std::vector<std::vector<std::string>>> vcells;
-
-	unsigned int a = 0, b = 0, c = 0;
-	std::vector<std::string> firstCut = split(data,"\n\n");
-
-	int new_nucleons_count = std::stoi(firstCut[0]);
-	firstCut.erase(firstCut.begin());
-
-	a = static_cast<unsigned int>(firstCut.size());
-
-	for (std::string first : firstCut)
+	struct Chunk
 	{
-		std::vector<std::vector<std::string>> filler;
-		std::vector<std::string> secondCut = split(first, "\n");
-		b = static_cast<unsigned int>(secondCut.size() > b ? secondCut.size() : b);
-		for (std::string second : secondCut)
+		Chunk() : x(0), y(0), z(0), state(0) {};
+		unsigned int x;
+		unsigned int y;
+		unsigned int z;
+		unsigned int state;
+	};
+	std::vector<Chunk> cell_chunks;
+	unsigned int	a = 0,
+					b = 0, 
+					c = 0,
+					smax = 0;
+	{
+		std::vector<std::string> data_chunks = split(data, "\n");
+		#pragma omp parallel for schedule(static)
+		for (int i = 0; i < data_chunks.size(); i++)
 		{
-			std::vector<std::string> sfiller;
-			std::vector<std::string> thirdCut = split(second, " ");
-			c = static_cast<unsigned int>(thirdCut.size() > c ? thirdCut.size() : c);
-			for (std::string third : thirdCut)
+			std::string data_chunk = data_chunks[i];
+			Chunk cell_chunk;
+			std::vector<std::string> string_chunk = split(data_chunk, " ");
+			if (string_chunk.size() == 4)
 			{
-				sfiller.push_back(third);
+				cell_chunk.x = static_cast<int>(std::stoi(string_chunk[0]));
+				if (cell_chunk.x > a) a = cell_chunk.x;
+				cell_chunk.y = static_cast<int>(std::stoi(string_chunk[1]));
+				if (cell_chunk.y > b) b = cell_chunk.y;
+				cell_chunk.z = static_cast<int>(std::stoi(string_chunk[2]));
+				if (cell_chunk.z > c) c = cell_chunk.z;
+				cell_chunk.state = static_cast<int>(std::stoi(string_chunk[3]));
+				if (cell_chunk.state > smax) smax = cell_chunk.state;
+
+				#pragma omp critical
+				cell_chunks.push_back(cell_chunk);
 			}
-			filler.push_back(sfiller);
 		}
-		vcells.push_back(filler);
 	}
-	
 	//Destructor call
 	this->CellularAutomataSpace::~CellularAutomataSpace();
 	//Constructor call
-	this->CellularAutomataSpace::CellularAutomataSpace(a, b, c);
-	this->nucleons_count = new_nucleons_count;
-	for (unsigned int i = 0 ; i < a; i++)
+	this->CellularAutomataSpace::CellularAutomataSpace(a + 1, b + 1, c + 1);
+	this->nucleons_count = smax;
+
+	#pragma omp parallel for schedule(static)
+	for (int i = 0; i < cell_chunks.size(); i++)
 	{
-		for (unsigned int j = 0; j < b; j++)
-		{
-			for (unsigned int k = 0; k < c; k++)
-			{
-				cells[i][j][k] = static_cast<unsigned int>(std::stoi(vcells[i][j][k]));
-			}
-		}
+		Chunk chunk = cell_chunks[i];
+		cells[chunk.x][chunk.y][chunk.z] = chunk.state;
 	}
 }
-
 
 /*	Pobieranie komórek	*/
 unsigned int *** CellularAutomataSpace::getCells() const
@@ -201,11 +206,6 @@ std::vector<unsigned int> CellularAutomataSpace::getSize(const unsigned int n) c
 	}
 	return size;
 }
-
-//BoundaryContidionTypes CellularAutomataSpace::getBoundaryContidion()
-//{
-//	return boundary_contidion;
-//}
 
 void CellularAutomataSpace::setBoundaryContidion(BoundaryContidionTypes type)
 {

@@ -2,7 +2,7 @@
 
 #include "CellularAutomataSpace.h"
 #include "Neighborhood.h"
-#include "CRule.h"
+#include "CellularAutomataRule.h"
 #include "SPoint.h"
 
 #include "MooreNeighborhood.h"
@@ -53,7 +53,7 @@ bool GrainGrowthCellularAutomata::step()
 					//Pobieranie s¹siedztwa
 					std::vector<unsigned int> neightborhood = this->neighborhood->get(cca, i, j, k);
 					//Wykonanie regó³y dla komórki
-					this->rule->step(&this->cellularautomata->getCells()[i][j][k], neightborhood);
+					this->rule->check(&this->cellularautomata->getCells()[i][j][k], neightborhood);
 					//Czy zmieni³ siê stan komórki
 					if (this->cellularautomata->getCells()[i][j][k] > 0)
 					{

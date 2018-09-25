@@ -1,6 +1,6 @@
 #include"CellularAutomata.h"
 #include"CellularAutomataSpace.h"
-#include"CRule.h"
+#include "CellularAutomataRule.h"
 #include"Neighborhood.h"
 #include"MooreNeighborhood.h"
 #include"VonNeummanNeighborhood.h"

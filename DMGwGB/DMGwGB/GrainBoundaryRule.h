@@ -1,7 +1,7 @@
 #pragma once
 #include <list>
 
-#include "CRule.h"
+#include "CellularAutomataRule.h"
 #include <omp.h>
 
 struct BoundaryNode
@@ -19,7 +19,7 @@ struct BoundaryNode
 };
 
 class GrainBoundaryRule :
-	public CRule
+	public CellularAutomataRule
 {
 public:
 	GrainBoundaryRule();
@@ -27,7 +27,7 @@ public:
 
 	std::vector<BoundaryNode> boundary_states;
 
-	virtual void step(unsigned int * cell, class std::vector<unsigned int> & neighborhood);
+	virtual void check(unsigned int * cell, class std::vector<unsigned int> & neighborhood);
 
 };
 

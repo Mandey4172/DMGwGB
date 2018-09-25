@@ -25,6 +25,8 @@ QGLRender::QGLRender(QWidget *parent)
 	betaRotation = 0.f;
 	scale = 100.;
 	colorGenerator.generate(500 * 500);
+	bShowGrains = true;
+	lightPosition = QVector3D(-100,0,0);
 	ca = new CellularAutomataSpace(30, 30, 30);
 	for (int i = 0; i < 6; i++)
 		Textures[i] = nullptr;
@@ -40,6 +42,22 @@ void QGLRender::setCA(CellularAutomataSpace * ca)
 	delete this->ca;
     this->ca = new CellularAutomataSpace(*ca);
     updateTextures();
+	updateCells();
+	updateView();
+}
+
+void QGLRender::setShowAllGrains(bool show)
+{
+	bShowGrains = show;
+	updateCells();
+	updateView();
+}
+
+void QGLRender::setHidenGrains(QVector<int> hidenGrains)
+{
+	this->hidenGrains = hidenGrains;
+	updateCells();
+	updateView();
 }
 
 void QGLRender::mousePressEvent(QMouseEvent * event)
@@ -101,12 +119,11 @@ void QGLRender::wheelEvent(QWheelEvent * event)
 
 void QGLRender::initializeGL()
 {
-
 	OpenGL.initializeOpenGLFunctions();
 
-	QVector<Point> vcolors;
-	QVector<Point> vtranslations;
-	QVector<float> vmodels;
+	//QVector<Point> vcolors;
+	//QVector<Point> vtranslations;
+	//QVector<float> vmodels;
 
 	//Pseudo inicjacja
 	int m = ca->getSize()[0],
@@ -130,28 +147,62 @@ void QGLRender::initializeGL()
 		exit(1);
 	}
 	ShaderProgram.bind();
-	// set up vertex data (and buffer(s)) and configure vertex attributes
-	float vertices[] = {
 
-		-0.5f, -0.5f, 0.5f,  0.0f,  0.0f, -1.0f, 0.f, 0.f,
-		0.5f, -0.5f, 0.5f,  0.0f,  0.0f, -1.0f, 0.f, 1.f,
-		0.5f,  0.5f, 0.5f,  0.0f,  0.0f, -1.0f, 1.f, 1.f,
-		0.5f,  0.5f, 0.5f,  0.0f,  0.0f, -1.0f, 1.f, 1.f,
-		-0.5f,  0.5f, 0.5f,  0.0f,  0.0f, -1.0f, 1.f, 0.f,
-		-0.5f, -0.5f, 0.5f,  0.0f,  0.0f, -1.0f, 0.f, 0.f,
+	float vertices[] = { 
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+		0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 	};
 
-	model[1].rotate(180.f, 1.f, 0.f, 0.f);
-	model[2].rotate(90.f, 1.f, 0.f, 0.f);
-	model[3].rotate(270.f, 1.f, 0.f, 0.f);
-	model[4].rotate(90.f, 0.f, 1.f, 0.f);
-	model[5].rotate(270.f, 0.f, 1.f, 0.f);
+	colorVBO.create();
+	colorVBO.setUsagePattern(QOpenGLBuffer::DynamicDraw);
+	offsetVBO.create();
+	offsetVBO.setUsagePattern(QOpenGLBuffer::DynamicDraw);
 
+	//
 	VAO.create();	//glGenVertexArrays(1, &VAO);
-
 	VAO.bind();
 
 	VBO.create();
+
 	VBO.setUsagePattern(QOpenGLBuffer::StaticDraw);
 	VBO.bind();
 	VBO.allocate(vertices, sizeof(vertices));
@@ -160,40 +211,46 @@ void QGLRender::initializeGL()
 	VBO.bind();
 
 	ShaderProgram.enableAttributeArray("position");
-	ShaderProgram.setAttributeBuffer("position", GL_FLOAT, 0, 3, 8 * sizeof(GLfloat));
+	ShaderProgram.setAttributeBuffer("position", GL_FLOAT, 0, 3, 6 * sizeof(GL_FLOAT));
 
 	ShaderProgram.enableAttributeArray("normal");
-	ShaderProgram.setAttributeBuffer("normal", GL_FLOAT, 3 * sizeof(GLfloat), 3, 8 * sizeof(GLfloat));
-
-	ShaderProgram.enableAttributeArray("textCord");
-	ShaderProgram.setAttributeBuffer("textCord", GL_FLOAT, 6 * sizeof(GLfloat), 2, 8 * sizeof(GLfloat));
+	ShaderProgram.setAttributeBuffer("normal", GL_FLOAT, 3 * sizeof(GL_FLOAT), 3, 6 * sizeof(GL_FLOAT));
 
 	VBO.release();
+
+	offsetVBO.bind();
+	ShaderProgram.enableAttributeArray("offset");
+	ShaderProgram.setAttributeBuffer("offset", GL_FLOAT, 0, 3);
+	offsetVBO.release();
+	OpenGL.glVertexAttribDivisor(ShaderProgram.attributeLocation("offset"), 1);
+
+	colorVBO.bind();
+	ShaderProgram.enableAttributeArray("color");	
+	ShaderProgram.setAttributeBuffer("color", GL_FLOAT, 0, 3);
+	colorVBO.release();
+	OpenGL.glVertexAttribDivisor(ShaderProgram.attributeLocation("color"), 1);
 
 	VAO.release();
 
 	projection.perspective(45.0f, (GLfloat)this->width() / this->height(), 0.1f, 100000.0f);
-
+	model[0] = QMatrix4x4();
 	updateView();
+
 
 	ShaderProgram.setUniformValue("view", view);
 	ShaderProgram.setUniformValue("projection", projection);
 	ShaderProgram.setUniformValue("model", model[0]);
-	ShaderProgram.setUniformValue("texture", 0);
-
-	GLfloat lp[3] = { (GLfloat)m / 2 + 10, (GLfloat)n / 2, (GLfloat)(2 * o) / 2 };
-	QVector3D v = camera * QVector3D(0, 0, -10);
-	QVector3D lightPosition = QVector3D(10.f,0.5f,0.5f);
-	ShaderProgram.setUniformValue("lightPos", v);
+	ShaderProgram.setUniformValue("lightPos", lightPosition);
 
 	ShaderProgram.release();
 
 	OpenGL.glEnable(GL_DEPTH_TEST);
-	OpenGL.glEnable(GL_BLEND);
-	OpenGL.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//OpenGL.glEnable(GL_BLEND);
+	//OpenGL.glEnable(GL_LIGHTING);
+	//OpenGL.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	updateTextures();
-#pragma endregion
+	updateCells();
+	updateView();
 }
 
 void QGLRender::resizeGL(int w, int h)
@@ -205,74 +262,66 @@ void QGLRender::resizeGL(int w, int h)
 
 void QGLRender::paintGL()
 {
-
-	QVector<GLfloat> vcolors;
-	QVector<GLfloat> vtranslations;
-
 	int m = ca->getSize()[0],
 		n = ca->getSize()[1],
 		o = ca->getSize()[2];
 
-	// render
-	// ------
+	
+
+	//// render
+	//// ------
 	this->OpenGL.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	this->OpenGL.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	ShaderProgram.bind();
 	ShaderProgram.setUniformValue("view", view);
 	ShaderProgram.setUniformValue("projection", projection);
-
-	for (int i = 0; i < 6; i++) model[i] = QMatrix4x4();
-
-	float			max = static_cast<float>(m);
-	if (max < n)	max = static_cast<float>(n);
-	if (max < o)	max = static_cast<float>(o);
-
-	float	scaleX = m / max,
-			scaleY = n / max,
-			scaleZ = o / max;
-
-	for (int i = 0; i < 6; i++) model[i].scale(scaleZ, scaleY, scaleX);
-
-	model[1].rotate(180.f, 1.f, 0.f, 0.f);
-	model[2].rotate(90.f, 1.f, 0.f, 0.f);
-	model[3].rotate(270.f, 1.f, 0.f, 0.f);
-	model[4].rotate(270.f, 1.f, 0.f, 0.f);
-	model[5].rotate(270.f, 1.f, 0.f, 0.f);
-	model[4].rotate(90.f, 0.f, 1.f, 0.f);
-	model[5].rotate(270.f, 0.f, 1.f, 0.f);
+	ShaderProgram.setUniformValue("lightPos", lightPosition);
 
 	VAO.bind();
-	for (int i = 0; i < 6; i++)
-	{
-		ShaderProgram.setUniformValue("model", model[i]);
-		if (Textures[i])
-		{
-			Textures[i]->setMinMagFilters(QOpenGLTexture::Filter::Nearest, QOpenGLTexture::Filter::Nearest);
-			Textures[i]->bind();
-		}
-		OpenGL.glDrawArrays(GL_TRIANGLES, 0, 6);
-	}
+	OpenGL.glDrawArraysInstanced(GL_TRIANGLES, 0, 36, position.size());
 	VAO.release();
 
 	update();
+}
 
-#pragma endregion
-	//glDrawArrays(GL_TRIANGLES, 0, 36);
-	//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	//glClear(GL_COLOR_BUFFER_BIT);
+bool QGLRender::shouldDrawCell(int x, int y, int z)
+{
+	int m = ca->getSize()[0],
+		n = ca->getSize()[1],
+		o = ca->getSize()[2];
+	unsigned int state = ca->getCells()[x][y][z];
 
-	//// draw our first triangle
-	//glUseProgram(shaderProgram);
-	//glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-
+	for (int i = -1; i < 1; i++)
+	{
+		int current_x = x + i;
+		if (current_x >= 0 && current_x < m)
+		{
+			for (int j = -1; j < 1; j++)
+			{
+				int current_y = y + j;
+				if (current_y >= 0 && current_y < n)
+				{
+					for (int k = -1; k < 1; k++)
+					{
+						int current_z = z + k;
+						if (current_z >= 0 && current_z < o)
+						{
+							if (state != ca->getCells()[current_x][current_y][current_z]) return true;
+						}
+					}
+				}
+			}
+		}
+	}
+	return false;
 }
 
 void QGLRender::updateTextures()
 {
-	int m = ca->getSize()[0] ,
-		n = ca->getSize()[1] ,
-		o = ca->getSize()[2] ;
+	int m = 100, //ca->getSize()[0] ,
+		n = 100, //ca->getSize()[1] ,
+		o = 100; //ca->getSize()[2] ;
 
 	QImage	TexturesData[6];
 
@@ -287,174 +336,182 @@ void QGLRender::updateTextures()
 
 	float min = 0.f, max = 1.f;
 
-	///X
-	for (int j = 0; j < n; j++)
-	{ 
-		for (int k = 0; k < o; k++)
-		{
-			QColor newColorA = QColor();
-			QColor newColorB = QColor();
-			unsigned int s1 = this->ca->getCells()[0][j][k];
-			unsigned int s2 = this->ca->getCells()[m - 1][j][k];
-		
-			if (s1 > this->ca->nucleons_count)
-			{
-				s1 = s1 + ((500 * 500) / 2) + 1;
-			}
-			if (s2 > this->ca->nucleons_count)
-			{
-				s2 = s2 + ((500 * 500) / 2) + 1;
-			}
-			
-			if (s1 > colorGenerator.colorCount)
-			{
-				s1 = colorGenerator.colorCount - 1;
-			}
-			if (s2 > colorGenerator.colorCount)
-			{
-				s2 = colorGenerator.colorCount - 1;
-			}
+	//for (int i = 0; i < 100; i++)
+	//{
+	//	for (int j = 0; j < 100; j++)
+	//	{
 
-			if (colorGenerator.colors[s1][0] > max) colorGenerator.colors[s1][0] = max;
-			else if (colorGenerator.colors[s1][0] < min) colorGenerator.colors[s1][0] = min;
-			if (colorGenerator.colors[s1][1] > max) colorGenerator.colors[s1][1] = max;
-			else if (colorGenerator.colors[s1][1] < min) colorGenerator.colors[s1][1] = min;
-			if (colorGenerator.colors[s1][2] > max) colorGenerator.colors[s1][2] = max;
-			else if (colorGenerator.colors[s1][2] < min) colorGenerator.colors[s1][2] = min;
+	//	}
+	//}
+	/////X
+	//for (int j = 0; j < n; j++)
+	//{ 
+	//	for (int k = 0; k < o; k++)
+	//	{
+	//		QColor newColorA = QColor();
+	//		QColor newColorB = QColor();
+	//		unsigned int s1 = this->ca->getCells()[0][j][k];
+	//		unsigned int s2 = this->ca->getCells()[m - 1][j][k];
+	//	
+	//		if (s1 > this->ca->nucleons_count)
+	//		{
+	//			s1 = s1 + ((500 * 500) / 2) + 1;
+	//		}
+	//		if (s2 > this->ca->nucleons_count)
+	//		{
+	//			s2 = s2 + ((500 * 500) / 2) + 1;
+	//		}
+	//		
+	//		if (s1 > colorGenerator.colorCount)
+	//		{
+	//			s1 = colorGenerator.colorCount - 1;
+	//		}
+	//		if (s2 > colorGenerator.colorCount)
+	//		{
+	//			s2 = colorGenerator.colorCount - 1;
+	//		}
 
-			if (colorGenerator.colors[s2][0] > max) colorGenerator.colors[s2][0] = max;
-			else if (colorGenerator.colors[s2][0] < min) colorGenerator.colors[s2][0] = min;
-			if (colorGenerator.colors[s2][1] > max) colorGenerator.colors[s2][1] = max;
-			else if (colorGenerator.colors[s2][1] < min) colorGenerator.colors[s2][1] = min;
-			if (colorGenerator.colors[s2][2] > max) colorGenerator.colors[s2][2] = max;
-			else if (colorGenerator.colors[s2][2] < min) colorGenerator.colors[s2][2] = min;
+	//		if (colorGenerator.colors[s1][0] > max) colorGenerator.colors[s1][0] = max;
+	//		else if (colorGenerator.colors[s1][0] < min) colorGenerator.colors[s1][0] = min;
+	//		if (colorGenerator.colors[s1][1] > max) colorGenerator.colors[s1][1] = max;
+	//		else if (colorGenerator.colors[s1][1] < min) colorGenerator.colors[s1][1] = min;
+	//		if (colorGenerator.colors[s1][2] > max) colorGenerator.colors[s1][2] = max;
+	//		else if (colorGenerator.colors[s1][2] < min) colorGenerator.colors[s1][2] = min;
 
-			qreal r, g, b;
-			r = colorGenerator.colors[s1][0];
-			g = colorGenerator.colors[s1][1];
-			b = colorGenerator.colors[s1][2];
-			newColorA.setRgbF(r, g, b);
-			r = colorGenerator.colors[s2][0];
-			g = colorGenerator.colors[s2][1];
-			b = colorGenerator.colors[s2][2];
-			newColorB.setRgbF(r, g, b);
+	//		if (colorGenerator.colors[s2][0] > max) colorGenerator.colors[s2][0] = max;
+	//		else if (colorGenerator.colors[s2][0] < min) colorGenerator.colors[s2][0] = min;
+	//		if (colorGenerator.colors[s2][1] > max) colorGenerator.colors[s2][1] = max;
+	//		else if (colorGenerator.colors[s2][1] < min) colorGenerator.colors[s2][1] = min;
+	//		if (colorGenerator.colors[s2][2] > max) colorGenerator.colors[s2][2] = max;
+	//		else if (colorGenerator.colors[s2][2] < min) colorGenerator.colors[s2][2] = min;
 
-			TexturesData[0].setPixelColor(QPoint(j, k), newColorA);
-			TexturesData[1].setPixelColor(QPoint(j, k), newColorB);
-		}
-	}
-	///Y
-	for (int i = 0; i < m; i++)
-	{
-		for (int k = 0; k < o; k++)
-		{
-			QColor newColorA = QColor();
-			QColor newColorB = QColor();
-			unsigned int s1 = this->ca->getCells()[i][0][k];
-			unsigned int s2 = this->ca->getCells()[i][n - 1][k];
-			
-			if (s1 > this->ca->nucleons_count)
-			{
-				s1 = s1 + ((500 * 500) / 2) + 1;
-			}
-			if (s2 > this->ca->nucleons_count)
-			{
-				s2 = s2 + ((500 * 500) / 2) + 1;
-			}
+	//		qreal r, g, b;
+	//		r = colorGenerator.colors[s1][0];
+	//		g = colorGenerator.colors[s1][1];
+	//		b = colorGenerator.colors[s1][2];
+	//		newColorA.setRgbF(r, g, b);
+	//		r = colorGenerator.colors[s2][0];
+	//		g = colorGenerator.colors[s2][1];
+	//		b = colorGenerator.colors[s2][2];
+	//		newColorB.setRgbF(r, g, b);
 
-			if (s1 > colorGenerator.colorCount)
-			{
-				s1 = colorGenerator.colorCount - 1;
-			}
-			if (s2 > colorGenerator.colorCount)
-			{
-				s2 = colorGenerator.colorCount - 1;
-			}
+	//		TexturesData[0].setPixelColor(QPoint(j, k), newColorA);
+	//		TexturesData[1].setPixelColor(QPoint(j, k), newColorB);
+	//	}
+	//}
+	/////Y
+	//for (int i = 0; i < m; i++)
+	//{
+	//	for (int k = 0; k < o; k++)
+	//	{
+	//		QColor newColorA = QColor();
+	//		QColor newColorB = QColor();
+	//		unsigned int s1 = this->ca->getCells()[i][0][k];
+	//		unsigned int s2 = this->ca->getCells()[i][n - 1][k];
+	//		
+	//		if (s1 > this->ca->nucleons_count)
+	//		{
+	//			s1 = s1 + ((500 * 500) / 2) + 1;
+	//		}
+	//		if (s2 > this->ca->nucleons_count)
+	//		{
+	//			s2 = s2 + ((500 * 500) / 2) + 1;
+	//		}
 
-			if (colorGenerator.colors[s1][0] > max) colorGenerator.colors[s1][0] = max;
-			else if (colorGenerator.colors[s1][0] < min) colorGenerator.colors[s1][0] = min;
-			if (colorGenerator.colors[s1][1] > max) colorGenerator.colors[s1][1] = max;
-			else if (colorGenerator.colors[s1][1] < min) colorGenerator.colors[s1][1] = min;
-			if (colorGenerator.colors[s1][2] > max) colorGenerator.colors[s1][2] = max;
-			else if (colorGenerator.colors[s1][2] < min) colorGenerator.colors[s1][2] = min;
+	//		if (s1 > colorGenerator.colorCount)
+	//		{
+	//			s1 = colorGenerator.colorCount - 1;
+	//		}
+	//		if (s2 > colorGenerator.colorCount)
+	//		{
+	//			s2 = colorGenerator.colorCount - 1;
+	//		}
 
-			if (colorGenerator.colors[s2][0] > max) colorGenerator.colors[s2][0] = max;
-			else if (colorGenerator.colors[s2][0] < min) colorGenerator.colors[s2][0] = min;
-			if (colorGenerator.colors[s2][1] > max) colorGenerator.colors[s2][1] = max;
-			else if (colorGenerator.colors[s2][1] < min) colorGenerator.colors[s2][1] = min;
-			if (colorGenerator.colors[s2][2] > max) colorGenerator.colors[s2][2] = max;
-			else if (colorGenerator.colors[s2][2] < min) colorGenerator.colors[s2][2] = min;
+	//		if (colorGenerator.colors[s1][0] > max) colorGenerator.colors[s1][0] = max;
+	//		else if (colorGenerator.colors[s1][0] < min) colorGenerator.colors[s1][0] = min;
+	//		if (colorGenerator.colors[s1][1] > max) colorGenerator.colors[s1][1] = max;
+	//		else if (colorGenerator.colors[s1][1] < min) colorGenerator.colors[s1][1] = min;
+	//		if (colorGenerator.colors[s1][2] > max) colorGenerator.colors[s1][2] = max;
+	//		else if (colorGenerator.colors[s1][2] < min) colorGenerator.colors[s1][2] = min;
 
-			qreal r, g, b;
-			r = colorGenerator.colors[s1][0];
-			g = colorGenerator.colors[s1][1];
-			b = colorGenerator.colors[s1][2];
-			newColorA.setRgbF(r, g, b);
-			r = colorGenerator.colors[s2][0];
-			g = colorGenerator.colors[s2][1];
-			b = colorGenerator.colors[s2][2];
-			newColorB.setRgbF(r, g, b);
+	//		if (colorGenerator.colors[s2][0] > max) colorGenerator.colors[s2][0] = max;
+	//		else if (colorGenerator.colors[s2][0] < min) colorGenerator.colors[s2][0] = min;
+	//		if (colorGenerator.colors[s2][1] > max) colorGenerator.colors[s2][1] = max;
+	//		else if (colorGenerator.colors[s2][1] < min) colorGenerator.colors[s2][1] = min;
+	//		if (colorGenerator.colors[s2][2] > max) colorGenerator.colors[s2][2] = max;
+	//		else if (colorGenerator.colors[s2][2] < min) colorGenerator.colors[s2][2] = min;
 
-			TexturesData[2].setPixelColor(QPoint(i, k), newColorA);
-			TexturesData[3].setPixelColor(QPoint(i, k), newColorB);
-		}
-	}
-	///Z
-	for (int i = 0; i < m; i++)
-	{
-		for (int j = 0; j < n; j++)
-		{
-			QColor newColorA = QColor();
-			QColor newColorB = QColor();
-			unsigned int s1 = this->ca->getCells()[i][j][0];
-			unsigned int s2 = this->ca->getCells()[i][j][o - 1];
+	//		qreal r, g, b;
+	//		r = colorGenerator.colors[s1][0];
+	//		g = colorGenerator.colors[s1][1];
+	//		b = colorGenerator.colors[s1][2];
+	//		newColorA.setRgbF(r, g, b);
+	//		r = colorGenerator.colors[s2][0];
+	//		g = colorGenerator.colors[s2][1];
+	//		b = colorGenerator.colors[s2][2];
+	//		newColorB.setRgbF(r, g, b);
 
-			if (s1 > this->ca->nucleons_count)
-			{
-				s1 = s1 + ((500 * 500) / 2) + 1;
-			}
-			if (s2 > this->ca->nucleons_count)
-			{
-				s2 = s2 + ((500 * 500) / 2) + 1;
-			}
+	//		TexturesData[2].setPixelColor(QPoint(i, k), newColorA);
+	//		TexturesData[3].setPixelColor(QPoint(i, k), newColorB);
+	//	}
+	//}
+	/////Z
+	//for (int i = 0; i < m; i++)
+	//{
+	//	for (int j = 0; j < n; j++)
+	//	{
+	//		QColor newColorA = QColor();
+	//		QColor newColorB = QColor();
+	//		unsigned int s1 = this->ca->getCells()[i][j][0];
+	//		unsigned int s2 = this->ca->getCells()[i][j][o - 1];
 
-			if (s1 > colorGenerator.colorCount)
-			{
-				s1 = colorGenerator.colorCount - 1;
-			}
-			if (s2 > colorGenerator.colorCount)
-			{
-				s2 = colorGenerator.colorCount - 1;
-			}
+	//		if (s1 > this->ca->nucleons_count)
+	//		{
+	//			s1 = s1 + ((500 * 500) / 2) + 1;
+	//		}
+	//		if (s2 > this->ca->nucleons_count)
+	//		{
+	//			s2 = s2 + ((500 * 500) / 2) + 1;
+	//		}
 
-			if (colorGenerator.colors[s1][0] > max) colorGenerator.colors[s1][0] = max;
-			else if (colorGenerator.colors[s1][0] < min) colorGenerator.colors[s1][0] = min;
-			if (colorGenerator.colors[s1][1] > max) colorGenerator.colors[s1][1] = max;
-			else if (colorGenerator.colors[s1][1] < min) colorGenerator.colors[s1][1] = min;
-			if (colorGenerator.colors[s1][2] > max) colorGenerator.colors[s1][2] = max;
-			else if (colorGenerator.colors[s1][2] < min) colorGenerator.colors[s1][2] = min;
+	//		if (s1 > colorGenerator.colorCount)
+	//		{
+	//			s1 = colorGenerator.colorCount - 1;
+	//		}
+	//		if (s2 > colorGenerator.colorCount)
+	//		{
+	//			s2 = colorGenerator.colorCount - 1;
+	//		}
 
-			if (colorGenerator.colors[s2][0] > max) colorGenerator.colors[s2][0] = max;
-			else if (colorGenerator.colors[s2][0] < min) colorGenerator.colors[s2][0] = min;
-			if (colorGenerator.colors[s2][1] > max) colorGenerator.colors[s2][1] = max;
-			else if (colorGenerator.colors[s2][1] < min) colorGenerator.colors[s2][1] = min;
-			if (colorGenerator.colors[s2][2] > max) colorGenerator.colors[s2][2] = max;
-			else if (colorGenerator.colors[s2][2] < min) colorGenerator.colors[s2][2] = min;
+	//		if (colorGenerator.colors[s1][0] > max) colorGenerator.colors[s1][0] = max;
+	//		else if (colorGenerator.colors[s1][0] < min) colorGenerator.colors[s1][0] = min;
+	//		if (colorGenerator.colors[s1][1] > max) colorGenerator.colors[s1][1] = max;
+	//		else if (colorGenerator.colors[s1][1] < min) colorGenerator.colors[s1][1] = min;
+	//		if (colorGenerator.colors[s1][2] > max) colorGenerator.colors[s1][2] = max;
+	//		else if (colorGenerator.colors[s1][2] < min) colorGenerator.colors[s1][2] = min;
 
-			qreal r, g, b;
-			r = colorGenerator.colors[s1][0];
-			g = colorGenerator.colors[s1][1];
-			b = colorGenerator.colors[s1][2];
-			newColorA.setRgbF(r, g, b);
-			r = colorGenerator.colors[s2][0];
-			g = colorGenerator.colors[s2][1];
-			b = colorGenerator.colors[s2][2];
-			newColorB.setRgbF(r, g, b);
+	//		if (colorGenerator.colors[s2][0] > max) colorGenerator.colors[s2][0] = max;
+	//		else if (colorGenerator.colors[s2][0] < min) colorGenerator.colors[s2][0] = min;
+	//		if (colorGenerator.colors[s2][1] > max) colorGenerator.colors[s2][1] = max;
+	//		else if (colorGenerator.colors[s2][1] < min) colorGenerator.colors[s2][1] = min;
+	//		if (colorGenerator.colors[s2][2] > max) colorGenerator.colors[s2][2] = max;
+	//		else if (colorGenerator.colors[s2][2] < min) colorGenerator.colors[s2][2] = min;
 
-			TexturesData[5].setPixelColor(QPoint(i, j), newColorA);
-			TexturesData[4].setPixelColor(QPoint(i, j), newColorB);
-		}
-	}
+	//		qreal r, g, b;
+	//		r = colorGenerator.colors[s1][0];
+	//		g = colorGenerator.colors[s1][1];
+	//		b = colorGenerator.colors[s1][2];
+	//		newColorA.setRgbF(r, g, b);
+	//		r = colorGenerator.colors[s2][0];
+	//		g = colorGenerator.colors[s2][1];
+	//		b = colorGenerator.colors[s2][2];
+	//		newColorB.setRgbF(r, g, b);
+
+	//		TexturesData[5].setPixelColor(QPoint(i, j), newColorA);
+	//		TexturesData[4].setPixelColor(QPoint(i, j), newColorB);
+	//	}
+	//}
+
 	for (QOpenGLTexture* t : Textures)
 	{
 		if (t)
@@ -482,18 +539,122 @@ void QGLRender::updateTextures()
 	Textures[5] = new QOpenGLTexture(TexturesData[5].mirrored(false, false));
 }
 
+void QGLRender::updateCells()
+{
+	int m = ca->getSize()[0],
+		n = ca->getSize()[1],
+		o = ca->getSize()[2];
+	position.clear();
+	color.clear();
+
+#pragma omp parallel
+	for (int i = 0; i < m; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			#pragma omp for schedule(static) //nowait
+			for (int k = 0; k < o; k++)
+			{
+				unsigned int state = this->ca->getCells()[i][j][k];
+				if (hidenGrains.indexOf(state) == -1)
+				{
+					if ((i == 0) || (j == 0) || (k == 0) ||
+						(i == n - 1) || (j == m - 1) || (k == o - 1) || shouldDrawCell(i, j, k))
+					{
+						//color.push_back(QVector3D(0.5, 0.5, 0.5));
+						if (bShowGrains && (state <= ca->nucleons_count))
+						{
+							#pragma omp critical
+							{
+								position.push_back(QVector3D(i, j, k));
+								color.push_back(QVector3D(this->colorGenerator.colors[state][0],
+									this->colorGenerator.colors[state][1],
+									this->colorGenerator.colors[state][2]));
+							}
+						}
+						else if(state > ca->nucleons_count)
+						{
+							state += 500 * 500 / 2;
+							#pragma omp critical
+							{
+								position.push_back(QVector3D(i, j, k));
+								color.push_back(QVector3D(this->colorGenerator.colors[state][0],
+									this->colorGenerator.colors[state][1],
+									this->colorGenerator.colors[state][2]));
+							}
+						}
+					}
+					//else if (shouldDrawCell(i, j, k))
+					//{
+					//	//color.push_back(QVector3D(0.5, 0.5, 0.5));
+					//	unsigned int state = this->ca->getCells()[i][j][k];
+					//	if (state <= ca->nucleons_count)
+					//	{
+					//		#pragma omp critical
+					//		{
+
+					//		}
+					//		position.push_back(QVector3D(i, j, k));
+					//		color.push_back(QVector3D(this->colorGenerator.colors[state][0],
+					//			this->colorGenerator.colors[state][1],
+					//			this->colorGenerator.colors[state][2]));
+					//	}
+					//	else if (bShowGrainBoundaries)
+					//	{
+					//		state += 500 * 500 / 2;
+					//		#pragma omp critical
+					//		{
+
+					//		}
+					//		position.push_back(QVector3D(i, j, k));
+					//		color.push_back(QVector3D(this->colorGenerator.colors[state][0],
+					//			this->colorGenerator.colors[state][1],
+					//			this->colorGenerator.colors[state][2]));
+					//	}
+					//}
+				}
+			}
+		}
+	}
+//#pragma omp barrier
+	colorVBO.bind();
+	colorVBO.allocate(color.constData(), sizeof(color[0]) * color.size());
+	colorVBO.release();
+	//
+
+	offsetVBO.bind();
+	offsetVBO.allocate(position.constData(), sizeof(position[0]) * position.size());
+	offsetVBO.release();
+}
+
 void QGLRender::updateView()
 {
-	float r = 1 + (static_cast<float>(scale) / 100.f);
+	float	center_x = static_cast<float>(ca->getSize()[0] / 2),
+			center_y = static_cast<float>(ca->getSize()[1] / 2),
+			center_z = static_cast<float>(ca->getSize()[2] / 2);
+
+	float max = center_x;
+	if (max > center_y) max = center_y;
+	if (max > center_z) max = center_z;
+	if (max < 1.f) max = 1;
+	max *= 5;
+	float r = max * ((static_cast<float>(scale) / 100.f));
+	//if (r < max) r = max;
 
 	float camX = r * qCos(qDegreesToRadians(betaRotation)) * qCos(qDegreesToRadians(alpthaRotation));
 	float camY = r * qCos(qDegreesToRadians(betaRotation)) * qSin(qDegreesToRadians(alpthaRotation));
 	float camZ = r * qSin(qDegreesToRadians(betaRotation));
 
-	QVector3D v1 = QVector3D(camX, camY, camZ);
-	QVector3D v2 = QVector3D(0, 0, 0);
+	QVector3D v1 = QVector3D(center_x + camX, center_y + camY, center_z + camZ);
+	QVector3D v2 = QVector3D(center_x, center_y, center_z);
 	QVector3D v3 = QVector3D(0.0f, 0.0f, 1.0f);
+
+	lightPosition = v1;
 
 	view = QMatrix4x4();
 	view.lookAt(v1, v2, v3);
 }
+
+//void QGLUpdateThread::run()
+//{
+//}

@@ -2,41 +2,35 @@
 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
-layout(location = 2) in vec3 offset;
-layout(location = 3) in vec3 color; //textCord;
+layout(location = 2) in vec2 textCord;
 
 
 out vec3 oNormal;
 out vec3 oColor;
 out vec3 oTranslation;
-out vec3 oLightPos;
 out vec2 oTextCord;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 uniform sampler2D textures;
-uniform vec3 lightPos;
+
 
 void main()                                                                                                   
 {
 	//Position calculation
-    gl_Position = projection * view * model * vec4(position + offset, 1.0f);
+    gl_Position = projection * view * model * vec4(position, 1.0f);
 
 	//Normal calculation
-		/*
-		mat3 normalMatrix = mat3(projection * view * model);
-		normalMatrix = inverse(normalMatrix);
-		normalMatrix = transpose(normalMatrix);
+	mat3 normalMatrix = mat3(projection * view * model);
+	normalMatrix = inverse(normalMatrix);
+	normalMatrix = transpose(normalMatrix);
 
-		//Prepare otuput for fragment shader
-		oNormal = normalize(normalMatrix * normal);
-		*/
-	oColor = color;
-	oTranslation = vec3(model * vec4(position + offset, 1.0));
-	oNormal = mat3(transpose(inverse(model))) * normal;
-	oLightPos = vec3(model * vec4(lightPos, 1.f));
-	//oTextCord = textCord;
+	//Prepare otuput for fragment shader
+	oNormal = normalize(normalMatrix * normal);
+	oColor = vec3(1.f,1.f,1.f);
+	oTranslation = vec3(gl_Position.x, gl_Position.y, gl_Position.z);
+	oTextCord = textCord;
 }
 
 
@@ -61,7 +55,7 @@ void main()
 	mat3 normalMatrix = mat3(projection * view * model);
 	normalMatrix = inverse(normalMatrix);
 	normalMatrix = transpose(normalMatrix);
-	oNormal = normal; //normalize(normalMatrix * normal);
+	oNormal = normalize(normalMatrix * normal);
 	oTranslation = vec3(gl_Position.x, gl_Position.y, gl_Position.z);
 	//oColor = oTranslation;
 	//oColor = normal;

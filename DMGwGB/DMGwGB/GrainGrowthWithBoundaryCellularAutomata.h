@@ -12,5 +12,7 @@ public:
 
 	virtual bool step();
 	virtual void start();
+
+	bool bFuseAfterSimulation;
 };
 

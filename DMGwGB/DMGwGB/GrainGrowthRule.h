@@ -1,12 +1,13 @@
 #pragma once
-#include "CRule.h"
+#include "CellularAutomataRule.h"
+
 class GrainGrowthRule :
-	public CRule
+	public CellularAutomataRule
 {
 public:
 	GrainGrowthRule();
 	~GrainGrowthRule();
 	
-	virtual void step(unsigned int * cell, class std::vector<unsigned int > & neighborhood);
+	virtual void check(unsigned int * cell, class std::vector<unsigned int > & neighborhood);
 };
 

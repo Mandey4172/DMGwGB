@@ -1,0 +1,38 @@
+#version 330 core
+
+in vec3 oColor;
+in vec3 oNormal;
+in vec3 oTranslation;
+in vec2 oTextCord;
+
+out vec4 color;
+
+uniform sampler2D texture[6];
+uniform vec3 lightPos;
+
+void main()
+{
+	//vec3 oTranslation = vec3(0.0f,0.0f,0.0f);
+	vec3 lightColor   =	vec3(1.0f,1.0f,1.0f);
+	vec3 xlightPos = vec3(0.f,0.f,10.f);
+
+	// ambient
+	float ambientStrength = 0.05;
+	vec3 ambient = ambientStrength * lightColor;
+
+	// diffuse 
+	vec3 norm = normalize(oNormal);
+	vec3 lightDir = normalize(xlightPos - oTranslation);
+	float diff = max(dot(norm, lightDir), 0.0);
+	vec3 diffuse = diff * lightColor;
+    
+	//color = vec4(oColor, 1.f);
+	//color = vec4(lightDir, 1.f);
+	
+	color = vec4((ambient + diffuse), 1.f) * texture2D(texture[0], oTextCord);
+	//vec3 result = (ambient + diffuse) * oColor;
+	//color = vec4(result, 1.00f);
+	
+	//color = vec4(oTranslation, 1.00f);
+	//color = vec4(oColor, 1.00f);
+}

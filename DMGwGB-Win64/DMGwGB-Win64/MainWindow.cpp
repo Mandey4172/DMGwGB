@@ -1,13 +1,14 @@
 #include "MainWindow.h"
 
 #include <QGlobal.h>
-#include <Qfile.h>
+#include <QFile.h>
 #include <QFileDialog.h>
 #include <QMessageBox.h>
 #include <QTime>
 #include <QDesktopWidget>
 #include <QApplication>
 #include <QDebug>
+#include <QString.h>
 
 #include <limits>
 
@@ -19,6 +20,7 @@
 #include "HexagonalNeighborhood.h"
 #include "PentagonalNeighborhood.h"
 #include "VonNeummanNeighborhood.h"
+#include "RadialNeighborhood.h"
 #include "NucleonGenerator.h"
 #include "GrainGrowthWithBoundaryCellularAutomata.h"
 
@@ -34,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
 
     createMenuBar();
+	createNewMenu();
+	createNucleationMenu();
     createSimulationMenu();
     createOpenGLDisplay();
 
@@ -41,8 +45,14 @@ MainWindow::MainWindow(QWidget *parent)
     QGridLayout *mainLayout = new QGridLayout();
 
     mainLayout->setMenuBar(menuB);
-    mainLayout->addWidget(simulationMenuGroupBox, 0, 0, 3, 2);
+	mainLayout->addWidget(newMenuGroupBox, 0, 0, 1, 2);
+	mainLayout->addWidget(nucleationMenuGroupBox, 1, 0, 1, 2);
+    mainLayout->addWidget(simulationMenuGroupBox, 2, 0, 1, 2);
     mainLayout->addWidget(openGLDisplay, 0, 2, 10, 10);
+	mainLayout->addWidget(showGrainBoundariesLabel, 11, 2);
+	mainLayout->addWidget(showGrainBoundariesChechBox, 11, 3);
+	mainLayout->addWidget(hidenGrainsLabel, 12, 2);
+	mainLayout->addWidget(hidenGrainsLineEdit, 12, 3);
     mainLayout->setContentsMargins(20, 20, 20, 20);
     mainWidget->setLayout(mainLayout);
 	
@@ -62,11 +72,13 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+	
 	if (calculationsThread.isRunning())
 	{
 		calculationsThread.terminate();
 		calculationsThread.wait();
 	}
+	#pragma omp barrier
 	//delete this->calculationsThread;
 }
 
@@ -88,28 +100,76 @@ void MainWindow::createMenuBar()
 	connect(saveAction, &QAction::triggered, this, &MainWindow::saveFile);
     connect(newAction, &QAction::triggered, this, &MainWindow::newSimulation);
 }
- 
-void MainWindow::createSimulationMenu()
+
+void MainWindow::createNewMenu()
 {
-    simulationMenuGroupBox = new QGroupBox(tr(" Simulation Menu "));
-    QGridLayout *layout = new QGridLayout();
+	QGridLayout *layout = new QGridLayout();
+	newMenuGroupBox = new QGroupBox(tr(" New microstructure"));
+	newMicrostructureButton = new QPushButton("New");
+	connect(newMicrostructureButton, SIGNAL(released()), this, SLOT(newSimulation()));
+	loadMicrostructureButton = new QPushButton("Load");
+	connect(loadMicrostructureButton, SIGNAL(released()), this, SLOT(loadFile()));
 
-    nucleationLabel = new QLabel(tr("Nucleons: "));
-    nucleationLabel->setMaximumHeight(50);
-    nucleationNumberSpinBox = new QSpinBox();
-    nucleationNumberSpinBox->setRange(0, std::numeric_limits<int>::max());
-    nucleationNumberSpinBox->setValue(10);
+	layout->addWidget(newMicrostructureButton, 0, 0);
+	layout->addWidget(loadMicrostructureButton, 0, 1);
+	newMenuGroupBox->setLayout(layout);
+	//const int beginValue = 100;
 
-	statesCountLabel = new QLabel(tr("Grain Count: "));
-	statesCountLabel->setMaximumHeight(50);
-	statesCountNumberSpinBox = new QSpinBox();
-	statesCountNumberSpinBox->setRange(0, std::numeric_limits<int>::max());
-	statesCountNumberSpinBox->setValue(10);
-    
+	//newMenuGroupBox = new QGroupBox(tr(" New microstructure"));
+	//QGridLayout *layout = new QGridLayout();
+
+	//xLabel = new QLabel("x :");
+	//yLabel = new QLabel("y :");
+	//zLabel = new QLabel("z :");
+
+	//xNumberSpinBox = new QSpinBox();
+	//xNumberSpinBox->setRange(1, 10000);
+	//xNumberSpinBox->setValue(beginValue);
+	//xNumberSpinBox->setFixedWidth(100);
+
+	//yNumberSpinBox = new QSpinBox();
+	//yNumberSpinBox->setRange(1, 10000);
+	//yNumberSpinBox->setValue(beginValue);
+	//yNumberSpinBox->setFixedWidth(100);
+
+	//zNumberSpinBox = new QSpinBox();
+	//zNumberSpinBox->setRange(1, 10000);
+	//zNumberSpinBox->setValue(beginValue);
+	//zNumberSpinBox->setFixedWidth(100);
+
+	//acceptButton = new QPushButton(tr("Accept"));
+	//connect(acceptButton, SIGNAL(released()), this, SLOT(acceptButtoClick()));
+
+
+	//layout->addWidget(xLabel, 0, 0, 1, 2);
+	//layout->addWidget(yLabel, 1, 0, 1, 2);
+	//layout->addWidget(zLabel, 2, 0, 1, 2);
+	//layout->addWidget();
+
+	//layout->addWidget(xNumberSpinBox, 0, 2);
+	//layout->addWidget(yNumberSpinBox, 1, 2);
+	//layout->addWidget(zNumberSpinBox, 2, 2);
+
+	//layout->setHorizontalSpacing(10);
+
+	//newMenuGroupBox->setLayout(layout);
+}
+
+void MainWindow::createNucleationMenu()
+{
+	nucleationMenuGroupBox = new QGroupBox(tr(" Nucleation Menu "));
+	QGridLayout *layout = new QGridLayout();
+
+	nucleationLabel = new QLabel(tr("Nucleons: "));
+	nucleationLabel->setMaximumHeight(50);
+	nucleationNumberSpinBox = new QSpinBox();
+	nucleationNumberSpinBox->setRange(0, std::numeric_limits<int>::max());
+	nucleationNumberSpinBox->setValue(10);
+
 	nucleationTypeLabel = new QLabel(tr("Nucelation type: "));
 	nucleationTypeComboBox = new QComboBox;
 	nucleationTypeComboBox->setFixedWidth(100);
-	nucleationTypeComboBox->setMaximumWidth(200);
+	//nucleationTypeComboBox->setMaximumWidth(200);
 	nucleationTypeComboBox->addItem(" Random ");
 	nucleationTypeComboBox->addItem(" Random with minimum radius ");
 	nucleationTypeComboBox->addItem(" Regular ");
@@ -140,14 +200,49 @@ void MainWindow::createSimulationMenu()
 	nucleationOptionTextBox4->hide();
 
 	nucleationGenerateButton = new QPushButton(tr(" Generate "));
-    connect(nucleationGenerateButton, SIGNAL(released()), this, SLOT(generateNucleons()));
-    //nubcleonsGenerateButton->setGeometry(QRect(QPoint(0, 0),QSize(200, 50)));
+	connect(nucleationGenerateButton, SIGNAL(released()), this, SLOT(generateNucleons()));
+
+	layout->addWidget(nucleationLabel, 0, 0, 1, 2);
+	layout->addWidget(nucleationNumberSpinBox, 0, 2, 1, 2);
+
+	layout->addWidget(nucleationTypeLabel, 1, 0, 1, 2);
+	layout->addWidget(nucleationTypeComboBox, 1, 2, 1, 2);
+
+	layout->addWidget(nucleationOptionLabel1, 2, 0, 1, 2);
+	layout->addWidget(nucleationOptionTextBox1, 2, 2, 1, 2);
+	layout->addWidget(nucleationOptionLabel2, 3, 0, 1, 2);
+	layout->addWidget(nucleationOptionTextBox2, 3, 2, 1, 2);
+	layout->addWidget(nucleationOptionLabel3, 4, 0, 1, 2);
+	layout->addWidget(nucleationOptionTextBox3, 4, 2, 1, 2);
+	layout->addWidget(nucleationOptionLabel4, 5, 0, 1, 2);
+	layout->addWidget(nucleationOptionTextBox4, 5, 2, 1, 2);
+
+	layout->addWidget(nucleationGenerateButton, 6, 0, 1, 4);
+
+	nucleationTypeComboBox->setCurrentIndex(0);
+
+	layout->setColumnMinimumWidth(0, 10);
+	layout->setColumnMinimumWidth(1, 10);
+	layout->setColumnMinimumWidth(2, 10);
+	layout->setColumnMinimumWidth(3, 10);
+
+	layout->setHorizontalSpacing(10);
+	layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+
+	nucleationMenuGroupBox->setLayout(layout);
+}
+ 
+void MainWindow::createSimulationMenu()
+{
+    simulationMenuGroupBox = new QGroupBox(tr(" Simulation Menu "));
+	QGridLayout *layout = new QGridLayout();
 
 	boundaryConditionsLabel = new QLabel(tr("Boundary Conditions:"));
 	boundaryConditionsComboBox = new QComboBox;
 	boundaryConditionsComboBox->addItem(" Blocking ");
 	boundaryConditionsComboBox->addItem(" Periodic ");
 	boundaryConditionsComboBox->addItem(" Reflectiong ");
+	//boundaryConditionsComboBox->addItem(" Regular ");
 
     neightborhoodLabel = new QLabel(tr(" Neightborhood type: "));
     neightborhoodLabel->setMaximumHeight(50);
@@ -156,6 +251,7 @@ void MainWindow::createSimulationMenu()
 	neightborhoodComboBox->addItem(" VonNeumman ");
 	neightborhoodComboBox->addItem(" Pentagonal ");
 	neightborhoodComboBox->addItem(" Hexagonal ");
+	neightborhoodComboBox->addItem(" Radial ");
 
 	neightborhoodRadiusLabel = new QLabel(tr(" Neightborhood radius "));
 	neightborhoodRadiusSpinBox = new QSpinBox;
@@ -173,50 +269,37 @@ void MainWindow::createSimulationMenu()
 	grainBoundarySizeTextBox = new QSpinBox;
 	grainBoundarySizeTextBox->setMinimum(1);
 
+	fuseAfterSimulationLabel = new QLabel(tr(" Fuse after simulation: "));
+	fuseAfterSimulationChechBox = new QCheckBox();
+	fuseAfterSimulationChechBox->setChecked(true);
+
     simulationStartButton = new QPushButton(tr(" Start "));
     connect(simulationStartButton, SIGNAL(released()), this, SLOT(startSimulation()));
 
-	debugLabel = new QLabel(tr("DEBUG "));
+	debugLabel = new QLabel(tr(" "));
 	debugLabel->setMaximumHeight(50);
 
-    layout->addWidget(nucleationLabel, 0, 0, 1, 2);
-    layout->addWidget(nucleationNumberSpinBox, 0, 2, 1, 2);
+	layout->addWidget(boundaryConditionsLabel, 0, 0, 1, 4);
+	layout->addWidget(boundaryConditionsComboBox, 1, 0, 1, 4);
 
-	layout->addWidget(statesCountLabel, 1, 0, 1, 2);
-	layout->addWidget(statesCountNumberSpinBox, 1, 2, 1, 2);\
+    layout->addWidget(neightborhoodLabel, 2, 0, 1, 4);
+    layout->addWidget(neightborhoodComboBox, 3, 0, 1, 4);
 
-	layout->addWidget(nucleationTypeLabel, 2, 0, 1, 2);
-	layout->addWidget(nucleationTypeComboBox, 2, 2, 1, 2);
+	layout->addWidget(neightborhoodRadiusLabel, 4, 0, 1, 4);
+	layout->addWidget(neightborhoodRadiusSpinBox, 5, 0, 1, 4);
 
-	layout->addWidget(nucleationOptionLabel1, 3, 0, 1, 2);
-	layout->addWidget(nucleationOptionTextBox1, 3, 2, 1, 2);
-	layout->addWidget(nucleationOptionLabel2, 4, 0, 1, 2);
-	layout->addWidget(nucleationOptionTextBox2, 4, 2, 1, 2);
-	layout->addWidget(nucleationOptionLabel3, 5, 0, 1, 2);
-	layout->addWidget(nucleationOptionTextBox3, 5, 2, 1, 2);
-	layout->addWidget(nucleationOptionLabel4, 6, 0, 1, 2);
-	layout->addWidget(nucleationOptionTextBox4, 6, 2, 1, 2);
+	layout->addWidget(boundaryNeightborhoodLabel, 6, 0, 1, 4);
+	layout->addWidget(boundaryNeightborhoodComboBox, 7, 0, 1, 4);
 
-    layout->addWidget(nucleationGenerateButton, 7, 0, 1, 4);
-	
-	layout->addWidget(boundaryConditionsLabel, 8, 0, 1, 4);
-	layout->addWidget(boundaryConditionsComboBox, 9, 0, 1, 4);
+	layout->addWidget(grainBoundarySizeLabel, 8, 0, 1, 4);
+	layout->addWidget(grainBoundarySizeTextBox, 9, 0, 1, 4);
 
-    layout->addWidget(neightborhoodLabel, 10, 0, 1, 4);
-    layout->addWidget(neightborhoodComboBox, 11, 0, 1, 4);
+	layout->addWidget(fuseAfterSimulationLabel, 10, 0, 1, 4);
+	layout->addWidget(fuseAfterSimulationChechBox, 11, 0, 1, 4);
 
-	layout->addWidget(neightborhoodRadiusLabel, 12, 0, 1, 4);
-	layout->addWidget(neightborhoodRadiusSpinBox, 13, 0, 1, 4);
+    layout->addWidget(simulationStartButton, 12, 0, 1, 4);
 
-	layout->addWidget(boundaryNeightborhoodLabel, 14, 0, 1, 4);
-	layout->addWidget(boundaryNeightborhoodComboBox, 15, 0, 1, 4);
-
-	layout->addWidget(grainBoundarySizeLabel, 16, 0, 1, 4);
-	layout->addWidget(grainBoundarySizeTextBox, 17, 0, 1, 4);
-
-    layout->addWidget(simulationStartButton, 18, 0, 1, 4);
-
-	layout->addWidget(debugLabel, 19, 0, 1, 4);
+	layout->addWidget(debugLabel, 13, 0, 1, 4);
 
  //   layout->setRowMinimumHeight(0, 20);
  //   layout->setRowMinimumHeight(1, 20);
@@ -245,14 +328,26 @@ void MainWindow::createSimulationMenu()
     layout->setRowStretch(5, 1);*/
 
     simulationMenuGroupBox->setLayout(layout);
-	nucleationTypeComboBox->setCurrentIndex(0);
+	
 }
 
 void MainWindow::createOpenGLDisplay()
 {
     openGLDisplay = new QGLRender();
-    this->openGLDisplay->setCA(calculationsThread.simulation->cellularautomata);
+    openGLDisplay->setCA(calculationsThread.simulation->cellularautomata);
     openGLDisplay->setGeometry(0,0,100, 100);
+
+	showGrainBoundariesLabel = new QLabel("Show grain boundaries :");
+	showGrainBoundariesChechBox = new QCheckBox();
+	showGrainBoundariesChechBox->setChecked(true);
+	connect(showGrainBoundariesChechBox, SIGNAL(clicked(bool)), this, SLOT(showGrainBoundariesStateChanged(bool)));
+
+	hidenGrainsLabel = new QLabel("Hiden grains:");
+	hidenGrainsLineEdit = new QLineEdit();
+	
+	connect(hidenGrainsLineEdit, SIGNAL(textChanged(const QString &)), this, SLOT(hidenGrainsStateChanged(const QString &)));
+	connect(hidenGrainsLineEdit, SIGNAL(editingFinished()), this, SLOT(hidenGrainsEditEnded()));
+	connect(hidenGrainsLineEdit, SIGNAL(returnPressed()), this, SLOT(hidenGrainsEditEnded()));
 	//openGLDisplay->show();
 }
 
@@ -261,31 +356,12 @@ void MainWindow::startSimulation()
 	unsigned int negihtborhoodRadius = static_cast<unsigned int>(neightborhoodRadiusSpinBox->value());
 	unsigned int grainSize = static_cast<unsigned int>(grainBoundarySizeTextBox->value());
 	
-	this->calculationsThread.simulation->neighborhood->setRadius(negihtborhoodRadius);
-	
 	GrainGrowthWithBoundaryCellularAutomata * simulation = dynamic_cast<GrainGrowthWithBoundaryCellularAutomata *>(this->calculationsThread.simulation);
-	if (simulation) simulation->grainSize = grainSize;
-
-	if (calculationsThread.simulation->neighborhood) delete calculationsThread.simulation->neighborhood;
-	if (neightborhoodComboBox->itemText(neightborhoodComboBox->currentIndex()) == " VonNeumman ")
-	{
-		calculationsThread.simulation->neighborhood = new VonNeummanNeighborhood();
-	}
-	else if (neightborhoodComboBox->itemText(neightborhoodComboBox->currentIndex()) == " Pentagonal ")
-	{
-		calculationsThread.simulation->neighborhood = new PentagonalNeighborhood();
-	}
-	else if (neightborhoodComboBox->itemText(neightborhoodComboBox->currentIndex()) == " Hexagonal ")
-	{
-		calculationsThread.simulation->neighborhood = new HexagonalNeighborhood();
-	}
-	else
-	{
-		calculationsThread.simulation->neighborhood = new MooreNeighborhood();
-	}
-
 	if (simulation)
 	{
+		simulation->grainSize = grainSize;
+		simulation->bFuseAfterSimulation = this->fuseAfterSimulationChechBox->isChecked();
+
 		delete simulation->boundary_neighborhood;
 		if (boundaryNeightborhoodComboBox->itemText(boundaryNeightborhoodComboBox->currentIndex()) == " VonNeumman ")
 		{
@@ -299,10 +375,35 @@ void MainWindow::startSimulation()
 		{
 			simulation->boundary_neighborhood = new HexagonalNeighborhood();
 		}
+		//else if (boundaryNeightborhoodComboBox->itemText(boundaryNeightborhoodComboBox->currentIndex()) == " Radial ")
+		//{
+		//	simulation->boundary_neighborhood = new RadialNeighborhood();
+		//}
 		else
 		{
 			simulation->boundary_neighborhood = new MooreNeighborhood();
 		}
+	}
+	if (calculationsThread.simulation->neighborhood) delete calculationsThread.simulation->neighborhood;
+	if (neightborhoodComboBox->itemText(neightborhoodComboBox->currentIndex()) == " VonNeumman ")
+	{
+		calculationsThread.simulation->neighborhood = new VonNeummanNeighborhood();
+	}
+	else if (neightborhoodComboBox->itemText(neightborhoodComboBox->currentIndex()) == " Pentagonal ")
+	{
+		calculationsThread.simulation->neighborhood = new PentagonalNeighborhood();
+	}
+	else if (neightborhoodComboBox->itemText(neightborhoodComboBox->currentIndex()) == " Hexagonal ")
+	{
+		calculationsThread.simulation->neighborhood = new HexagonalNeighborhood();
+	}
+	else if (neightborhoodComboBox->itemText(neightborhoodComboBox->currentIndex()) == " Radial ")
+	{
+		calculationsThread.simulation->neighborhood = new RadialNeighborhood();
+	}
+	else
+	{
+		calculationsThread.simulation->neighborhood = new MooreNeighborhood();
 	}
 	
 
@@ -318,8 +419,7 @@ void MainWindow::startSimulation()
 	{
 		calculationsThread.simulation->cellularautomata->setBoundaryContidion(BoundaryContidionTypes::Reflecting);
 	}
-
-
+	this->calculationsThread.simulation->neighborhood->setRadius(negihtborhoodRadius);
 
     connect(&calculationsThread, &CalculationsThread::updateVal, this, &MainWindow::updateRender);
     calculationsThread.start();
@@ -336,36 +436,37 @@ void MainWindow::generateNucleons()
 		if ( nucleationTypeComboBox->itemText(nucleationTypeComboBox->currentIndex()) == " Random " )
 		{
 			generator.random(ca,
-				static_cast<unsigned int>(this->nucleationNumberSpinBox->value()),
-				static_cast<unsigned int>(this->statesCountNumberSpinBox->value()));
+				static_cast<unsigned int>(this->nucleationNumberSpinBox->value()));
 		}
 		else if (nucleationTypeComboBox->itemText(nucleationTypeComboBox->currentIndex()) == " Random with minimum radius " )
 		{
 			generator.random(ca, 
 				static_cast<unsigned int>(this->nucleationNumberSpinBox->value()),
-				static_cast<unsigned int>(this->statesCountNumberSpinBox->value()),
-				static_cast<unsigned int>(this->nucleationOptionTextBox1->value()) );
+				static_cast<unsigned int>(this->nucleationOptionTextBox1->value()));
 		}
 		else if (nucleationTypeComboBox->itemText(nucleationTypeComboBox->currentIndex()) == " Regular ")
 		{
 			generator.regular(ca,
 				static_cast<unsigned int>(this->nucleationOptionTextBox1->value()),
 				static_cast<unsigned int>(this->nucleationOptionTextBox2->value()),
-				static_cast<unsigned int>(this->nucleationOptionTextBox3->value()),
-				static_cast<unsigned int>(this->statesCountNumberSpinBox->value()));
+				static_cast<unsigned int>(this->nucleationOptionTextBox3->value()));
 		}
-		else if (nucleationTypeComboBox->itemText(nucleationTypeComboBox->currentIndex()) == " GradientA ")
-		{
+		//else if (nucleationTypeComboBox->itemText(nucleationTypeComboBox->currentIndex()) == " GradientA ")
+		//{
 
-		}
-        this->openGLDisplay->setCA(new CellularAutomataSpace(*ca));
+		//}
+		openGLDisplay->setCA(ca);
+        //this->openGLDisplay->setCA(new CellularAutomataSpace(*ca));
     }
 
 }
 
 void MainWindow::updateRender()
 {
-    this->openGLDisplay->setCA(new CellularAutomataSpace(*calculationsThread.simulation->cellularautomata));
+	updateDebug(tr("Display updating"));
+	//openGLDisplay->setCA(new CellularAutomataSpace(*calculationsThread.simulation->cellularautomata));
+	openGLDisplay->setCA(calculationsThread.simulation->cellularautomata);
+	updateDebug(tr(""));
 }
 
 void MainWindow::updateDebug(const QString text)
@@ -404,7 +505,7 @@ void MainWindow::nucleonGenerationTypeChanged(const int & index)
 	}
 	else if ( nucleationTypeComboBox->itemText(nucleationTypeComboBox->currentIndex()) == " Regular ")
 	{
-		nucleationNumberSpinBox->hide();
+		nucleationNumberSpinBox->show();
 		nucleationOptionLabel1->show();
 		nucleationOptionLabel2->show();
 		nucleationOptionLabel3->show();
@@ -414,16 +515,47 @@ void MainWindow::nucleonGenerationTypeChanged(const int & index)
 		nucleationOptionTextBox3->show();
 		nucleationOptionTextBox4->hide();
 		
-		nucleationOptionLabel1->setText(" Count on X axis: ");
-		nucleationOptionLabel2->setText(" Count on Y axis: ");
-		nucleationOptionLabel3->setText(" Count on Z axis: ");
+		nucleationOptionLabel1->setText(" X axis: ");
+		nucleationOptionLabel2->setText(" Y axis: ");
+		nucleationOptionLabel3->setText(" Z axis: ");
 	}
 }
 
+void MainWindow::showGrainBoundariesStateChanged(bool state)
+{
+	this->openGLDisplay->setShowAllGrains(state);
+}
+
+void MainWindow::hidenGrainsStateChanged(const QString & text)
+{
+	QString newText = text;
+	newText.remove(QRegExp("[^\\d\\s]"));
+	hidenGrainsLineEdit->setText(newText);
+}
+
+void MainWindow::hidenGrainsEditEnded()
+{
+	QString		 text = hidenGrainsLineEdit->text();
+	QStringList  chunks = text.split(QRegExp("\\s"));
+	QVector<int> hidenGrains;
+
+	for (QString chunk : chunks)
+	{
+		bool succes;
+		int digit = chunk.toInt(&succes);
+		if (succes) hidenGrains.push_back(digit);
+	}
+	openGLDisplay->setHidenGrains(hidenGrains);
+}
+
+
+
+
 void MainWindow::loadFile()
 {
+	updateDebug(tr("Loading"));
 	QString fileName = QFileDialog::getOpenFileName(this,
-		tr("Save Microstructure"), "File.txt",
+		tr("Load Microstructure"), "File.txt",
 		tr("TextFile (*.txt);;All Files (*)"));
 
 	if (fileName.isEmpty())
@@ -441,10 +573,12 @@ void MainWindow::loadFile()
 		file.close();
 		this->openGLDisplay->setCA(this->calculationsThread.simulation->cellularautomata);
 	}
+	updateDebug(tr(""));
 }
 
 void MainWindow::saveFile()
 {
+	updateDebug(tr("Saving"));
 	QString fileName = QFileDialog::getSaveFileName(this,
 		tr("Save Microstructure"), "File.txt",
 		tr("TextFile (*.txt);;All Files (*)"));
@@ -461,6 +595,7 @@ void MainWindow::saveFile()
 		saveText << QString::fromStdString(this->calculationsThread.simulation->cellularautomata->save());
 		file.close();
 	}
+	updateDebug(tr(""));
 }
 
 void MainWindow::newSimulation()
@@ -471,7 +606,7 @@ void MainWindow::newSimulation()
         int x, y, z;
 		delete calculationsThread.simulation->cellularautomata;
         newDialog->getValues(x, y, z);
-        this->openGLDisplay->setCA(new CellularAutomataSpace(x, y, z));
+		this->openGLDisplay->setCA(new CellularAutomataSpace(x, y, z));
         calculationsThread.simulation->cellularautomata = new CellularAutomataSpace(x, y, z);
     }
     delete newDialog;

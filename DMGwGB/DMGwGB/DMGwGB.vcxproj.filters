@@ -54,9 +54,6 @@
     <ClInclude Include="VonNeummanNeighborhood.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="CRule.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
     <ClInclude Include="CellularAutomataSpace.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
@@ -67,6 +64,12 @@
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="GrainGrowthWithBoundaryCellularAutomata.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="CellularAutomataRule.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="RadialNeighborhood.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
   </ItemGroup>
@@ -107,9 +110,6 @@
     <ClCompile Include="VonNeummanNeighborhood.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="CRule.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
     <ClCompile Include="CellularAutomataSpace.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
@@ -117,6 +117,12 @@
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="GrainGrowthWithBoundaryCellularAutomata.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="CellularAutomataRule.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="RadialNeighborhood.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>

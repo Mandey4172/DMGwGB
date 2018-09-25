@@ -154,7 +154,7 @@
   <ItemGroup>
     <ClInclude Include="Calculations.h" />
     <ClInclude Include="CellularAutomataSpace.h" />
-    <ClInclude Include="CRule.h" />
+    <ClInclude Include="CellularAutomataRule.h" />
     <ClInclude Include="GrainBoundaryRule.h" />
     <ClInclude Include="GrainGrowthWithBoundaryCellularAutomata.h" />
     <ClInclude Include="GrainGrowthRule.h" />
@@ -166,6 +166,7 @@
     <ClInclude Include="NVonNeummanNeighborhood.h" />
     <ClInclude Include="PentagonalNeighborhood.h" />
     <ClInclude Include="CellularAutomata.h" />
+    <ClInclude Include="RadialNeighborhood.h" />
     <ClInclude Include="SPoint.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -174,7 +175,7 @@
   <ItemGroup>
     <ClCompile Include="Calculations.cpp" />
     <ClCompile Include="CellularAutomataSpace.cpp" />
-    <ClCompile Include="CRule.cpp" />
+    <ClCompile Include="CellularAutomataRule.cpp" />
     <ClCompile Include="GrainBoundaryRule.cpp" />
     <ClCompile Include="GrainGrowthWithBoundaryCellularAutomata.cpp" />
     <ClCompile Include="GrainGrowthRule.cpp" />
@@ -186,6 +187,7 @@
     <ClCompile Include="NVonNeummanNeighborhood.cpp" />
     <ClCompile Include="PentagonalNeighborhood.cpp" />
     <ClCompile Include="CellularAutomata.cpp" />
+    <ClCompile Include="RadialNeighborhood.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

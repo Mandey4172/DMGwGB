@@ -15,7 +15,7 @@ GrainBoundaryRule::~GrainBoundaryRule()
 }
 
 /* Regu³a przejœcia dla wyszukiwania granic ziaren */
-void GrainBoundaryRule::step(unsigned int * cell, std::vector<unsigned int> & neighborhood)
+void GrainBoundaryRule::check(unsigned int * cell, std::vector<unsigned int> & neighborhood)
 {
 	if (!neighborhood.empty())
 	{
@@ -47,7 +47,6 @@ void GrainBoundaryRule::step(unsigned int * cell, std::vector<unsigned int> & ne
 					//Sprawdzanie czy granica posiada opis w globalnej liœcie
 					for (std::vector<BoundaryNode>::reverse_iterator b = this->boundary_states.rbegin(); b != this->boundary_states.rend(); b++)
 					{
-
 						//Czy aktualne otoczenie jest takie samo jak otoczenie elementu z listy
 						if (b->neighborhood_states == unique_grains)
 						{
