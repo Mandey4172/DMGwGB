@@ -11,7 +11,6 @@ public:
 	GrainGrowthCellularAutomata();
 	~GrainGrowthCellularAutomata();
 
-	virtual bool step();
-	virtual void start();
+	virtual bool step() override;
 };
 

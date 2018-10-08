@@ -1,25 +1,27 @@
-#include "GrainGrowthWithBoundaryCellularAutomata.h"
+#include "GrainGrowthWithBoundaryCellularAutomataV2.h"
 
 #include "CellularAutomataSpace.h"
 #include "MooreNeighborhood.h"
-#include "GrainBoundaryRule.h"
+#include "GrainBoundaryRulev2.h"
 #include "GrainGrowthCellularAutomata.h"
 
-
-
-GrainGrowthWithBoundaryCellularAutomata::GrainGrowthWithBoundaryCellularAutomata()
+GrainGrowthWithBoundaryCellularAutomataV2::GrainGrowthWithBoundaryCellularAutomataV2()
 {
 	this->cellularautomata = new CellularAutomataSpace(100, 100, 100);
 	this->neighborhood = new MooreNeighborhood();
 	this->boundary_neighborhood = new MooreNeighborhood();
 
-	this->rule = new GrainBoundaryRule();
+	this->rule = new GrainBoundaryRuleV2();
 	this->grainSize = 1;
 	bFuseAfterSimulation = true;
 }
 
 
-bool GrainGrowthWithBoundaryCellularAutomata::step()
+GrainGrowthWithBoundaryCellularAutomataV2::~GrainGrowthWithBoundaryCellularAutomataV2()
+{
+}
+
+bool GrainGrowthWithBoundaryCellularAutomataV2::step()
 {
 	bool isComplete = true;
 
@@ -29,16 +31,14 @@ bool GrainGrowthWithBoundaryCellularAutomata::step()
 	GrainGrowth.start();
 	GrainGrowth.neighborhood = nullptr;
 	GrainGrowth.cellularautomata = nullptr;
-	
 
 	int m = static_cast<int>(cellularautomata->m),
 		n = static_cast<int>(cellularautomata->n),
 		o = static_cast<int>(cellularautomata->o);
 
-
 	GrainGrowthCellularAutomata GrainGrowth2;
-	GrainGrowth2.cellularautomata = new CellularAutomataSpace(m,n,o);
-	
+	GrainGrowth2.cellularautomata = new CellularAutomataSpace(m, n, o);
+
 	this->rule->grain_count = this->cellularautomata->nucleons_count;
 
 	#pragma omp parallel
@@ -57,42 +57,29 @@ bool GrainGrowthWithBoundaryCellularAutomata::step()
 			}
 		}
 	}
-	bool work = true;
-	/*for (int x = 0; x < 7; x++)
-	{*/
 
-	for(int i = 0 ; i < m*n*o && work; i++)
+	#pragma omp parallel
+	for (int i = 0; i < m; i++)
 	{
-		work = false;
-		GrainGrowthCellularAutomata GrainGrowth3;
-		GrainGrowth3.cellularautomata = new CellularAutomataSpace(*GrainGrowth2.cellularautomata);
-		#pragma omp parallel
-		for (int i = 0; i < m; i++)
+		for (int j = 0; j < n; j++)
 		{
-			for (int j = 0; j < n; j++)
+			#pragma omp for schedule(static) nowait
+			for (int k = 0; k < o; k++)
 			{
-				#pragma omp for schedule(static) nowait
-				for (int k = 0; k < o; k++)
+				if (GrainGrowth2.cellularautomata->getCells()[i][j][k] == this->cellularautomata->nucleons_count + 1)
 				{
-					if (GrainGrowth3.cellularautomata->getCells()[i][j][k] > 0)// this->cellularautomata->nucleons_count)
-					{
-						//Pobieranie s¹siedztwa
-						MooreNeighborhood n;
-						n.setRadius(2);
-						std::vector<unsigned int> neightborhood = n.get(GrainGrowth3.cellularautomata, i, j, k);
+					//Pobieranie s¹siedztwa
+					MooreNeighborhood n;
+					n.setRadius(2);
+					std::vector<unsigned int> neightborhood = n.get(this->cellularautomata, i, j, k);
 
-						static_cast<GrainBoundaryRule *>(this->rule)->clear(&GrainGrowth2.cellularautomata->getCells()[i][j][k], neightborhood);
-						if (GrainGrowth2.cellularautomata->getCells()[i][j][k] != GrainGrowth3.cellularautomata->getCells()[i][j][k])
-						{
-							work = true;
-						}
-					}
+					static_cast<GrainBoundaryRuleV2 *>(this->rule)->identify(&GrainGrowth2.cellularautomata->getCells()[i][j][k], neightborhood);
 				}
 			}
 		}
 	}
 
-	GrainGrowth2.cellularautomata->boundarys_count = static_cast<unsigned int>(((GrainBoundaryRule *)rule)->boundary_states.size());
+	GrainGrowth2.cellularautomata->boundarys_count = static_cast<unsigned int>(((GrainBoundaryRuleV2 *)rule)->boundary_states.size());
 	GrainGrowth2.neighborhood = this->boundary_neighborhood;
 	if (grainSize > 1)
 	{
@@ -105,7 +92,7 @@ bool GrainGrowthWithBoundaryCellularAutomata::step()
 
 	if (bFuseAfterSimulation)
 	{
-		#pragma omp parallel 
+	#pragma omp parallel 
 		for (int i = 0; i < m; i++)
 		{
 			for (int j = 0; j < n; j++)
@@ -127,17 +114,8 @@ bool GrainGrowthWithBoundaryCellularAutomata::step()
 		this->cellularautomata = GrainGrowth2.cellularautomata;
 		GrainGrowth2.cellularautomata = nullptr;
 	}
-	static_cast<GrainBoundaryRule *>(this->rule)->boundary_states.clear();
+	static_cast<GrainBoundaryRuleV2 *>(this->rule)->boundary_states.clear();
 	return isComplete;
 }
 
-//void GrainGrowthWithBoundaryCellularAutomata::start()
-//{
-//	
-//	if (this->rule)
-//		delete this->rule;
-//	this->rule = new GrainBoundaryRule();
-//	int state = 0;
-//	while (!step());
-//	int stop = 0;
-//}
+

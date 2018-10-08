@@ -14,9 +14,9 @@ MooreNeighborhood::~MooreNeighborhood()
 std::vector<unsigned int> MooreNeighborhood::get(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->getSize()[0]),
-		n = static_cast<int>(cellularautomata->getSize()[1]),
-		o = static_cast<int>(cellularautomata->getSize()[2]);
+	int m = static_cast<int>(cellularautomata->m),
+		n = static_cast<int>(cellularautomata->n),
+		o = static_cast<int>(cellularautomata->o);
 
 	for (int i = -radius; i <= radius; i++)
 	{

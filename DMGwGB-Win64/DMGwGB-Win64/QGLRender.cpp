@@ -126,9 +126,10 @@ void QGLRender::initializeGL()
 	//QVector<float> vmodels;
 
 	//Pseudo inicjacja
-	int m = ca->getSize()[0],
-		n = ca->getSize()[1],
-		o = ca->getSize()[2];
+	int m = static_cast<int>(ca->m),
+		n = static_cast<int>(ca->n),
+		o = static_cast<int>(ca->o);
+
 
 	// Budowa i kompilacja shaderów 
 	if (!ShaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, "TransformVertexShader.vertexshader"))
@@ -262,9 +263,9 @@ void QGLRender::resizeGL(int w, int h)
 
 void QGLRender::paintGL()
 {
-	int m = ca->getSize()[0],
-		n = ca->getSize()[1],
-		o = ca->getSize()[2];
+	int m = static_cast<int>(ca->m),
+		n = static_cast<int>(ca->n),
+		o = static_cast<int>(ca->o);
 
 	
 
@@ -287,22 +288,23 @@ void QGLRender::paintGL()
 
 bool QGLRender::shouldDrawCell(int x, int y, int z)
 {
-	int m = ca->getSize()[0],
-		n = ca->getSize()[1],
-		o = ca->getSize()[2];
+	int m = static_cast<int>(ca->m),
+		n = static_cast<int>(ca->n),
+		o = static_cast<int>(ca->o);
+
 	unsigned int state = ca->getCells()[x][y][z];
 
-	for (int i = -1; i < 1; i++)
+	for (int i = -1; i <= 1; i++)
 	{
 		int current_x = x + i;
 		if (current_x >= 0 && current_x < m)
 		{
-			for (int j = -1; j < 1; j++)
+			for (int j = -1; j <= 1; j++)
 			{
 				int current_y = y + j;
 				if (current_y >= 0 && current_y < n)
 				{
-					for (int k = -1; k < 1; k++)
+					for (int k = -1; k <= 1; k++)
 					{
 						int current_z = z + k;
 						if (current_z >= 0 && current_z < o)
@@ -319,9 +321,9 @@ bool QGLRender::shouldDrawCell(int x, int y, int z)
 
 void QGLRender::updateTextures()
 {
-	int m = 100, //ca->getSize()[0] ,
-		n = 100, //ca->getSize()[1] ,
-		o = 100; //ca->getSize()[2] ;
+	int m = 100, //ca->m ,
+		n = 100, //ca->n ,
+		o = 100; //ca->o ;
 
 	QImage	TexturesData[6];
 
@@ -541,30 +543,32 @@ void QGLRender::updateTextures()
 
 void QGLRender::updateCells()
 {
-	int m = ca->getSize()[0],
-		n = ca->getSize()[1],
-		o = ca->getSize()[2];
+	int m = static_cast<int>(ca->m),
+		n = static_cast<int>(ca->n),
+		o = static_cast<int>(ca->o);
+
 	position.clear();
 	color.clear();
 
-#pragma omp parallel
+//#pragma omp parallel
 	for (int i = 0; i < m; i++)
 	{
 		for (int j = 0; j < n; j++)
 		{
-			#pragma omp for schedule(static) //nowait
+			//#pragma omp for schedule(static) //nowait
 			for (int k = 0; k < o; k++)
 			{
 				unsigned int state = this->ca->getCells()[i][j][k];
 				if (hidenGrains.indexOf(state) == -1)
 				{
 					if ((i == 0) || (j == 0) || (k == 0) ||
-						(i == n - 1) || (j == m - 1) || (k == o - 1) || shouldDrawCell(i, j, k))
+						(i == n - 1) || (j == m - 1) || (k == o - 1) || 
+						shouldDrawCell(i, j, k))
 					{
 						//color.push_back(QVector3D(0.5, 0.5, 0.5));
 						if (bShowGrains && (state <= ca->nucleons_count))
 						{
-							#pragma omp critical
+							//#pragma omp critical
 							{
 								position.push_back(QVector3D(i, j, k));
 								color.push_back(QVector3D(this->colorGenerator.colors[state][0],
@@ -575,7 +579,7 @@ void QGLRender::updateCells()
 						else if(state > ca->nucleons_count)
 						{
 							state += 500 * 500 / 2;
-							#pragma omp critical
+							//#pragma omp critical
 							{
 								position.push_back(QVector3D(i, j, k));
 								color.push_back(QVector3D(this->colorGenerator.colors[state][0],
@@ -584,34 +588,6 @@ void QGLRender::updateCells()
 							}
 						}
 					}
-					//else if (shouldDrawCell(i, j, k))
-					//{
-					//	//color.push_back(QVector3D(0.5, 0.5, 0.5));
-					//	unsigned int state = this->ca->getCells()[i][j][k];
-					//	if (state <= ca->nucleons_count)
-					//	{
-					//		#pragma omp critical
-					//		{
-
-					//		}
-					//		position.push_back(QVector3D(i, j, k));
-					//		color.push_back(QVector3D(this->colorGenerator.colors[state][0],
-					//			this->colorGenerator.colors[state][1],
-					//			this->colorGenerator.colors[state][2]));
-					//	}
-					//	else if (bShowGrainBoundaries)
-					//	{
-					//		state += 500 * 500 / 2;
-					//		#pragma omp critical
-					//		{
-
-					//		}
-					//		position.push_back(QVector3D(i, j, k));
-					//		color.push_back(QVector3D(this->colorGenerator.colors[state][0],
-					//			this->colorGenerator.colors[state][1],
-					//			this->colorGenerator.colors[state][2]));
-					//	}
-					//}
 				}
 			}
 		}
@@ -629,9 +605,9 @@ void QGLRender::updateCells()
 
 void QGLRender::updateView()
 {
-	float	center_x = static_cast<float>(ca->getSize()[0] / 2),
-			center_y = static_cast<float>(ca->getSize()[1] / 2),
-			center_z = static_cast<float>(ca->getSize()[2] / 2);
+	float	center_x = static_cast<float>(ca->m / 2),
+			center_y = static_cast<float>(ca->n / 2),
+			center_z = static_cast<float>(ca->o / 2);
 
 	float max = center_x;
 	if (max > center_y) max = center_y;

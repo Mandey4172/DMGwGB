@@ -49,8 +49,8 @@ MainWindow::MainWindow(QWidget *parent)
 	mainLayout->addWidget(nucleationMenuGroupBox, 1, 0, 1, 2);
     mainLayout->addWidget(simulationMenuGroupBox, 2, 0, 1, 2);
     mainLayout->addWidget(openGLDisplay, 0, 2, 10, 10);
-	mainLayout->addWidget(showGrainBoundariesLabel, 11, 2);
-	mainLayout->addWidget(showGrainBoundariesChechBox, 11, 3);
+	mainLayout->addWidget(showGrainsLabel, 11, 2);
+	mainLayout->addWidget(showGrainsChechBox, 11, 3);
 	mainLayout->addWidget(hidenGrainsLabel, 12, 2);
 	mainLayout->addWidget(hidenGrainsLineEdit, 12, 3);
     mainLayout->setContentsMargins(20, 20, 20, 20);
@@ -177,10 +177,13 @@ void MainWindow::createNucleationMenu()
 
 	nucleationOptionLabel1 = new QLabel(tr("Option 1"));
 	nucleationOptionTextBox1 = new QSpinBox;
+	nucleationOptionTextBox1->setMinimum(1);
 	nucleationOptionLabel2 = new QLabel(tr("Option 2"));
 	nucleationOptionTextBox2 = new QSpinBox;
+	nucleationOptionTextBox2->setMinimum(1);
 	nucleationOptionLabel3 = new QLabel(tr("Option 3"));
 	nucleationOptionTextBox3 = new QSpinBox;
+	nucleationOptionTextBox3->setMinimum(1);
 	nucleationOptionLabel4 = new QLabel(tr("Option 4"));
 	nucleationOptionTextBox4 = new QComboBox;
 	nucleationOptionTextBox4->addItem(" 0 ");
@@ -241,7 +244,7 @@ void MainWindow::createSimulationMenu()
 	boundaryConditionsComboBox = new QComboBox;
 	boundaryConditionsComboBox->addItem(" Blocking ");
 	boundaryConditionsComboBox->addItem(" Periodic ");
-	boundaryConditionsComboBox->addItem(" Reflectiong ");
+	//boundaryConditionsComboBox->addItem(" Reflectiong ");
 	//boundaryConditionsComboBox->addItem(" Regular ");
 
     neightborhoodLabel = new QLabel(tr(" Neightborhood type: "));
@@ -264,6 +267,11 @@ void MainWindow::createSimulationMenu()
 	boundaryNeightborhoodComboBox->addItem(" VonNeumman ");
 	boundaryNeightborhoodComboBox->addItem(" Pentagonal ");
 	boundaryNeightborhoodComboBox->addItem(" Hexagonal ");
+	boundaryNeightborhoodComboBox->addItem(" Radial ");
+
+	boundaryNeightborhoodRadiusLabel = new QLabel(tr(" Boundary neightborhood radius "));
+	boundaryNeightborhoodRadiusSpinBox = new QSpinBox;
+	boundaryNeightborhoodRadiusSpinBox->setMinimum(1);
 
 	grainBoundarySizeLabel = new QLabel(tr(" Grain boundary size: "));
 	grainBoundarySizeTextBox = new QSpinBox;
@@ -291,15 +299,18 @@ void MainWindow::createSimulationMenu()
 	layout->addWidget(boundaryNeightborhoodLabel, 6, 0, 1, 4);
 	layout->addWidget(boundaryNeightborhoodComboBox, 7, 0, 1, 4);
 
-	layout->addWidget(grainBoundarySizeLabel, 8, 0, 1, 4);
-	layout->addWidget(grainBoundarySizeTextBox, 9, 0, 1, 4);
+	layout->addWidget(boundaryNeightborhoodRadiusLabel, 8, 0, 1, 4);
+	layout->addWidget(boundaryNeightborhoodRadiusSpinBox, 9, 0, 1, 4);
 
-	layout->addWidget(fuseAfterSimulationLabel, 10, 0, 1, 4);
-	layout->addWidget(fuseAfterSimulationChechBox, 11, 0, 1, 4);
+	layout->addWidget(grainBoundarySizeLabel, 10, 0, 1, 4);
+	layout->addWidget(grainBoundarySizeTextBox, 11, 0, 1, 4);
 
-    layout->addWidget(simulationStartButton, 12, 0, 1, 4);
+	layout->addWidget(fuseAfterSimulationLabel, 12, 0, 1, 4);
+	layout->addWidget(fuseAfterSimulationChechBox, 13, 0, 1, 4);
 
-	layout->addWidget(debugLabel, 13, 0, 1, 4);
+    layout->addWidget(simulationStartButton, 14, 0, 1, 4);
+
+	layout->addWidget(debugLabel, 15, 0, 1, 4);
 
  //   layout->setRowMinimumHeight(0, 20);
  //   layout->setRowMinimumHeight(1, 20);
@@ -337,10 +348,10 @@ void MainWindow::createOpenGLDisplay()
     openGLDisplay->setCA(calculationsThread.simulation->cellularautomata);
     openGLDisplay->setGeometry(0,0,100, 100);
 
-	showGrainBoundariesLabel = new QLabel("Show grain boundaries :");
-	showGrainBoundariesChechBox = new QCheckBox();
-	showGrainBoundariesChechBox->setChecked(true);
-	connect(showGrainBoundariesChechBox, SIGNAL(clicked(bool)), this, SLOT(showGrainBoundariesStateChanged(bool)));
+	showGrainsLabel = new QLabel("Show grains :");
+	showGrainsChechBox = new QCheckBox();
+	showGrainsChechBox->setChecked(true);
+	connect(showGrainsChechBox, SIGNAL(clicked(bool)), this, SLOT(showGrainBoundariesStateChanged(bool)));
 
 	hidenGrainsLabel = new QLabel("Hiden grains:");
 	hidenGrainsLineEdit = new QLineEdit();
@@ -354,6 +365,7 @@ void MainWindow::createOpenGLDisplay()
 void MainWindow::startSimulation()
 {
 	unsigned int negihtborhoodRadius = static_cast<unsigned int>(neightborhoodRadiusSpinBox->value());
+	unsigned int boundaryNegihtborhoodRadius = static_cast<unsigned int>(boundaryNeightborhoodRadiusSpinBox->value());
 	unsigned int grainSize = static_cast<unsigned int>(grainBoundarySizeTextBox->value());
 	
 	GrainGrowthWithBoundaryCellularAutomata * simulation = dynamic_cast<GrainGrowthWithBoundaryCellularAutomata *>(this->calculationsThread.simulation);
@@ -361,8 +373,7 @@ void MainWindow::startSimulation()
 	{
 		simulation->grainSize = grainSize;
 		simulation->bFuseAfterSimulation = this->fuseAfterSimulationChechBox->isChecked();
-
-		delete simulation->boundary_neighborhood;
+		if(simulation->boundary_neighborhood) delete simulation->boundary_neighborhood;
 		if (boundaryNeightborhoodComboBox->itemText(boundaryNeightborhoodComboBox->currentIndex()) == " VonNeumman ")
 		{
 			simulation->boundary_neighborhood = new VonNeummanNeighborhood();
@@ -383,6 +394,7 @@ void MainWindow::startSimulation()
 		{
 			simulation->boundary_neighborhood = new MooreNeighborhood();
 		}
+		simulation->boundary_neighborhood->setRadius(boundaryNegihtborhoodRadius);
 	}
 	if (calculationsThread.simulation->neighborhood) delete calculationsThread.simulation->neighborhood;
 	if (neightborhoodComboBox->itemText(neightborhoodComboBox->currentIndex()) == " VonNeumman ")
@@ -405,7 +417,7 @@ void MainWindow::startSimulation()
 	{
 		calculationsThread.simulation->neighborhood = new MooreNeighborhood();
 	}
-	
+	this->calculationsThread.simulation->neighborhood->setRadius(negihtborhoodRadius);
 
 	if (boundaryConditionsComboBox->itemText(boundaryConditionsComboBox->currentIndex()) == " Blocking ")
 	{
@@ -419,7 +431,6 @@ void MainWindow::startSimulation()
 	{
 		calculationsThread.simulation->cellularautomata->setBoundaryContidion(BoundaryContidionTypes::Reflecting);
 	}
-	this->calculationsThread.simulation->neighborhood->setRadius(negihtborhoodRadius);
 
     connect(&calculationsThread, &CalculationsThread::updateVal, this, &MainWindow::updateRender);
     calculationsThread.start();

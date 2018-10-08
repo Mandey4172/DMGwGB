@@ -10,8 +10,7 @@ public:
 	unsigned int grainSize;
 	class Neighborhood * boundary_neighborhood;
 
-	virtual bool step();
-	virtual void start();
+	virtual bool step() override;
 
 	bool bFuseAfterSimulation;
 };

@@ -23,7 +23,6 @@ GrainGrowthCellularAutomata::GrainGrowthCellularAutomata()
 
 GrainGrowthCellularAutomata::~GrainGrowthCellularAutomata()
 {
-
 }
 
 //Pojedyñczy krok czasowy symulacji
@@ -32,9 +31,9 @@ bool GrainGrowthCellularAutomata::step()
 	//Kopiowanie wynikowego automatu komórkowego
 	CellularAutomataSpace * cca = new CellularAutomataSpace(*this->cellularautomata);
 	//Pobieranie rozmiaru automatu
-	int m = static_cast<int>(cellularautomata->getSize()[0]),
-		n = static_cast<int>(cellularautomata->getSize()[1]),
-		o = static_cast<int>(cellularautomata->getSize()[2]);
+	int m = static_cast<int>(cellularautomata->m),
+		n = static_cast<int>(cellularautomata->n),
+		o = static_cast<int>(cellularautomata->o);
 	//Zmienna informuj¹ca czy mikrostruktóra jest gotowa
 	bool exit = true;
 	//Wejœcie w obszar zrównoleglony
@@ -71,8 +70,8 @@ bool GrainGrowthCellularAutomata::step()
 }
 
 //
-void GrainGrowthCellularAutomata::start()
-{
-	//Generuj a¿ mikrostruktóra bêdzie gotowa
-	while (!step());
-}
+//void GrainGrowthCellularAutomata::start()
+//{
+//	//Generuj a¿ mikrostruktóra bêdzie gotowa
+//	while (!step());
+//}

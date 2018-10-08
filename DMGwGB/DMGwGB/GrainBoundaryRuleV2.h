@@ -1,7 +1,5 @@
 #pragma once
-
 #include "CellularAutomataRule.h"
-#include <omp.h>
 
 struct BoundaryNode
 {
@@ -17,16 +15,16 @@ struct BoundaryNode
 	unsigned int state;
 };
 
-class GrainBoundaryRule :
+class GrainBoundaryRuleV2 :
 	public CellularAutomataRule
 {
 public:
-	GrainBoundaryRule();
-	~GrainBoundaryRule();
+	GrainBoundaryRuleV2();
+	~GrainBoundaryRuleV2();
 
 	std::vector<BoundaryNode> boundary_states;
 
 	virtual void check(unsigned int * cell, class std::vector<unsigned int> & neighborhood);
-	virtual void clear(unsigned int * cell, class std::vector<unsigned int> & neighborhood);
+	virtual void identify(unsigned int * cell, class std::vector<unsigned int> & neighborhood);
 };
 

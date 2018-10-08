@@ -47,9 +47,9 @@ CellularAutomataSpace::CellularAutomataSpace(unsigned int nm, unsigned int nn, u
 
 CellularAutomataSpace::CellularAutomataSpace(const CellularAutomataSpace & ca)
 {
-	this->m = ca.getSize()[0];
-	this->n = ca.getSize()[1];
-	this->o = ca.getSize()[2];
+	this->m = ca.m;
+	this->n = ca.n;
+	this->o = ca.o;
 
 	this->cells = new unsigned int ** [this->m];
 	//this->cells.resize(this->m);

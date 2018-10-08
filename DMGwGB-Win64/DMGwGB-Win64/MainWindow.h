@@ -87,6 +87,9 @@ private:
 	QLabel			*boundaryNeightborhoodLabel;
 	QComboBox		*boundaryNeightborhoodComboBox;
 
+	QLabel			*boundaryNeightborhoodRadiusLabel;
+	QSpinBox		*boundaryNeightborhoodRadiusSpinBox;
+
 	QLabel			*boundaryConditionsLabel;
 	QComboBox		*boundaryConditionsComboBox;
 
@@ -103,8 +106,8 @@ private:
 	QGroupBox		*displayMenuGroupBox;
     QGLRender		*openGLDisplay;
 
-	QLabel			*showGrainBoundariesLabel;
-	QCheckBox		*showGrainBoundariesChechBox;
+	QLabel			*showGrainsLabel;
+	QCheckBox		*showGrainsChechBox;
 
 	QLabel			*hidenGrainsLabel;
 	QLineEdit		*hidenGrainsLineEdit;

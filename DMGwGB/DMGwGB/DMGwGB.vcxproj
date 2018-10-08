@@ -156,9 +156,11 @@
     <ClInclude Include="CellularAutomataSpace.h" />
     <ClInclude Include="CellularAutomataRule.h" />
     <ClInclude Include="GrainBoundaryRule.h" />
+    <ClInclude Include="GrainBoundaryRuleV2.h" />
     <ClInclude Include="GrainGrowthWithBoundaryCellularAutomata.h" />
     <ClInclude Include="GrainGrowthRule.h" />
     <ClInclude Include="GrainGrowthCellularAutomata.h" />
+    <ClInclude Include="GrainGrowthWithBoundaryCellularAutomataV2.h" />
     <ClInclude Include="HexagonalNeighborhood.h" />
     <ClInclude Include="MooreNeighborhood.h" />
     <ClInclude Include="Neighborhood.h" />
@@ -177,9 +179,11 @@
     <ClCompile Include="CellularAutomataSpace.cpp" />
     <ClCompile Include="CellularAutomataRule.cpp" />
     <ClCompile Include="GrainBoundaryRule.cpp" />
+    <ClCompile Include="GrainBoundaryRuleV2.cpp" />
     <ClCompile Include="GrainGrowthWithBoundaryCellularAutomata.cpp" />
     <ClCompile Include="GrainGrowthRule.cpp" />
-    <ClCompile Include="GrainGrowthSimulation.cpp" />
+    <ClCompile Include="GrainGrowthCellularAutomata.cpp" />
+    <ClCompile Include="GrainGrowthWithBoundaryCellularAutomataV2.cpp" />
     <ClCompile Include="HexagonalNeighborhood.cpp" />
     <ClCompile Include="MooreNeighborhood.cpp" />
     <ClCompile Include="Neighborhood.cpp" />

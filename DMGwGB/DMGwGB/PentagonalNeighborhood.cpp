@@ -23,9 +23,9 @@ std::vector<unsigned int> PentagonalNeighborhood::get(CellularAutomataSpace * ce
 std::vector<unsigned int> PentagonalNeighborhood::getFront(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->getSize()[0]),
-		n = static_cast<int>(cellularautomata->getSize()[1]),
-		o = static_cast<int>(cellularautomata->getSize()[2]);
+	int m = static_cast<int>(cellularautomata->m),
+		n = static_cast<int>(cellularautomata->n),
+		o = static_cast<int>(cellularautomata->o);
 
 	for (int i = -radius; i <= 0; i++)
 	{
@@ -130,9 +130,9 @@ std::vector<unsigned int> PentagonalNeighborhood::getFront(CellularAutomataSpace
 std::vector<unsigned int> PentagonalNeighborhood::getBack(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->getSize()[0]),
-		n = static_cast<int>(cellularautomata->getSize()[1]),
-		o = static_cast<int>(cellularautomata->getSize()[2]);
+	int m = static_cast<int>(cellularautomata->m),
+		n = static_cast<int>(cellularautomata->n),
+		o = static_cast<int>(cellularautomata->o);
 
 	for (int i = 0; i <= radius; i++)
 	{
@@ -237,9 +237,9 @@ std::vector<unsigned int> PentagonalNeighborhood::getBack(CellularAutomataSpace 
 std::vector<unsigned int> PentagonalNeighborhood::getTop(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->getSize()[0]),
-		n = static_cast<int>(cellularautomata->getSize()[1]),
-		o = static_cast<int>(cellularautomata->getSize()[2]);
+	int m = static_cast<int>(cellularautomata->m),
+		n = static_cast<int>(cellularautomata->n),
+		o = static_cast<int>(cellularautomata->o);
 
 	for (int i = -radius; i <= radius; i++)
 	{
@@ -344,9 +344,9 @@ std::vector<unsigned int> PentagonalNeighborhood::getTop(CellularAutomataSpace *
 std::vector<unsigned int> PentagonalNeighborhood::getBottom(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->getSize()[0]),
-		n = static_cast<int>(cellularautomata->getSize()[1]),
-		o = static_cast<int>(cellularautomata->getSize()[2]);
+	int m = static_cast<int>(cellularautomata->m),
+		n = static_cast<int>(cellularautomata->n),
+		o = static_cast<int>(cellularautomata->o);
 
 	for (int i = -radius; i <= radius; i++)
 	{
@@ -451,9 +451,9 @@ std::vector<unsigned int> PentagonalNeighborhood::getBottom(CellularAutomataSpac
 std::vector<unsigned int> PentagonalNeighborhood::getLeft(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->getSize()[0]),
-		n = static_cast<int>(cellularautomata->getSize()[1]),
-		o = static_cast<int>(cellularautomata->getSize()[2]);
+	int m = static_cast<int>(cellularautomata->m),
+		n = static_cast<int>(cellularautomata->n),
+		o = static_cast<int>(cellularautomata->o);
 
 	for (int i = -radius; i <= radius; i++)
 	{
@@ -558,9 +558,9 @@ std::vector<unsigned int> PentagonalNeighborhood::getLeft(CellularAutomataSpace 
 std::vector<unsigned int> PentagonalNeighborhood::getRight(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->getSize()[0]),
-		n = static_cast<int>(cellularautomata->getSize()[1]),
-		o = static_cast<int>(cellularautomata->getSize()[2]);
+	int m = static_cast<int>(cellularautomata->m),
+		n = static_cast<int>(cellularautomata->n),
+		o = static_cast<int>(cellularautomata->o);
 
 	for (int i = -radius; i <= radius; i++)
 	{

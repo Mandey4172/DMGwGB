@@ -27,9 +27,9 @@ void NucleonGenerator::random(CellularAutomataSpace * ca,const unsigned int quan
 	int limit = 1000;
 	for (unsigned int i = 0; i < quantity; i++)
 	{
-		seed_x.push_back(rand() % ca->getSize()[0]);
-		seed_y.push_back(rand() % ca->getSize()[1]);
-		seed_z.push_back(rand() % ca->getSize()[2]);
+		seed_x.push_back(rand() % ca->m);
+		seed_y.push_back(rand() % ca->n);
+		seed_z.push_back(rand() % ca->o);
 		if (limit == 0) break;
 		for (unsigned int j = 0; j < i; j++)
 		{
@@ -71,9 +71,9 @@ void NucleonGenerator::random(CellularAutomataSpace * ca, unsigned int quantity,
 			break;
 		}
 		limit--;
-		seed_x.push_back(rand() % ca->getSize()[0]);
-		seed_y.push_back(rand() % ca->getSize()[1]);
-		seed_z.push_back(rand() % ca->getSize()[2]);
+		seed_x.push_back(rand() % ca->m);
+		seed_y.push_back(rand() % ca->n);
+		seed_z.push_back(rand() % ca->o);
 
 		for (unsigned int j = 0; j < i; j++)
 		{
@@ -108,9 +108,9 @@ void NucleonGenerator::random(CellularAutomataSpace * ca, unsigned int quantity,
 void NucleonGenerator::regular(CellularAutomataSpace * ca, unsigned int quantity_m, unsigned int quantity_n, unsigned int quantity_o) const
 {
 
-	int m = static_cast<int>(ca->getSize()[0]),
-		n = static_cast<int>(ca->getSize()[1]),
-		o = static_cast<int>(ca->getSize()[2]);
+	int m = static_cast<int>(ca->m),
+		n = static_cast<int>(ca->n),
+		o = static_cast<int>(ca->o);
 	int step_x = m / (quantity_m + 1),
 		step_y = n / (quantity_n + 1),
 		step_z = o / (quantity_o + 1);
@@ -133,9 +133,9 @@ void NucleonGenerator::regular(CellularAutomataSpace * ca, unsigned int quantity
 		step_z = 1;
 	}
 	int count = 0;
-	for (unsigned int i = 1; i < (quantity_n + 1); i++)
+	for (unsigned int i = 1; i < (quantity_m + 1); i++)
 	{
-		for (unsigned int j = 1; j < (quantity_m + 1); j++)
+		for (unsigned int j = 1; j < (quantity_n + 1); j++)
 		{
 			for (unsigned int k = 1; k < (quantity_o + 1); k++)
 			{

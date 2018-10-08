@@ -14,9 +14,9 @@ NVonNeummanNeighborhood::~NVonNeummanNeighborhood()
 //std::vector<unsigned int> NVonNeummanNeighborhood::get(CellularAutomata * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
 //{
 //	std::vector<unsigned int> neighborhood;
-//	int m = cellularautomata->getSize()[0],
-//		n = cellularautomata->getSize()[1],
-//		o = cellularautomata->getSize()[2];
+//	int m = cellularautomata->m,
+//		n = cellularautomata->n,
+//		o = cellularautomata->o;
 //
 //	for (int i = -1; i <= 1; i++)
 //	{

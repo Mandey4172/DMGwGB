@@ -1,21 +1,44 @@
-#include "GrainBoundaryRule.h"
+#include "GrainBoundaryRuleV2.h"
 
 #include <algorithm>    
 #include <vector>
 #include <omp.h>
 
-
-GrainBoundaryRule::GrainBoundaryRule()
+GrainBoundaryRuleV2::GrainBoundaryRuleV2()
 {
 }
 
 
-GrainBoundaryRule::~GrainBoundaryRule()
+GrainBoundaryRuleV2::~GrainBoundaryRuleV2()
 {
 }
 
-/* Regu³a przejœcia dla wyszukiwania granic ziaren */
-void GrainBoundaryRule::check(unsigned int * cell, std::vector<unsigned int> & neighborhood)
+void GrainBoundaryRuleV2::check(unsigned int * cell, std::vector<unsigned int>& neighborhood)
+{
+	if (!neighborhood.empty())
+	{
+		std::vector<unsigned int> unique_grains;
+		BoundaryNode new_node;
+		//Tworzenie tablicy z unikalnymi stanami
+		for (unsigned int n : neighborhood)
+		{
+			if (n <= this->grain_count)
+			{
+				if (std::find(unique_grains.begin(), unique_grains.end(), n) == unique_grains.end())
+				{
+					unique_grains.push_back(n);
+				}
+				if (unique_grains.size() > 1)
+				{
+					*cell = this->grain_count + 1;
+					return;
+				}
+			}
+		}
+	}
+}
+
+void GrainBoundaryRuleV2::identify(unsigned int * cell, std::vector<unsigned int>& neighborhood)
 {
 	if (!neighborhood.empty())
 	{
@@ -67,61 +90,6 @@ void GrainBoundaryRule::check(unsigned int * cell, std::vector<unsigned int> & n
 					this->boundary_states.push_back(new_node);
 				}
 			}
-		}	
-	}
-}
-
-void GrainBoundaryRule::clear(unsigned int * cell, std::vector<unsigned int>& neighborhood)
-{
-	if (!neighborhood.empty())
-	{
-		std::vector<unsigned int> unique_grains;
-		std::vector<unsigned int> count_grain;
-
-		unique_grains.push_back(*cell);
-		count_grain.push_back(1);
-
-		for (int n : neighborhood)
-		{
-			if (n >= grain_count)
-			{
-				//Sprawdzanie czy stan w tablicy s¹siadów s¹siedztwa istnieje 
-				bool exist = false;
-				if (!unique_grains.empty())
-				{
-					for (int i = 0; i < unique_grains.size(); i++)
-					{
-						if (unique_grains[i] == n)
-						{
-							//Gdy stan istnieje w tablicy z unikalnymi stanami
-							exist = true;
-							count_grain[i]++;
-							break;
-						}
-					}
-				}
-				if (!exist)
-				{
-					//Gdy stan istnieje w tablicy z unikalnymi stanami. 
-					//Dodaj go do tablicy.
-					unique_grains.push_back(n);
-					count_grain.push_back(1);
-				}
-			}
-		}
-		//Wybór ziarna które najczêœciej wystêpuje 
-		if (!unique_grains.empty())
-		{
-			int max = 0;
-			for (int i = 1; i < unique_grains.size(); i++)
-			{
-				if (count_grain[max] < count_grain[i])
-				{
-					max = i;
-				}
-			}
-			*cell = unique_grains[max];
 		}
 	}
 }
-	

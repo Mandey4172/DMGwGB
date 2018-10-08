@@ -42,12 +42,12 @@ public:
 	unsigned int nucleons_count;
 	//Iloœæ granic ziaren
 	unsigned int boundarys_count;
-
-private:
 	//Rozmiar na osi:
 	unsigned int m;	//X
 	unsigned int n;	//Y
 	unsigned int o;	//Z
+
+private:
 	//Komórki
 	unsigned int *** cells;
 	//Warunki brzegowe
