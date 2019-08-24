@@ -9,19 +9,15 @@
 
 #include<vector>
 
-
 CellularAutomata::CellularAutomata()
 {
-	this->cellularautomata = nullptr;
-	this->neighborhood = nullptr;
-	this->rule = nullptr;
+	cellular_automata_space = nullptr;
+	neighborhood = nullptr;
+	rule = nullptr;
 }
 
 CellularAutomata::~CellularAutomata()
 {
-	if (this->cellularautomata) delete cellularautomata;
-	if (this->neighborhood)		delete this->neighborhood;
-	if (this->rule)				delete this->rule;
 }
 
 bool CellularAutomata::step()
@@ -33,4 +29,34 @@ bool CellularAutomata::step()
 void CellularAutomata::start()
 {
 	while (!step());
+}
+
+void CellularAutomata::setCellularAutomataSpace(const std::shared_ptr<class CellularAutomataSpace>& new_cellularautomata)
+{
+	cellular_automata_space = new_cellularautomata;
+}
+
+std::shared_ptr<class CellularAutomataSpace> CellularAutomata::getCellularAutomataSpace() const
+{
+	return cellular_automata_space;
+}
+
+void CellularAutomata::setNeighborhood(const std::shared_ptr<class Neighborhood>& new_neighborhood)
+{
+	neighborhood = new_neighborhood;
+}
+
+std::shared_ptr<class Neighborhood> CellularAutomata::getNeighborhood() const
+{
+	return neighborhood;
+}
+
+void CellularAutomata::setCellularAutomataRule(const std::shared_ptr<class CellularAutomataRule>& new_rule)
+{
+	rule = new_rule;
+}
+
+std::shared_ptr<class CellularAutomataRule> CellularAutomata::getCellularAutomataRule() const
+{
+	return rule;
 }

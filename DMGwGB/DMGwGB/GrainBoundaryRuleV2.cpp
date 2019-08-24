@@ -22,7 +22,7 @@ void GrainBoundaryRuleV2::check(unsigned int * cell, std::vector<unsigned int>& 
 		//Tworzenie tablicy z unikalnymi stanami
 		for (unsigned int n : neighborhood)
 		{
-			if (n <= this->grain_count)
+			if (n <= grain_count)
 			{
 				if (std::find(unique_grains.begin(), unique_grains.end(), n) == unique_grains.end())
 				{
@@ -30,7 +30,7 @@ void GrainBoundaryRuleV2::check(unsigned int * cell, std::vector<unsigned int>& 
 				}
 				if (unique_grains.size() > 1)
 				{
-					*cell = this->grain_count + 1;
+					*cell = grain_count + 1;
 					return;
 				}
 			}
@@ -47,7 +47,7 @@ void GrainBoundaryRuleV2::identify(unsigned int * cell, std::vector<unsigned int
 		//Tworzenie tablicy z unikalnymi stanami
 		for (unsigned int n : neighborhood)
 		{
-			if (n <= this->grain_count)
+			if (n <= grain_count)
 			{
 				if (std::find(unique_grains.begin(), unique_grains.end(), n) == unique_grains.end())
 				{
@@ -65,10 +65,10 @@ void GrainBoundaryRuleV2::identify(unsigned int * cell, std::vector<unsigned int
 		{
 			if (unique_grains.size() > 1)
 			{
-				if (!this->boundary_states.empty())
+				if (!boundary_states.empty())
 				{
 					//Sprawdzanie czy granica posiada opis w globalnej liœcie
-					for (std::vector<BoundaryNode>::reverse_iterator b = this->boundary_states.rbegin(); b != this->boundary_states.rend(); b++)
+					for (std::vector<BoundaryNode>::reverse_iterator b = boundary_states.rbegin(); b != boundary_states.rend(); b++)
 					{
 						//Czy aktualne otoczenie jest takie samo jak otoczenie elementu z listy
 						if (b->neighborhood_states == unique_grains)
@@ -83,11 +83,11 @@ void GrainBoundaryRuleV2::identify(unsigned int * cell, std::vector<unsigned int
 				{
 					//Gdy nie istnieje opis w globalnej liœcie
 					new_node.neighborhood_states = unique_grains;
-					new_node.state = static_cast<unsigned int>(this->grain_count + 1 + this->boundary_states.size());
+					new_node.state = static_cast<unsigned int>(grain_count + 1 + boundary_states.size());
 					*cell = new_node.state;
 
 					//Dodaj opis
-					this->boundary_states.push_back(new_node);
+					boundary_states.push_back(new_node);
 				}
 			}
 		}

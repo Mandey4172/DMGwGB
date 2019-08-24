@@ -7,11 +7,14 @@ class GrainGrowthWithBoundaryCellularAutomata :
 public:
 	GrainGrowthWithBoundaryCellularAutomata();
 
-	unsigned int grainSize;
-	class Neighborhood * boundary_neighborhood;
+	void setBoundaryNeighborhood(const std::shared_ptr< class Neighborhood > & neighborhood);
+	std::shared_ptr< class Neighborhood > getBoundaryNeighborhood();
 
 	virtual bool step() override;
 
+	unsigned int grainSize;
 	bool bFuseAfterSimulation;
-};
 
+protected:
+	std::shared_ptr< class Neighborhood > boundary_neighborhood;
+};

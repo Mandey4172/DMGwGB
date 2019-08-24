@@ -3,22 +3,17 @@
 #include "CellularAutomataSpace.h"
 #include "Neighborhood.h"
 #include "CellularAutomataRule.h"
-#include "SPoint.h"
 
 #include "MooreNeighborhood.h"
 #include "GrainGrowthRule.h"
 
 #include<omp.h>
 
-
 GrainGrowthCellularAutomata::GrainGrowthCellularAutomata()
 {
-	this->cellularautomata = new CellularAutomataSpace(10, 10, 10);
-	this->neighborhood = new MooreNeighborhood();
-	//new VonNeummanNeighborhood();
-	//new HexagonalNeighborhood();
-	//new PentagonalNeighborhood();
-	this->rule = new GrainGrowthRule();
+	cellular_automata_space = std::make_shared< CellularAutomataSpace >(100, 100, 100);
+	neighborhood = std::make_shared < MooreNeighborhood >();
+	rule = std::make_shared < GrainGrowthRule >();
 }
 
 GrainGrowthCellularAutomata::~GrainGrowthCellularAutomata()
@@ -29,32 +24,32 @@ GrainGrowthCellularAutomata::~GrainGrowthCellularAutomata()
 bool GrainGrowthCellularAutomata::step()
 {
 	//Kopiowanie wynikowego automatu komórkowego
-	CellularAutomataSpace * cca = new CellularAutomataSpace(*this->cellularautomata);
+	std::shared_ptr< CellularAutomataSpace > cca = std::make_shared< CellularAutomataSpace >(*cellular_automata_space);
 	//Pobieranie rozmiaru automatu
-	int m = static_cast<int>(cellularautomata->m),
-		n = static_cast<int>(cellularautomata->n),
-		o = static_cast<int>(cellularautomata->o);
+	int m = static_cast<int>(cellular_automata_space->m),
+		n = static_cast<int>(cellular_automata_space->n),
+		o = static_cast<int>(cellular_automata_space->o);
 	//Zmienna informuj¹ca czy mikrostruktóra jest gotowa
 	bool exit = true;
 	//Wejœcie w obszar zrównoleglony
-	#pragma omp parallel
+#pragma omp parallel
 	for (int i = 0; i < m; i++)
 	{
 		for (int j = 0; j < n; j++)
 		{
 			//Wspó³bierzne wykonanie pêtli
-			#pragma omp for schedule(static) nowait
+#pragma omp for schedule(static) nowait
 			for (int k = 0; k < o; k++)
 			{
 				//Czy sprawdzana komórka jest pusta
-				if(this->cellularautomata->getCells()[i][j][k] == 0)
+				if (cellular_automata_space->getCells()[i][j][k] == 0)
 				{
 					//Pobieranie s¹siedztwa
-					std::vector<unsigned int> neightborhood = this->neighborhood->get(cca, i, j, k);
+					std::vector<unsigned int> neightborhood = neighborhood->get(cca, i, j, k);
 					//Wykonanie regó³y dla komórki
-					this->rule->check(&this->cellularautomata->getCells()[i][j][k], neightborhood);
+					rule->check(&cellular_automata_space->getCells()[i][j][k], neightborhood);
 					//Czy zmieni³ siê stan komórki
-					if (this->cellularautomata->getCells()[i][j][k] > 0)
+					if (cellular_automata_space->getCells()[i][j][k] > 0)
 					{
 						//Mikrostruktóra nie jest gotowa
 						exit = false;
@@ -63,8 +58,6 @@ bool GrainGrowthCellularAutomata::step()
 			}
 		}
 	}
-
-	delete cca;
 
 	return exit;
 }

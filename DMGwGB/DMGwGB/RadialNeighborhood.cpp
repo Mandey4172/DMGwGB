@@ -1,22 +1,21 @@
 #include "RadialNeighborhood.h"
 #include"CellularAutomataSpace.h"
 
-
 RadialNeighborhood::RadialNeighborhood()
 {
-	this->radius = 1;
+	radius = 1;
 }
 
 RadialNeighborhood::~RadialNeighborhood()
 {
 }
 
-std::vector<unsigned int> RadialNeighborhood::get(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> RadialNeighborhood::get(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->m),
-		n = static_cast<int>(cellularautomata->n),
-		o = static_cast<int>(cellularautomata->o);
+	int m = static_cast<int>(cellular_automata_space->m),
+		n = static_cast<int>(cellular_automata_space->n),
+		o = static_cast<int>(cellular_automata_space->o);
 
 	for (int i = -radius; i <= radius; i++)
 	{
@@ -24,14 +23,14 @@ std::vector<unsigned int> RadialNeighborhood::get(CellularAutomataSpace * cellul
 		double r_x = static_cast<double>(current_x) - static_cast<double>(x);
 		r_x = pow(r_x, 2);
 
-		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking)
+		if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking)
 		{
 			if (current_x < 0 || current_x >= m)
 			{
 				continue;
 			}
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -42,7 +41,7 @@ std::vector<unsigned int> RadialNeighborhood::get(CellularAutomataSpace * cellul
 				current_x = current_x - m;
 			}
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 		{
 			if (current_x < 0)
 			{
@@ -59,14 +58,14 @@ std::vector<unsigned int> RadialNeighborhood::get(CellularAutomataSpace * cellul
 			int current_y = y + j;
 			double r_y = static_cast<double>(current_y) - static_cast<double>(y);
 			r_y = pow(r_y, 2);
-			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking)
+			if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking)
 			{
 				if ((current_y < 0) || (current_y >= n))
 				{
 					continue;
 				}
 			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 			{
 				if (current_y < 0)
 				{
@@ -77,7 +76,7 @@ std::vector<unsigned int> RadialNeighborhood::get(CellularAutomataSpace * cellul
 					current_y = current_y - n;
 				}
 			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 			{
 				if (current_y < 0)
 				{
@@ -94,14 +93,14 @@ std::vector<unsigned int> RadialNeighborhood::get(CellularAutomataSpace * cellul
 				int current_z = z + k;
 				double r_z = static_cast<double>(current_z) - static_cast<double>(z);
 				r_z = pow(r_z, 2);
-				if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking)
+				if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking)
 				{
 					if ((current_z < 0) || (current_z >= o))
 					{
 						continue;
 					}
 				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 				{
 					if (current_z < 0)
 					{
@@ -111,13 +110,13 @@ std::vector<unsigned int> RadialNeighborhood::get(CellularAutomataSpace * cellul
 					{
 						current_z = current_z - o;
 					}
-				}			
+				}
 				double r = r_x + r_y + r_z;
 				double rad = pow(static_cast<double>(radius), 2);
 				//r = sqrt(r);
-				if ((r <= rad) && (cellularautomata->getCells()[current_x][current_y][current_z] > 0))
+				if ((r <= rad) && (cellular_automata_space->getCells()[current_x][current_y][current_z] > 0))
 				{
-					neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+					neighborhood.push_back(cellular_automata_space->getCells()[current_x][current_y][current_z]);
 				}
 			}
 		}

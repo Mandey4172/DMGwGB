@@ -1,42 +1,40 @@
 #include "HexagonalNeighborhood.h"
 #include "CellularAutomataSpace.h"
 
-
 HexagonalNeighborhood::HexagonalNeighborhood()
 {
 }
-
 
 HexagonalNeighborhood::~HexagonalNeighborhood()
 {
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::get(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::get(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
 {
 	int v = rand() % 6;
-	if (v == 0) return this->getXA(cellularautomata, x, y, z);
-	else if (v == 1) return this->getXB(cellularautomata, x, y, z);
-	else if (v == 2) return this->getYA(cellularautomata, x, y, z);
-	else if (v == 3) return this->getYB(cellularautomata, x, y, z);
-	else if (v == 4) return this->getZA(cellularautomata, x, y, z);
-	return this->getZB(cellularautomata, x, y, z);
+	if (v == 0) return getXA(cellular_automata_space, x, y, z);
+	else if (v == 1) return getXB(cellular_automata_space, x, y, z);
+	else if (v == 2) return getYA(cellular_automata_space, x, y, z);
+	else if (v == 3) return getYB(cellular_automata_space, x, y, z);
+	else if (v == 4) return getZA(cellular_automata_space, x, y, z);
+	return getZB(cellular_automata_space, x, y, z);
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::getXA(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::getXA(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->m),
-		n = static_cast<int>(cellularautomata->n),
-		o = static_cast<int>(cellularautomata->o);
+	int m = static_cast<int>(cellular_automata_space->m),
+		n = static_cast<int>(cellular_automata_space->n),
+		o = static_cast<int>(cellular_automata_space->o);
 
 	for (int i = -radius; i <= radius; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
+		if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x < 0) || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -52,11 +50,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getXA(CellularAutomataSpace * c
 			if (((i != -1) || (j != -1)) && ((i != 1) || (j != 1)))
 			{
 				int current_y = y + j;
-				if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y  < 0) || (current_y >= n)))
+				if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
 				{
 					continue;
 				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 				{
 					if (current_y < 0)
 					{
@@ -70,24 +68,24 @@ std::vector<unsigned int> HexagonalNeighborhood::getXA(CellularAutomataSpace * c
 				for (int k = -radius; k <= radius; k++)
 				{
 					int current_z = z + k;
-					if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+					if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 					{
 						continue;
 					}
-					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+					else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 					{
 						if (current_z < 0)
 						{
-							current_z = o + current_z ;
+							current_z = o + current_z;
 						}
 						else if (current_z >= o)
 						{
 							current_z = current_z - o;
 						}
 					}
-					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
+					if (cellular_automata_space->getCells()[current_x][current_y][current_z] != 0)
 					{
-						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+						neighborhood.push_back(cellular_automata_space->getCells()[current_x][current_y][current_z]);
 					}
 				}
 			}
@@ -96,21 +94,21 @@ std::vector<unsigned int> HexagonalNeighborhood::getXA(CellularAutomataSpace * c
 	return neighborhood;
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::getXB(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::getXB(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->m),
-		n = static_cast<int>(cellularautomata->n),
-		o = static_cast<int>(cellularautomata->o);
+	int m = static_cast<int>(cellular_automata_space->m),
+		n = static_cast<int>(cellular_automata_space->n),
+		o = static_cast<int>(cellular_automata_space->o);
 
 	for (int i = -radius; i <= radius; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0) || (current_x  >= m)))
+		if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x < 0) || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -126,11 +124,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getXB(CellularAutomataSpace * c
 			if (((i != -1) || (j != 1)) && ((i != 1) || (j != -1)))
 			{
 				int current_y = y + j;
-				if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y  < 0)  || (current_y >= n)))
+				if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
 				{
 					continue;
 				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 				{
 					if (current_y < 0)
 					{
@@ -144,24 +142,24 @@ std::vector<unsigned int> HexagonalNeighborhood::getXB(CellularAutomataSpace * c
 				for (int k = -radius; k <= radius; k++)
 				{
 					int current_z = z + k;
-					if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+					if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 					{
 						continue;
 					}
-					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+					else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 					{
 						if (current_z < 0)
 						{
-							current_z = o + current_z ;
+							current_z = o + current_z;
 						}
 						else if (current_z >= o)
 						{
 							current_z = current_z - o;
 						}
 					}
-					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
+					if (cellular_automata_space->getCells()[current_x][current_y][current_z] != 0)
 					{
-						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+						neighborhood.push_back(cellular_automata_space->getCells()[current_x][current_y][current_z]);
 					}
 				}
 			}
@@ -170,21 +168,21 @@ std::vector<unsigned int> HexagonalNeighborhood::getXB(CellularAutomataSpace * c
 	return neighborhood;
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::getYA(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::getYA(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->m),
-		n = static_cast<int>(cellularautomata->n),
-		o = static_cast<int>(cellularautomata->o);
+	int m = static_cast<int>(cellular_automata_space->m),
+		n = static_cast<int>(cellular_automata_space->n),
+		o = static_cast<int>(cellular_automata_space->o);
 
 	for (int i = -radius; i <= radius; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
+		if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x < 0) || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -198,11 +196,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getYA(CellularAutomataSpace * c
 		for (int j = -radius; j <= radius; j++)
 		{
 			int current_y = y + j;
-			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y  < 0)  || (current_y >= n)))
+			if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
 			{
 				continue;
 			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 			{
 				if (current_y < 0)
 				{
@@ -218,24 +216,24 @@ std::vector<unsigned int> HexagonalNeighborhood::getYA(CellularAutomataSpace * c
 				if (((i != -1) || (k != -1)) && ((i != 1) || (k != 1)))
 				{
 					int current_z = z + k;
-					if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+					if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 					{
 						continue;
 					}
-					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+					else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 					{
 						if (current_z < 0)
 						{
-							current_z = o + current_z ;
+							current_z = o + current_z;
 						}
 						else if (current_z >= o)
 						{
 							current_z = current_z - o;
 						}
 					}
-					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
+					if (cellular_automata_space->getCells()[current_x][current_y][current_z] != 0)
 					{
-						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+						neighborhood.push_back(cellular_automata_space->getCells()[current_x][current_y][current_z]);
 					}
 				}
 			}
@@ -244,21 +242,21 @@ std::vector<unsigned int> HexagonalNeighborhood::getYA(CellularAutomataSpace * c
 	return neighborhood;
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::getYB(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::getYB(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->m),
-		n = static_cast<int>(cellularautomata->n),
-		o = static_cast<int>(cellularautomata->o);
+	int m = static_cast<int>(cellular_automata_space->m),
+		n = static_cast<int>(cellular_automata_space->n),
+		o = static_cast<int>(cellular_automata_space->o);
 
 	for (int i = -radius; i <= radius; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
+		if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x < 0) || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -272,11 +270,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getYB(CellularAutomataSpace * c
 		for (int j = -radius; j <= radius; j++)
 		{
 			int current_y = y + j;
-			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y  < 0) || (current_y >= n)))
+			if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
 			{
 				continue;
 			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 			{
 				if (current_y < 0)
 				{
@@ -292,24 +290,24 @@ std::vector<unsigned int> HexagonalNeighborhood::getYB(CellularAutomataSpace * c
 				if (((i != 1) || (k != -1)) && ((i != -1) || (k != 1)))
 				{
 					int current_z = z + k;
-					if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+					if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 					{
 						continue;
 					}
-					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+					else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 					{
 						if (current_z < 0)
 						{
-							current_z = o + current_z ;
+							current_z = o + current_z;
 						}
 						else if (current_z >= o)
 						{
 							current_z = current_z - o;
 						}
 					}
-					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
+					if (cellular_automata_space->getCells()[current_x][current_y][current_z] != 0)
 					{
-						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+						neighborhood.push_back(cellular_automata_space->getCells()[current_x][current_y][current_z]);
 					}
 				}
 			}
@@ -318,21 +316,21 @@ std::vector<unsigned int> HexagonalNeighborhood::getYB(CellularAutomataSpace * c
 	return neighborhood;
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::getZA(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::getZA(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->m),
-		n = static_cast<int>(cellularautomata->n),
-		o = static_cast<int>(cellularautomata->o);
+	int m = static_cast<int>(cellular_automata_space->m),
+		n = static_cast<int>(cellular_automata_space->n),
+		o = static_cast<int>(cellular_automata_space->o);
 
 	for (int i = -radius; i <= radius; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
+		if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x < 0) || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -346,11 +344,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getZA(CellularAutomataSpace * c
 		for (int j = -radius; j <= radius; j++)
 		{
 			int current_y = y + j;
-			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y  < 0)  || (current_y >= n)))
+			if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
 			{
 				continue;
 			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 			{
 				if (current_y < 0)
 				{
@@ -366,24 +364,24 @@ std::vector<unsigned int> HexagonalNeighborhood::getZA(CellularAutomataSpace * c
 				if (((j != -1) || (k != -1)) && ((j != 1) || (k != 1)))
 				{
 					int current_z = z + k;
-					if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+					if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 					{
 						continue;
 					}
-					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+					else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 					{
 						if (current_z < 0)
 						{
-							current_z = o + current_z ;
+							current_z = o + current_z;
 						}
 						else if (current_z >= o)
 						{
 							current_z = current_z - o;
 						}
 					}
-					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
+					if (cellular_automata_space->getCells()[current_x][current_y][current_z] != 0)
 					{
-						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+						neighborhood.push_back(cellular_automata_space->getCells()[current_x][current_y][current_z]);
 					}
 				}
 			}
@@ -392,21 +390,21 @@ std::vector<unsigned int> HexagonalNeighborhood::getZA(CellularAutomataSpace * c
 	return neighborhood;
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::getZB(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::getZB(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->m),
-		n = static_cast<int>(cellularautomata->n),
-		o = static_cast<int>(cellularautomata->o);
+	int m = static_cast<int>(cellular_automata_space->m),
+		n = static_cast<int>(cellular_automata_space->n),
+		o = static_cast<int>(cellular_automata_space->o);
 
 	for (int i = -radius; i <= radius; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
+		if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x < 0) || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -420,11 +418,11 @@ std::vector<unsigned int> HexagonalNeighborhood::getZB(CellularAutomataSpace * c
 		for (int j = -radius; j <= radius; j++)
 		{
 			int current_y = y + j;
-			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y  < 0)  || (current_y >= n)))
+			if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
 			{
 				continue;
 			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 			{
 				if (current_y < 0)
 				{
@@ -440,24 +438,24 @@ std::vector<unsigned int> HexagonalNeighborhood::getZB(CellularAutomataSpace * c
 				if (((j != 1) || (k != -1)) && ((j != -1) || (k != 1)))
 				{
 					int current_z = z + k;
-					if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+					if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 					{
 						continue;
 					}
-					else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+					else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 					{
 						if (current_z < 0)
 						{
-							current_z = o + current_z ;
+							current_z = o + current_z;
 						}
 						else if (current_z >= o)
 						{
 							current_z = current_z - o;
 						}
 					}
-					if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
+					if (cellular_automata_space->getCells()[current_x][current_y][current_z] != 0)
 					{
-						neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+						neighborhood.push_back(cellular_automata_space->getCells()[current_x][current_y][current_z]);
 					}
 				}
 			}

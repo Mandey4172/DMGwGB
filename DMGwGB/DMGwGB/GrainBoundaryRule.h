@@ -8,8 +8,8 @@ struct BoundaryNode
 	BoundaryNode() {}
 	BoundaryNode(const BoundaryNode &obj)
 	{
-		this->neighborhood_states = obj.neighborhood_states;
-		this->state = obj.state;
+		neighborhood_states = obj.neighborhood_states;
+		state = obj.state;
 	}
 	//Stany w otoczeniu komórki
 	std::vector<unsigned int> neighborhood_states;
@@ -26,7 +26,6 @@ public:
 
 	std::vector<BoundaryNode> boundary_states;
 
-	virtual void check(unsigned int * cell, class std::vector<unsigned int> & neighborhood);
-	virtual void clear(unsigned int * cell, class std::vector<unsigned int> & neighborhood);
+	void check(unsigned int * cell, class std::vector<unsigned int> & neighborhood) override;
+	virtual void clear(unsigned int * cell, class std::vector<unsigned int> & neighborhood) const;
 };
-

@@ -1,13 +1,10 @@
 #include "GrainGrowthRule.h"
 
-
 #include <vector>
-
 
 GrainGrowthRule::GrainGrowthRule()
 {
 }
-
 
 GrainGrowthRule::~GrainGrowthRule()
 {
@@ -23,7 +20,7 @@ void GrainGrowthRule::check(unsigned int * cell, std::vector<unsigned int> & nei
 		//Zliczanie wyst¹pien danego stanu
 		for (int n : neighborhood)
 		{
-			//Sprawdzanie czy stan w tablicy s¹siadów s¹siedztwa istnieje 
+			//Sprawdzanie czy stan w tablicy s¹siadów s¹siedztwa istnieje
 			bool exist = false;
 			if (!unique_grains.empty())
 			{
@@ -40,13 +37,13 @@ void GrainGrowthRule::check(unsigned int * cell, std::vector<unsigned int> & nei
 			}
 			if (!exist)
 			{
-				//Gdy stan istnieje w tablicy z unikalnymi stanami. 
+				//Gdy stan istnieje w tablicy z unikalnymi stanami.
 				//Dodaj go do tablicy.
 				unique_grains.push_back(n);
 				count_grain.push_back(1);
 			}
 		}
-		//Wybór ziarna które najczêœciej wystêpuje 
+		//Wybór ziarna które najczêœciej wystêpuje
 		int max = 0;
 		for (int i = 1; i < unique_grains.size(); i++)
 		{
@@ -58,7 +55,6 @@ void GrainGrowthRule::check(unsigned int * cell, std::vector<unsigned int> & nei
 		*cell = unique_grains[max];
 	}
 }
-
 
 ////
 	/*for (unsigned int n : cell->neighborhoods)
@@ -96,7 +92,7 @@ void GrainGrowthRule::check(unsigned int * cell, std::vector<unsigned int> & nei
 	//	//		n->neighborhoods.push_back(cell->getState());
 	//	//		n->setCheck(true);
 	//	//		bool exist = false;
-	//	//		for (Cell * c : *this->queue)
+	//	//		for (Cell * c : *queue)
 	//	//		{
 	//	//			if ((c->position.x == n->position.x) && (c->position.y == n->position.y) && (c->position.z == n->position.z))
 	//	//			{
@@ -105,7 +101,7 @@ void GrainGrowthRule::check(unsigned int * cell, std::vector<unsigned int> & nei
 	//	//		}
 	//	//		if (!exist)
 	//	//		{
-	//	//			this->queue->push_back(n);
+	//	//			queue->push_back(n);
 	//	//		}
 	//	//	}
 	//	//}
@@ -120,7 +116,7 @@ void GrainGrowthRule::check(unsigned int * cell, std::vector<unsigned int> & nei
 	//			//n->setState(cell->getState());
 	//			n->neighborhoods.push_back(cell->getState());
 	//			n->setCheck(true);
-	//			this->queue->push_back(n);
+	//			queue->push_back(n);
 	//		}
 	//	}
 	//}

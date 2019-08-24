@@ -7,7 +7,6 @@ class GrainGrowthRule :
 public:
 	GrainGrowthRule();
 	~GrainGrowthRule();
-	
+
 	virtual void check(unsigned int * cell, class std::vector<unsigned int > & neighborhood);
 };
-

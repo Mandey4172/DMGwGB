@@ -12,12 +12,11 @@ NucleonGenerator::NucleonGenerator()
 	srand((unsigned)time(NULL));
 }
 
-
 NucleonGenerator::~NucleonGenerator()
 {
 }
 
-void NucleonGenerator::random(CellularAutomataSpace * ca,const unsigned int quantity) const
+void NucleonGenerator::random(const std::shared_ptr< CellularAutomataSpace > & ca, const unsigned int quantity) const
 {
 	std::vector<unsigned int> seed_x;
 	std::vector<unsigned int> seed_y;
@@ -53,7 +52,7 @@ void NucleonGenerator::random(CellularAutomataSpace * ca,const unsigned int quan
 	}
 }
 
-void NucleonGenerator::random(CellularAutomataSpace * ca, unsigned int quantity, unsigned int r) const
+void NucleonGenerator::random(const std::shared_ptr< CellularAutomataSpace > & ca, unsigned int quantity, unsigned int r) const
 {
 	std::vector<unsigned int> seed_x;
 	std::vector<unsigned int> seed_y;
@@ -78,9 +77,9 @@ void NucleonGenerator::random(CellularAutomataSpace * ca, unsigned int quantity,
 		for (unsigned int j = 0; j < i; j++)
 		{
 			unsigned int ri = static_cast<unsigned int>(
-								round(sqrt(pow( abs( static_cast<int>( seed_x[i] - seed_x[j])), 2) +
-								pow( abs( static_cast<int>( seed_y[i] - seed_y[j])), 2) +
-								pow( abs( static_cast<int>( seed_z[i] - seed_z[j])), 2))));
+				round(sqrt(pow(abs(static_cast<int>(seed_x[i] - seed_x[j])), 2) +
+					pow(abs(static_cast<int>(seed_y[i] - seed_y[j])), 2) +
+					pow(abs(static_cast<int>(seed_z[i] - seed_z[j])), 2))));
 			if (ri < r)
 			{
 				--i;
@@ -105,9 +104,8 @@ void NucleonGenerator::random(CellularAutomataSpace * ca, unsigned int quantity,
 	}
 }
 
-void NucleonGenerator::regular(CellularAutomataSpace * ca, unsigned int quantity_m, unsigned int quantity_n, unsigned int quantity_o) const
+void NucleonGenerator::regular(const std::shared_ptr< CellularAutomataSpace > & ca, unsigned int quantity_m, unsigned int quantity_n, unsigned int quantity_o) const
 {
-
 	int m = static_cast<int>(ca->m),
 		n = static_cast<int>(ca->n),
 		o = static_cast<int>(ca->o);
@@ -118,7 +116,6 @@ void NucleonGenerator::regular(CellularAutomataSpace * ca, unsigned int quantity
 	int	rest_x = static_cast<int>(floor((m - (step_x * (quantity_m + 1))) / 2)),
 		rest_y = static_cast<int>(floor((n - (step_y * (quantity_n + 1))) / 2)),
 		rest_z = static_cast<int>(floor((o - (step_z * (quantity_o + 1))) / 2));
-
 
 	if (step_x < 1)
 	{
@@ -142,9 +139,9 @@ void NucleonGenerator::regular(CellularAutomataSpace * ca, unsigned int quantity
 				int x = rest_x + (i * step_x),
 					y = rest_y + (j * step_y),
 					z = rest_z + (k * step_z);
-				if ( x >= 0 && x < m &&
-					 y >= 0 && y < n &&
-					 z >= 0 && z < o )
+				if (x >= 0 && x < m &&
+					y >= 0 && y < n &&
+					z >= 0 && z < o)
 				{
 					ca->getCells()[x][y][z] = ++ca->nucleons_count;
 				}
@@ -153,13 +150,12 @@ void NucleonGenerator::regular(CellularAutomataSpace * ca, unsigned int quantity
 	}
 }
 
-void NucleonGenerator::regular(CellularAutomataSpace * ca, unsigned int quantity_n_m_o) const
+void NucleonGenerator::regular(const std::shared_ptr< CellularAutomataSpace > & ca, unsigned int quantity_n_m_o) const
 {
-	this->regular(ca, quantity_n_m_o, quantity_n_m_o, quantity_n_m_o);
+	regular(ca, quantity_n_m_o, quantity_n_m_o, quantity_n_m_o);
 }
 
 //void NucleonGenerator::gradientA(CellularAutomata * ca, unsigned int grain_count, unsigned int cuts, unsigned int delta, unsigned int begin, short direction)
 //{
 //
 //}
-

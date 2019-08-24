@@ -1,40 +1,40 @@
 #include "PentagonalNeighborhood.h"
 #include "CellularAutomataSpace.h"
 
-#include <stdio.h>      
-#include <stdlib.h>     
+#include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
 PentagonalNeighborhood::PentagonalNeighborhood()
 {
 }
 
-std::vector<unsigned int> PentagonalNeighborhood::get(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> PentagonalNeighborhood::get(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
 {
 	int v = rand() % 6;
-	if (v == 0) return this->getFront(cellularautomata, x, y, z);
-	else if (v == 1) return this->getBack(cellularautomata, x, y, z);
-	else if (v == 2) return this->getLeft(cellularautomata, x, y, z);
-	else if (v == 3) return this->getRight(cellularautomata, x, y, z);
-	else if (v == 4) return this->getTop(cellularautomata, x, y, z);
-	return this->getBottom(cellularautomata, x, y, z);
+	if (v == 0) return getFront(cellular_automata_space, x, y, z);
+	else if (v == 1) return getBack(cellular_automata_space, x, y, z);
+	else if (v == 2) return getLeft(cellular_automata_space, x, y, z);
+	else if (v == 3) return getRight(cellular_automata_space, x, y, z);
+	else if (v == 4) return getTop(cellular_automata_space, x, y, z);
+	return getBottom(cellular_automata_space, x, y, z);
 }
 
-std::vector<unsigned int> PentagonalNeighborhood::getFront(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> PentagonalNeighborhood::getFront(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->m),
-		n = static_cast<int>(cellularautomata->n),
-		o = static_cast<int>(cellularautomata->o);
+	int m = static_cast<int>(cellular_automata_space->m),
+		n = static_cast<int>(cellular_automata_space->n),
+		o = static_cast<int>(cellular_automata_space->o);
 
 	for (int i = -radius; i <= 0; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
+		if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x < 0) || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -45,7 +45,7 @@ std::vector<unsigned int> PentagonalNeighborhood::getFront(CellularAutomataSpace
 				current_x = current_x - m;
 			}
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 		{
 			if (current_x < 0)
 			{
@@ -60,11 +60,11 @@ std::vector<unsigned int> PentagonalNeighborhood::getFront(CellularAutomataSpace
 		for (int j = -radius; j <= radius; j++)
 		{
 			int current_y = y + j;
-			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
+			if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
 			{
 				continue;
 			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 			{
 				if (current_y < 0)
 				{
@@ -75,7 +75,7 @@ std::vector<unsigned int> PentagonalNeighborhood::getFront(CellularAutomataSpace
 					current_y = current_y - n;
 				}
 			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 			{
 				if (current_y < 0)
 				{
@@ -90,118 +90,11 @@ std::vector<unsigned int> PentagonalNeighborhood::getFront(CellularAutomataSpace
 			for (int k = -radius; k <= radius; k++)
 			{
 				int current_z = z + k;
-				if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+				if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 				{
 					continue;
 				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
-				{
-					if (current_z < 0)
-					{
-						current_z = o + current_z ;
-					}
-					else if (current_z >= o)
-					{
-						current_z = current_z - o;
-					}
-				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
-				{
-					if (current_z < 0)
-					{
-						current_z++;
-						current_z = abs(current_z);
-					}
-					else if (current_z >= o)
-					{
-						current_z = o - (current_z - o) - 1;
-					}
-				}
-				if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
-				{
-					neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
-				}
-			}
-		}
-	}
-	return neighborhood;
-}
-
-std::vector<unsigned int> PentagonalNeighborhood::getBack(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
-{
-	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->m),
-		n = static_cast<int>(cellularautomata->n),
-		o = static_cast<int>(cellularautomata->o);
-
-	for (int i = 0; i <= radius; i++)
-	{
-		int current_x = x + i;
-		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
-		{
-			continue;
-		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
-		{
-			if (current_x < 0)
-			{
-				current_x = m + current_x;
-			}
-			else if (current_x >= m)
-			{
-				current_x = current_x - m;
-			}
-		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
-		{
-			if (current_x < 0)
-			{
-				current_x++;
-				current_x = abs(current_x);
-			}
-			else if (current_x >= m)
-			{
-				current_x = m - (current_x - m) - 1;
-			}
-		}
-		for (int j = -radius; j <= radius; j++)
-		{
-			int current_y = y + j;
-			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
-			{
-				continue;
-			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
-			{
-				if (current_y < 0)
-				{
-					current_y = n + current_y;
-				}
-				else if (current_y >= n)
-				{
-					current_y = current_y - n;
-				}
-			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
-			{
-				if (current_y < 0)
-				{
-					current_y++;
-					current_y = abs(current_y);
-				}
-				else if (current_y >= n)
-				{
-					current_y = n - (current_y - n) - 1;
-				}
-			}
-			for (int k = -radius; k <= radius; k++)
-			{
-				int current_z = z + k;
-				if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
-				{
-					continue;
-				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 				{
 					if (current_z < 0)
 					{
@@ -212,7 +105,7 @@ std::vector<unsigned int> PentagonalNeighborhood::getBack(CellularAutomataSpace 
 						current_z = current_z - o;
 					}
 				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 				{
 					if (current_z < 0)
 					{
@@ -224,9 +117,9 @@ std::vector<unsigned int> PentagonalNeighborhood::getBack(CellularAutomataSpace 
 						current_z = o - (current_z - o) - 1;
 					}
 				}
-				if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
+				if (cellular_automata_space->getCells()[current_x][current_y][current_z] != 0)
 				{
-					neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+					neighborhood.push_back(cellular_automata_space->getCells()[current_x][current_y][current_z]);
 				}
 			}
 		}
@@ -234,21 +127,21 @@ std::vector<unsigned int> PentagonalNeighborhood::getBack(CellularAutomataSpace 
 	return neighborhood;
 }
 
-std::vector<unsigned int> PentagonalNeighborhood::getTop(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> PentagonalNeighborhood::getBack(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->m),
-		n = static_cast<int>(cellularautomata->n),
-		o = static_cast<int>(cellularautomata->o);
+	int m = static_cast<int>(cellular_automata_space->m),
+		n = static_cast<int>(cellular_automata_space->n),
+		o = static_cast<int>(cellular_automata_space->o);
 
-	for (int i = -radius; i <= radius; i++)
+	for (int i = 0; i <= radius; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
+		if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x < 0) || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -259,7 +152,114 @@ std::vector<unsigned int> PentagonalNeighborhood::getTop(CellularAutomataSpace *
 				current_x = current_x - m;
 			}
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+		{
+			if (current_x < 0)
+			{
+				current_x++;
+				current_x = abs(current_x);
+			}
+			else if (current_x >= m)
+			{
+				current_x = m - (current_x - m) - 1;
+			}
+		}
+		for (int j = -radius; j <= radius; j++)
+		{
+			int current_y = y + j;
+			if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
+			{
+				continue;
+			}
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+			{
+				if (current_y < 0)
+				{
+					current_y = n + current_y;
+				}
+				else if (current_y >= n)
+				{
+					current_y = current_y - n;
+				}
+			}
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+			{
+				if (current_y < 0)
+				{
+					current_y++;
+					current_y = abs(current_y);
+				}
+				else if (current_y >= n)
+				{
+					current_y = n - (current_y - n) - 1;
+				}
+			}
+			for (int k = -radius; k <= radius; k++)
+			{
+				int current_z = z + k;
+				if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+				{
+					continue;
+				}
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+				{
+					if (current_z < 0)
+					{
+						current_z = o + current_z;
+					}
+					else if (current_z >= o)
+					{
+						current_z = current_z - o;
+					}
+				}
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+				{
+					if (current_z < 0)
+					{
+						current_z++;
+						current_z = abs(current_z);
+					}
+					else if (current_z >= o)
+					{
+						current_z = o - (current_z - o) - 1;
+					}
+				}
+				if (cellular_automata_space->getCells()[current_x][current_y][current_z] != 0)
+				{
+					neighborhood.push_back(cellular_automata_space->getCells()[current_x][current_y][current_z]);
+				}
+			}
+		}
+	}
+	return neighborhood;
+}
+
+std::vector<unsigned int> PentagonalNeighborhood::getTop(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
+{
+	std::vector<unsigned int> neighborhood;
+	int m = static_cast<int>(cellular_automata_space->m),
+		n = static_cast<int>(cellular_automata_space->n),
+		o = static_cast<int>(cellular_automata_space->o);
+
+	for (int i = -radius; i <= radius; i++)
+	{
+		int current_x = x + i;
+		if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x < 0) || (current_x >= m)))
+		{
+			continue;
+		}
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+		{
+			if (current_x < 0)
+			{
+				current_x = m + current_x;
+			}
+			else if (current_x >= m)
+			{
+				current_x = current_x - m;
+			}
+		}
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 		{
 			if (current_x < 0)
 			{
@@ -274,11 +274,11 @@ std::vector<unsigned int> PentagonalNeighborhood::getTop(CellularAutomataSpace *
 		for (int j = -radius; j <= 0; j++)
 		{
 			int current_y = y + j;
-			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
+			if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
 			{
 				continue;
 			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 			{
 				if (current_y < 0)
 				{
@@ -289,7 +289,7 @@ std::vector<unsigned int> PentagonalNeighborhood::getTop(CellularAutomataSpace *
 					current_y = current_y - n;
 				}
 			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 			{
 				if (current_y < 0)
 				{
@@ -304,22 +304,22 @@ std::vector<unsigned int> PentagonalNeighborhood::getTop(CellularAutomataSpace *
 			for (int k = -radius; k <= radius; k++)
 			{
 				int current_z = z + k;
-				if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+				if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 				{
 					continue;
 				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 				{
 					if (current_z < 0)
 					{
-						current_z = o + current_z ;
+						current_z = o + current_z;
 					}
 					else if (current_z >= o)
 					{
 						current_z = current_z - o;
 					}
 				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 				{
 					if (current_z < 0)
 					{
@@ -331,9 +331,9 @@ std::vector<unsigned int> PentagonalNeighborhood::getTop(CellularAutomataSpace *
 						current_z = o - (current_z - o) - 1;
 					}
 				}
-				if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
+				if (cellular_automata_space->getCells()[current_x][current_y][current_z] != 0)
 				{
-					neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+					neighborhood.push_back(cellular_automata_space->getCells()[current_x][current_y][current_z]);
 				}
 			}
 		}
@@ -341,21 +341,21 @@ std::vector<unsigned int> PentagonalNeighborhood::getTop(CellularAutomataSpace *
 	return neighborhood;
 }
 
-std::vector<unsigned int> PentagonalNeighborhood::getBottom(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> PentagonalNeighborhood::getBottom(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->m),
-		n = static_cast<int>(cellularautomata->n),
-		o = static_cast<int>(cellularautomata->o);
+	int m = static_cast<int>(cellular_automata_space->m),
+		n = static_cast<int>(cellular_automata_space->n),
+		o = static_cast<int>(cellular_automata_space->o);
 
 	for (int i = -radius; i <= radius; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
+		if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x < 0) || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -366,7 +366,7 @@ std::vector<unsigned int> PentagonalNeighborhood::getBottom(CellularAutomataSpac
 				current_x = current_x - m;
 			}
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 		{
 			if (current_x < 0)
 			{
@@ -381,11 +381,11 @@ std::vector<unsigned int> PentagonalNeighborhood::getBottom(CellularAutomataSpac
 		for (int j = 0; j <= radius; j++)
 		{
 			int current_y = y + j;
-			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
+			if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
 			{
 				continue;
 			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 			{
 				if (current_y < 0)
 				{
@@ -396,7 +396,7 @@ std::vector<unsigned int> PentagonalNeighborhood::getBottom(CellularAutomataSpac
 					current_y = current_y - n;
 				}
 			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 			{
 				if (current_y < 0)
 				{
@@ -411,22 +411,22 @@ std::vector<unsigned int> PentagonalNeighborhood::getBottom(CellularAutomataSpac
 			for (int k = -radius; k <= radius; k++)
 			{
 				int current_z = z + k;
-				if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+				if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 				{
 					continue;
 				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 				{
 					if (current_z < 0)
 					{
-						current_z = o + current_z ;
+						current_z = o + current_z;
 					}
 					else if (current_z >= o)
 					{
 						current_z = current_z - o;
 					}
 				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 				{
 					if (current_z < 0)
 					{
@@ -438,9 +438,9 @@ std::vector<unsigned int> PentagonalNeighborhood::getBottom(CellularAutomataSpac
 						current_z = o - (current_z - o) - 1;
 					}
 				}
-				if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
+				if (cellular_automata_space->getCells()[current_x][current_y][current_z] != 0)
 				{
-					neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+					neighborhood.push_back(cellular_automata_space->getCells()[current_x][current_y][current_z]);
 				}
 			}
 		}
@@ -448,21 +448,21 @@ std::vector<unsigned int> PentagonalNeighborhood::getBottom(CellularAutomataSpac
 	return neighborhood;
 }
 
-std::vector<unsigned int> PentagonalNeighborhood::getLeft(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> PentagonalNeighborhood::getLeft(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->m),
-		n = static_cast<int>(cellularautomata->n),
-		o = static_cast<int>(cellularautomata->o);
+	int m = static_cast<int>(cellular_automata_space->m),
+		n = static_cast<int>(cellular_automata_space->n),
+		o = static_cast<int>(cellular_automata_space->o);
 
 	for (int i = -radius; i <= radius; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
+		if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x < 0) || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -473,7 +473,7 @@ std::vector<unsigned int> PentagonalNeighborhood::getLeft(CellularAutomataSpace 
 				current_x = current_x - m;
 			}
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 		{
 			if (current_x < 0)
 			{
@@ -488,11 +488,11 @@ std::vector<unsigned int> PentagonalNeighborhood::getLeft(CellularAutomataSpace 
 		for (int j = -radius; j <= radius; j++)
 		{
 			int current_y = y + j;
-			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
+			if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
 			{
 				continue;
 			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 			{
 				if (current_y < 0)
 				{
@@ -506,22 +506,22 @@ std::vector<unsigned int> PentagonalNeighborhood::getLeft(CellularAutomataSpace 
 			for (int k = -radius; k <= 0; k++)
 			{
 				int current_z = z + k;
-				if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+				if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 				{
 					continue;
 				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 				{
 					if (current_z < 0)
 					{
-						current_z = o + current_z ;
+						current_z = o + current_z;
 					}
 					else if (current_z >= o)
 					{
 						current_z = current_z - o;
 					}
 				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 				{
 					if (current_y < 0)
 					{
@@ -533,7 +533,7 @@ std::vector<unsigned int> PentagonalNeighborhood::getLeft(CellularAutomataSpace 
 						current_y = n - (current_y - n) - 1;
 					}
 				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 				{
 					if (current_z < 0)
 					{
@@ -545,9 +545,9 @@ std::vector<unsigned int> PentagonalNeighborhood::getLeft(CellularAutomataSpace 
 						current_z = o - (current_z - o) - 1;
 					}
 				}
-				if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
+				if (cellular_automata_space->getCells()[current_x][current_y][current_z] != 0)
 				{
-					neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+					neighborhood.push_back(cellular_automata_space->getCells()[current_x][current_y][current_z]);
 				}
 			}
 		}
@@ -555,21 +555,21 @@ std::vector<unsigned int> PentagonalNeighborhood::getLeft(CellularAutomataSpace 
 	return neighborhood;
 }
 
-std::vector<unsigned int> PentagonalNeighborhood::getRight(CellularAutomataSpace * cellularautomata, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> PentagonalNeighborhood::getRight(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellularautomata->m),
-		n = static_cast<int>(cellularautomata->n),
-		o = static_cast<int>(cellularautomata->o);
+	int m = static_cast<int>(cellular_automata_space->m),
+		n = static_cast<int>(cellular_automata_space->n),
+		o = static_cast<int>(cellular_automata_space->o);
 
 	for (int i = -radius; i <= radius; i++)
 	{
 		int current_x = x + i;
-		if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x  < 0)  || (current_x >= m)))
+		if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_x < 0) || (current_x >= m)))
 		{
 			continue;
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 		{
 			if (current_x < 0)
 			{
@@ -580,7 +580,7 @@ std::vector<unsigned int> PentagonalNeighborhood::getRight(CellularAutomataSpace
 				current_x = current_x - m;
 			}
 		}
-		else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+		else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 		{
 			if (current_x < 0)
 			{
@@ -595,11 +595,11 @@ std::vector<unsigned int> PentagonalNeighborhood::getRight(CellularAutomataSpace
 		for (int j = -radius; j <= radius; j++)
 		{
 			int current_y = y + j;
-			if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
+			if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_y < 0) || (current_y >= n)))
 			{
 				continue;
 			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 			{
 				if (current_y < 0)
 				{
@@ -610,7 +610,7 @@ std::vector<unsigned int> PentagonalNeighborhood::getRight(CellularAutomataSpace
 					current_y = current_y - n;
 				}
 			}
-			else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+			else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 			{
 				if (current_y < 0)
 				{
@@ -625,22 +625,22 @@ std::vector<unsigned int> PentagonalNeighborhood::getRight(CellularAutomataSpace
 			for (int k = 0; k <= radius; k++)
 			{
 				int current_z = z + k;
-				if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
+				if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Blocking && ((current_z < 0) || (current_z >= o)))
 				{
 					continue;
 				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Periodic)
 				{
 					if (current_z < 0)
 					{
-						current_z = o + current_z ;
+						current_z = o + current_z;
 					}
 					else if (current_z >= o)
 					{
 						current_z = current_z - o;
 					}
 				}
-				else if (cellularautomata->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
+				else if (cellular_automata_space->getBoundatyConditionType() == BoundaryContidionTypes::Reflecting)
 				{
 					if (current_z < 0)
 					{
@@ -652,9 +652,9 @@ std::vector<unsigned int> PentagonalNeighborhood::getRight(CellularAutomataSpace
 						current_z = o - (current_z - o) - 1;
 					}
 				}
-				if (cellularautomata->getCells()[current_x][current_y][current_z] != 0)
+				if (cellular_automata_space->getCells()[current_x][current_y][current_z] != 0)
 				{
-					neighborhood.push_back(cellularautomata->getCells()[current_x][current_y][current_z]);
+					neighborhood.push_back(cellular_automata_space->getCells()[current_x][current_y][current_z]);
 				}
 			}
 		}

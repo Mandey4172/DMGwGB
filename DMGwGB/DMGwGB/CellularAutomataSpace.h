@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include<vector>
 #include<string>
 
@@ -17,6 +16,8 @@ public:
 	CellularAutomataSpace(unsigned int m = 1, unsigned int n = 1, unsigned int o = 1);
 	//Konstruktor kopiuj¹cy
 	CellularAutomataSpace(const CellularAutomataSpace & ca);
+	//Konstruktor przesuwaj¹cy
+	CellularAutomataSpace(CellularAutomataSpace && ca);
 	//Operator przepisania
 	CellularAutomataSpace& operator=(const CellularAutomataSpace & ca);
 	//Destruktor
@@ -25,17 +26,18 @@ public:
 	//Zapisu w obiekcie string
 	std::string save() const;
 	//Wczytaj z obiektu string
-	void load(const std::string &data);
+	//void load(const std::string &data);
+	bool load(const std::string &path);
 
 	//Pobieranie komórek
 	inline unsigned int *** getCells() const;
-	
+
 	//Pobieranie rozmiaru : 0 - wszystkie wymiary, 1 - oœ X, 2 - oœ Y, 3 - oœ Z
 	std::vector<unsigned int> getSize(const unsigned int n = 0) const;
-	
+
 	//Pobierz typ sasiedztwa
-	BoundaryContidionTypes getBoundatyConditionType();
-	//Ustaw typ sasiedztwa 
+	BoundaryContidionTypes getBoundatyConditionType() const;
+	//Ustaw typ sasiedztwa
 	void setBoundaryContidion(BoundaryContidionTypes type);
 
 	//Iloœæ zarodków
@@ -52,5 +54,7 @@ private:
 	unsigned int *** cells;
 	//Warunki brzegowe
 	BoundaryContidionTypes boundary_contidion;
-};
 
+	void constructSpace(unsigned int m, unsigned int n, unsigned int o);
+	void destroySpace();
+};

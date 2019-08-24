@@ -2,6 +2,11 @@
 
 #include<vector>
 
+//! CellularAutomataRule
+/// <summary>
+//	Class
+/// </summary>
+
 class CellularAutomataRule
 {
 public:
@@ -12,4 +17,3 @@ public:
 	//Funkcja przejœcia
 	virtual void check(unsigned int * cell, class std::vector<unsigned int> & neighborhood);
 };
-
