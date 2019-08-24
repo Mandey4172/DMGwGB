@@ -7,10 +7,9 @@
 #include <QMouseEvent>
 #include <QImage>
 
-
 struct Point
 {
-	Point() : Point(0.0f,0.0f,0.0f) {};
+	Point() : Point(0.0f, 0.0f, 0.0f) {};
 	Point(GLfloat nx, GLfloat ny, GLfloat nz)
 	{
 		position[0] = nx;  position[1] = ny;  position[2] = nz;
@@ -26,22 +25,20 @@ QGLRender::QGLRender(QWidget *parent)
 	scale = 100.;
 	colorGenerator.generate(500 * 500);
 	bShowGrains = true;
-	lightPosition = QVector3D(-100,0,0);
-	ca = new CellularAutomataSpace(30, 30, 30);
-	for (int i = 0; i < 6; i++)
-		Textures[i] = nullptr;
+	lightPosition = QVector3D(-100, 0, 0);
+	ca = std::make_shared<CellularAutomataSpace>(100, 100, 100);
+	//for (int i = 0; i < 6; i++)
+	//	Textures[i] = nullptr;
 }
-	
 
 QGLRender::~QGLRender()
 {
 }
 
-void QGLRender::setCA(CellularAutomataSpace * ca)
+void QGLRender::setCA(const std::shared_ptr<CellularAutomataSpace> new_ca)
 {
-	delete this->ca;
-    this->ca = new CellularAutomataSpace(*ca);
-    updateTextures();
+	ca = std::make_shared<CellularAutomataSpace>(*new_ca);
+	//updateTextures();
 	updateCells();
 	updateView();
 }
@@ -55,25 +52,25 @@ void QGLRender::setShowAllGrains(bool show)
 
 void QGLRender::setHidenGrains(QVector<int> hidenGrains)
 {
-	this->hidenGrains = hidenGrains;
+	hidenGrains = hidenGrains;
 	updateCells();
 	updateView();
 }
 
 void QGLRender::mousePressEvent(QMouseEvent * event)
 {
-    if (event->button() == Qt::LeftButton) {
-        lastMouseClickPoint = event->pos();
-        mousePressed = true;
-    }
+	if (event->button() == Qt::LeftButton) {
+		lastMouseClickPoint = event->pos();
+		mousePressed = true;
+	}
 }
 
 void QGLRender::mouseMoveEvent(QMouseEvent * event)
 {
-    if (mousePressed)
-    {
-        QPoint delta;
-        delta = event->pos() - lastMouseClickPoint;
+	if (mousePressed)
+	{
+		QPoint delta;
+		delta = event->pos() - lastMouseClickPoint;
 
 		const float alpthaRotationMin = 0.f;
 		const float alpthaRotationMax = 360.f;
@@ -84,37 +81,37 @@ void QGLRender::mouseMoveEvent(QMouseEvent * event)
 		const float betaRotationMin = -89.f;
 		const float betaRotationMax = 89.f;
 
-        if (!((betaRotation <= betaRotationMin) && (delta.y() < 0)) && !((betaRotation >= betaRotationMax) && (delta.y() > 0)))
-        {
-            betaRotation += (delta.y() / speedDivider);
+		if (!((betaRotation <= betaRotationMin) && (delta.y() < 0)) && !((betaRotation >= betaRotationMax) && (delta.y() > 0)))
+		{
+			betaRotation += (delta.y() / speedDivider);
 			if (betaRotation < betaRotationMin) betaRotation = betaRotationMin;
 			if (betaRotation > betaRotationMax) betaRotation = betaRotationMax;
-        }
+		}
 		lastMouseClickPoint = event->pos();
 		updateView();
-    }
+	}
 }
 
 void QGLRender::mouseReleaseEvent(QMouseEvent * event)
 {
-    if (mousePressed) mousePressed = false;
+	if (mousePressed) mousePressed = false;
 }
 
 void QGLRender::wheelEvent(QWheelEvent * event)
 {
-    if ( !( (scale <= 0)&&(event->delta() < 0) ) && !( (scale >= 200) && (event->delta() > 0) ) )
-    {
-        if (event->delta() < 0)
-        {
-            scale -= 10;
-        }
+	if (!((scale <= 0) && (event->delta() < 0)) && !((scale >= 200) && (event->delta() > 0)))
+	{
+		if (event->delta() < 0)
+		{
+			scale -= 10;
+		}
 
-        else if (event->delta() > 0)
-        {
-            scale += 10;
-        }
+		else if (event->delta() > 0)
+		{
+			scale += 10;
+		}
 		updateView();
-    }
+	}
 }
 
 void QGLRender::initializeGL()
@@ -126,12 +123,11 @@ void QGLRender::initializeGL()
 	//QVector<float> vmodels;
 
 	//Pseudo inicjacja
-	int m = static_cast<int>(ca->m),
-		n = static_cast<int>(ca->n),
-		o = static_cast<int>(ca->o);
+	//int m = static_cast<int>(ca->m),
+	//	n = static_cast<int>(ca->n),
+	//	o = static_cast<int>(ca->o);
 
-
-	// Budowa i kompilacja shaderów 
+	// Budowa i kompilacja shaderów
 	if (!ShaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, "TransformVertexShader.vertexshader"))
 	{
 		qDebug() << "Program :: OpenGL Initialization - Error in vertex shader : " << ShaderProgram.log();
@@ -149,7 +145,7 @@ void QGLRender::initializeGL()
 	}
 	ShaderProgram.bind();
 
-	float vertices[] = { 
+	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -226,17 +222,16 @@ void QGLRender::initializeGL()
 	OpenGL.glVertexAttribDivisor(ShaderProgram.attributeLocation("offset"), 1);
 
 	colorVBO.bind();
-	ShaderProgram.enableAttributeArray("color");	
+	ShaderProgram.enableAttributeArray("color");
 	ShaderProgram.setAttributeBuffer("color", GL_FLOAT, 0, 3);
 	colorVBO.release();
 	OpenGL.glVertexAttribDivisor(ShaderProgram.attributeLocation("color"), 1);
 
 	VAO.release();
 
-	projection.perspective(45.0f, (GLfloat)this->width() / this->height(), 0.1f, 100000.0f);
+	projection.perspective(45.0f, (GLfloat)width() / height(), 0.1f, 100000.0f);
 	model[0] = QMatrix4x4();
 	updateView();
-
 
 	ShaderProgram.setUniformValue("view", view);
 	ShaderProgram.setUniformValue("projection", projection);
@@ -256,23 +251,17 @@ void QGLRender::initializeGL()
 
 void QGLRender::resizeGL(int w, int h)
 {
-	this->OpenGL.glViewport(0, 0, w, h);
+	OpenGL.glViewport(0, 0, w, h);
 	projection = QMatrix4x4();
 	projection.perspective(45.0f, (GLfloat)w / h, 0.1f, 100000.0f);
 }
 
 void QGLRender::paintGL()
 {
-	int m = static_cast<int>(ca->m),
-		n = static_cast<int>(ca->n),
-		o = static_cast<int>(ca->o);
-
-	
-
 	//// render
 	//// ------
-	this->OpenGL.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	this->OpenGL.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	OpenGL.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	OpenGL.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	ShaderProgram.bind();
 	ShaderProgram.setUniformValue("view", view);
@@ -319,227 +308,49 @@ bool QGLRender::shouldDrawCell(int x, int y, int z)
 	return false;
 }
 
-void QGLRender::updateTextures()
-{
-	int m = 100, //ca->m ,
-		n = 100, //ca->n ,
-		o = 100; //ca->o ;
-
-	QImage	TexturesData[6];
-
-	TexturesData[0] = QImage(QSize(n, o), QImage::Format_RGB32);
-	TexturesData[1] = QImage(QSize(n, o), QImage::Format_RGB32);
-
-	TexturesData[2] = QImage(QSize(m, o), QImage::Format_RGB32);
-	TexturesData[3] = QImage(QSize(m, o), QImage::Format_RGB32);
-
-	TexturesData[4] = QImage(QSize(m, n), QImage::Format_RGB32);
-	TexturesData[5] = QImage(QSize(m, n), QImage::Format_RGB32);
-
-	float min = 0.f, max = 1.f;
-
-	//for (int i = 0; i < 100; i++)
-	//{
-	//	for (int j = 0; j < 100; j++)
-	//	{
-
-	//	}
-	//}
-	/////X
-	//for (int j = 0; j < n; j++)
-	//{ 
-	//	for (int k = 0; k < o; k++)
-	//	{
-	//		QColor newColorA = QColor();
-	//		QColor newColorB = QColor();
-	//		unsigned int s1 = this->ca->getCells()[0][j][k];
-	//		unsigned int s2 = this->ca->getCells()[m - 1][j][k];
-	//	
-	//		if (s1 > this->ca->nucleons_count)
-	//		{
-	//			s1 = s1 + ((500 * 500) / 2) + 1;
-	//		}
-	//		if (s2 > this->ca->nucleons_count)
-	//		{
-	//			s2 = s2 + ((500 * 500) / 2) + 1;
-	//		}
-	//		
-	//		if (s1 > colorGenerator.colorCount)
-	//		{
-	//			s1 = colorGenerator.colorCount - 1;
-	//		}
-	//		if (s2 > colorGenerator.colorCount)
-	//		{
-	//			s2 = colorGenerator.colorCount - 1;
-	//		}
-
-	//		if (colorGenerator.colors[s1][0] > max) colorGenerator.colors[s1][0] = max;
-	//		else if (colorGenerator.colors[s1][0] < min) colorGenerator.colors[s1][0] = min;
-	//		if (colorGenerator.colors[s1][1] > max) colorGenerator.colors[s1][1] = max;
-	//		else if (colorGenerator.colors[s1][1] < min) colorGenerator.colors[s1][1] = min;
-	//		if (colorGenerator.colors[s1][2] > max) colorGenerator.colors[s1][2] = max;
-	//		else if (colorGenerator.colors[s1][2] < min) colorGenerator.colors[s1][2] = min;
-
-	//		if (colorGenerator.colors[s2][0] > max) colorGenerator.colors[s2][0] = max;
-	//		else if (colorGenerator.colors[s2][0] < min) colorGenerator.colors[s2][0] = min;
-	//		if (colorGenerator.colors[s2][1] > max) colorGenerator.colors[s2][1] = max;
-	//		else if (colorGenerator.colors[s2][1] < min) colorGenerator.colors[s2][1] = min;
-	//		if (colorGenerator.colors[s2][2] > max) colorGenerator.colors[s2][2] = max;
-	//		else if (colorGenerator.colors[s2][2] < min) colorGenerator.colors[s2][2] = min;
-
-	//		qreal r, g, b;
-	//		r = colorGenerator.colors[s1][0];
-	//		g = colorGenerator.colors[s1][1];
-	//		b = colorGenerator.colors[s1][2];
-	//		newColorA.setRgbF(r, g, b);
-	//		r = colorGenerator.colors[s2][0];
-	//		g = colorGenerator.colors[s2][1];
-	//		b = colorGenerator.colors[s2][2];
-	//		newColorB.setRgbF(r, g, b);
-
-	//		TexturesData[0].setPixelColor(QPoint(j, k), newColorA);
-	//		TexturesData[1].setPixelColor(QPoint(j, k), newColorB);
-	//	}
-	//}
-	/////Y
-	//for (int i = 0; i < m; i++)
-	//{
-	//	for (int k = 0; k < o; k++)
-	//	{
-	//		QColor newColorA = QColor();
-	//		QColor newColorB = QColor();
-	//		unsigned int s1 = this->ca->getCells()[i][0][k];
-	//		unsigned int s2 = this->ca->getCells()[i][n - 1][k];
-	//		
-	//		if (s1 > this->ca->nucleons_count)
-	//		{
-	//			s1 = s1 + ((500 * 500) / 2) + 1;
-	//		}
-	//		if (s2 > this->ca->nucleons_count)
-	//		{
-	//			s2 = s2 + ((500 * 500) / 2) + 1;
-	//		}
-
-	//		if (s1 > colorGenerator.colorCount)
-	//		{
-	//			s1 = colorGenerator.colorCount - 1;
-	//		}
-	//		if (s2 > colorGenerator.colorCount)
-	//		{
-	//			s2 = colorGenerator.colorCount - 1;
-	//		}
-
-	//		if (colorGenerator.colors[s1][0] > max) colorGenerator.colors[s1][0] = max;
-	//		else if (colorGenerator.colors[s1][0] < min) colorGenerator.colors[s1][0] = min;
-	//		if (colorGenerator.colors[s1][1] > max) colorGenerator.colors[s1][1] = max;
-	//		else if (colorGenerator.colors[s1][1] < min) colorGenerator.colors[s1][1] = min;
-	//		if (colorGenerator.colors[s1][2] > max) colorGenerator.colors[s1][2] = max;
-	//		else if (colorGenerator.colors[s1][2] < min) colorGenerator.colors[s1][2] = min;
-
-	//		if (colorGenerator.colors[s2][0] > max) colorGenerator.colors[s2][0] = max;
-	//		else if (colorGenerator.colors[s2][0] < min) colorGenerator.colors[s2][0] = min;
-	//		if (colorGenerator.colors[s2][1] > max) colorGenerator.colors[s2][1] = max;
-	//		else if (colorGenerator.colors[s2][1] < min) colorGenerator.colors[s2][1] = min;
-	//		if (colorGenerator.colors[s2][2] > max) colorGenerator.colors[s2][2] = max;
-	//		else if (colorGenerator.colors[s2][2] < min) colorGenerator.colors[s2][2] = min;
-
-	//		qreal r, g, b;
-	//		r = colorGenerator.colors[s1][0];
-	//		g = colorGenerator.colors[s1][1];
-	//		b = colorGenerator.colors[s1][2];
-	//		newColorA.setRgbF(r, g, b);
-	//		r = colorGenerator.colors[s2][0];
-	//		g = colorGenerator.colors[s2][1];
-	//		b = colorGenerator.colors[s2][2];
-	//		newColorB.setRgbF(r, g, b);
-
-	//		TexturesData[2].setPixelColor(QPoint(i, k), newColorA);
-	//		TexturesData[3].setPixelColor(QPoint(i, k), newColorB);
-	//	}
-	//}
-	/////Z
-	//for (int i = 0; i < m; i++)
-	//{
-	//	for (int j = 0; j < n; j++)
-	//	{
-	//		QColor newColorA = QColor();
-	//		QColor newColorB = QColor();
-	//		unsigned int s1 = this->ca->getCells()[i][j][0];
-	//		unsigned int s2 = this->ca->getCells()[i][j][o - 1];
-
-	//		if (s1 > this->ca->nucleons_count)
-	//		{
-	//			s1 = s1 + ((500 * 500) / 2) + 1;
-	//		}
-	//		if (s2 > this->ca->nucleons_count)
-	//		{
-	//			s2 = s2 + ((500 * 500) / 2) + 1;
-	//		}
-
-	//		if (s1 > colorGenerator.colorCount)
-	//		{
-	//			s1 = colorGenerator.colorCount - 1;
-	//		}
-	//		if (s2 > colorGenerator.colorCount)
-	//		{
-	//			s2 = colorGenerator.colorCount - 1;
-	//		}
-
-	//		if (colorGenerator.colors[s1][0] > max) colorGenerator.colors[s1][0] = max;
-	//		else if (colorGenerator.colors[s1][0] < min) colorGenerator.colors[s1][0] = min;
-	//		if (colorGenerator.colors[s1][1] > max) colorGenerator.colors[s1][1] = max;
-	//		else if (colorGenerator.colors[s1][1] < min) colorGenerator.colors[s1][1] = min;
-	//		if (colorGenerator.colors[s1][2] > max) colorGenerator.colors[s1][2] = max;
-	//		else if (colorGenerator.colors[s1][2] < min) colorGenerator.colors[s1][2] = min;
-
-	//		if (colorGenerator.colors[s2][0] > max) colorGenerator.colors[s2][0] = max;
-	//		else if (colorGenerator.colors[s2][0] < min) colorGenerator.colors[s2][0] = min;
-	//		if (colorGenerator.colors[s2][1] > max) colorGenerator.colors[s2][1] = max;
-	//		else if (colorGenerator.colors[s2][1] < min) colorGenerator.colors[s2][1] = min;
-	//		if (colorGenerator.colors[s2][2] > max) colorGenerator.colors[s2][2] = max;
-	//		else if (colorGenerator.colors[s2][2] < min) colorGenerator.colors[s2][2] = min;
-
-	//		qreal r, g, b;
-	//		r = colorGenerator.colors[s1][0];
-	//		g = colorGenerator.colors[s1][1];
-	//		b = colorGenerator.colors[s1][2];
-	//		newColorA.setRgbF(r, g, b);
-	//		r = colorGenerator.colors[s2][0];
-	//		g = colorGenerator.colors[s2][1];
-	//		b = colorGenerator.colors[s2][2];
-	//		newColorB.setRgbF(r, g, b);
-
-	//		TexturesData[5].setPixelColor(QPoint(i, j), newColorA);
-	//		TexturesData[4].setPixelColor(QPoint(i, j), newColorB);
-	//	}
-	//}
-
-	for (QOpenGLTexture* t : Textures)
-	{
-		if (t)
-		{
-			delete t;
-		}
-	}
-	//if (Textures[0])
-	//	delete Textures[0];
-	Textures[0] = new QOpenGLTexture(TexturesData[0].mirrored(false, false));
-	//if (Textures[1])
-	//	delete Textures[1];
-	Textures[1] = new QOpenGLTexture(TexturesData[1].mirrored(true, false));
-	//if (Textures[2])
-	//	delete Textures[2];
-	Textures[2] = new QOpenGLTexture(TexturesData[2].mirrored(true, false));
-	//if (Textures[3])
-	//	delete Textures[3];
-	Textures[3] = new QOpenGLTexture(TexturesData[3].mirrored(false, false));
-	//if (Textures[4])
-	//	delete Textures[4];
-	Textures[4] = new QOpenGLTexture(TexturesData[4].mirrored(false, true));
-	//if (Textures[5])
-	//	delete Textures[5];
-	Textures[5] = new QOpenGLTexture(TexturesData[5].mirrored(false, false));
-}
+//void QGLRender::updateTextures()
+//{
+//	int m = 100, //ca->m ,
+//		n = 100, //ca->n ,
+//		o = 100; //ca->o ;
+//
+//	QImage	TexturesData[6];
+//
+//	TexturesData[0] = QImage(QSize(n, o), QImage::Format_RGB32);
+//	TexturesData[1] = QImage(QSize(n, o), QImage::Format_RGB32);
+//
+//	TexturesData[2] = QImage(QSize(m, o), QImage::Format_RGB32);
+//	TexturesData[3] = QImage(QSize(m, o), QImage::Format_RGB32);
+//
+//	TexturesData[4] = QImage(QSize(m, n), QImage::Format_RGB32);
+//	TexturesData[5] = QImage(QSize(m, n), QImage::Format_RGB32);
+//
+//	for (QOpenGLTexture* t : Textures)
+//	{
+//		if (t)
+//		{
+//			delete t;
+//		}
+//	}
+//	//if (Textures[0])
+//	//	delete Textures[0];
+//	Textures[0] = new QOpenGLTexture(TexturesData[0].mirrored(false, false));
+//	//if (Textures[1])
+//	//	delete Textures[1];
+//	Textures[1] = new QOpenGLTexture(TexturesData[1].mirrored(true, false));
+//	//if (Textures[2])
+//	//	delete Textures[2];
+//	Textures[2] = new QOpenGLTexture(TexturesData[2].mirrored(true, false));
+//	//if (Textures[3])
+//	//	delete Textures[3];
+//	Textures[3] = new QOpenGLTexture(TexturesData[3].mirrored(false, false));
+//	//if (Textures[4])
+//	//	delete Textures[4];
+//	Textures[4] = new QOpenGLTexture(TexturesData[4].mirrored(false, true));
+//	//if (Textures[5])
+//	//	delete Textures[5];
+//	Textures[5] = new QOpenGLTexture(TexturesData[5].mirrored(false, false));
+//}
 
 void QGLRender::updateCells()
 {
@@ -550,7 +361,7 @@ void QGLRender::updateCells()
 	position.clear();
 	color.clear();
 
-//#pragma omp parallel
+	//#pragma omp parallel
 	for (int i = 0; i < m; i++)
 	{
 		for (int j = 0; j < n; j++)
@@ -558,11 +369,11 @@ void QGLRender::updateCells()
 			//#pragma omp for schedule(static) //nowait
 			for (int k = 0; k < o; k++)
 			{
-				unsigned int state = this->ca->getCells()[i][j][k];
+				unsigned int state = ca->getCells()[i][j][k];
 				if (hidenGrains.indexOf(state) == -1)
 				{
 					if ((i == 0) || (j == 0) || (k == 0) ||
-						(i == n - 1) || (j == m - 1) || (k == o - 1) || 
+						(i == n - 1) || (j == m - 1) || (k == o - 1) ||
 						shouldDrawCell(i, j, k))
 					{
 						//color.push_back(QVector3D(0.5, 0.5, 0.5));
@@ -571,20 +382,20 @@ void QGLRender::updateCells()
 							//#pragma omp critical
 							{
 								position.push_back(QVector3D(i, j, k));
-								color.push_back(QVector3D(this->colorGenerator.colors[state][0],
-									this->colorGenerator.colors[state][1],
-									this->colorGenerator.colors[state][2]));
+								color.push_back(QVector3D(colorGenerator.colors[state][0],
+									colorGenerator.colors[state][1],
+									colorGenerator.colors[state][2]));
 							}
 						}
-						else if(state > ca->nucleons_count)
+						else if (state > ca->nucleons_count)
 						{
 							state += 500 * 500 / 2;
 							//#pragma omp critical
 							{
 								position.push_back(QVector3D(i, j, k));
-								color.push_back(QVector3D(this->colorGenerator.colors[state][0],
-									this->colorGenerator.colors[state][1],
-									this->colorGenerator.colors[state][2]));
+								color.push_back(QVector3D(colorGenerator.colors[state][0],
+									colorGenerator.colors[state][1],
+									colorGenerator.colors[state][2]));
 							}
 						}
 					}
@@ -592,7 +403,7 @@ void QGLRender::updateCells()
 			}
 		}
 	}
-//#pragma omp barrier
+	//#pragma omp barrier
 	colorVBO.bind();
 	colorVBO.allocate(color.constData(), sizeof(color[0]) * color.size());
 	colorVBO.release();
@@ -606,8 +417,8 @@ void QGLRender::updateCells()
 void QGLRender::updateView()
 {
 	float	center_x = static_cast<float>(ca->m / 2),
-			center_y = static_cast<float>(ca->n / 2),
-			center_z = static_cast<float>(ca->o / 2);
+		center_y = static_cast<float>(ca->n / 2),
+		center_z = static_cast<float>(ca->o / 2);
 
 	float max = center_x;
 	if (max > center_y) max = center_y;

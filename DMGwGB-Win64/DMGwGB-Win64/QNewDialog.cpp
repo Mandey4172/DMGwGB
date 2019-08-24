@@ -24,7 +24,7 @@ QNewDialog::QNewDialog(QWidget *parent)
 	mainLayout->addWidget(cancelButton, 1, 1);
 	
 	//setCentralWidget(mainWidget);
-	this->setLayout(mainLayout);
+	setLayout(mainLayout);
 }
 
 
@@ -44,9 +44,9 @@ QNewDialog::~QNewDialog()
 
 void QNewDialog::getValues(int & x, int & y, int & z)
 {
-	x = this->xNumberSpinBox->value();
-	y = this->yNumberSpinBox->value();
-	z = this->zNumberSpinBox->value();
+	x = xNumberSpinBox->value();
+	y = yNumberSpinBox->value();
+	z = zNumberSpinBox->value();
 }
 
 void QNewDialog::createDialog()
@@ -92,10 +92,10 @@ void QNewDialog::createBottom()
 
 void QNewDialog::acceptButtoClick()
 {
-	this->accept();
+	accept();
 }
 
 void QNewDialog::cancelButtoClick()
 {
-	this->reject();
+	reject();
 }

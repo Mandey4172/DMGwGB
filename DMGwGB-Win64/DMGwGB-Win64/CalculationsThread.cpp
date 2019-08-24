@@ -10,14 +10,14 @@
 
 CalculationsThread::CalculationsThread()
 {
-	//this->simulation = new GrainGrowthCellularAutomata();
-    this->simulation = new GrainGrowthWithBoundaryCellularAutomata();
+	//simulation = new GrainGrowthCellularAutomata();
+    simulation = new GrainGrowthWithBoundaryCellularAutomata();
 }
 
 
 CalculationsThread::~CalculationsThread()
 {
-    delete this->simulation;
+    delete simulation;
 }
 
 void CalculationsThread::run()
@@ -26,10 +26,10 @@ void CalculationsThread::run()
 	emit updateDeb(tr("Simulating ..."));
 	QElapsedTimer timer;
 	timer.start();
-    this->simulation->start();
-	/*while (!this->simulation->step())
+    simulation->start();
+	/*while (!simulation->step())
 	{
-		emit updateVal(this->simulation->cellularautomata);
+		emit updateVal(simulation->cellularautomata);
 	}*/
 	emit updateVal();
 	QString debug = tr("Time : ");
