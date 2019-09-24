@@ -42,7 +42,8 @@ CellularAutomataSpace::CellularAutomataSpace(unsigned int nm, unsigned int nn, u
 		}
 	}
 	boundary_contidion = BoundaryContidionTypes::Blocking;
-	this->nucleons_count = 0;
+	nucleons_count = 0;
+	boundarys_count = 0;
 }
 
 CellularAutomataSpace::CellularAutomataSpace(const CellularAutomataSpace & ca)
@@ -69,6 +70,8 @@ CellularAutomataSpace::CellularAutomataSpace(const CellularAutomataSpace & ca)
 	}
 	nucleons_count = ca.nucleons_count;
 	boundary_contidion = ca.boundary_contidion;
+	boundarys_count = ca.boundarys_count;
+
 }
 CellularAutomataSpace& CellularAutomataSpace::operator=(const CellularAutomataSpace & ca)
 {

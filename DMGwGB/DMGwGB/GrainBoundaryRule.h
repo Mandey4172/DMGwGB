@@ -5,7 +5,10 @@
 
 struct BoundaryNode
 {
-	BoundaryNode() {}
+	BoundaryNode() 
+	{
+		state = 0;
+	}
 	BoundaryNode(const BoundaryNode &obj)
 	{
 		this->neighborhood_states = obj.neighborhood_states;
