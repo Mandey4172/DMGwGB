@@ -24,6 +24,8 @@ CellularAutomataSpace::CellularAutomataSpace(unsigned int m, unsigned int n, uns
 {
 	constructSpace(m, n, o);
 	boundary_contidion = BoundaryContidionTypes::Blocking;
+	nucleons_count = 0;
+	boundarys_count = 0;
 }
 
 CellularAutomataSpace::CellularAutomataSpace(const CellularAutomataSpace & ca)
@@ -50,6 +52,8 @@ CellularAutomataSpace::CellularAutomataSpace(const CellularAutomataSpace & ca)
 	}
 	nucleons_count = ca.nucleons_count;
 	boundary_contidion = ca.boundary_contidion;
+	boundarys_count = ca.boundarys_count;
+
 }
 CellularAutomataSpace::CellularAutomataSpace(CellularAutomataSpace && ca)
 {
@@ -149,7 +153,7 @@ bool CellularAutomataSpace::load(const std::string &path)
 	}
 }
 
-/*	Pobieranie komórek	*/
+/*	Pobieranie komï¿½rek	*/
 unsigned int *** CellularAutomataSpace::getCells() const
 {
 	return cells;
@@ -191,14 +195,14 @@ void CellularAutomataSpace::setBoundaryContidion(BoundaryContidionTypes type)
 
 void CellularAutomataSpace::constructSpace(unsigned int nm, unsigned int nn, unsigned int no)
 {
-	//Wymiar w ka¿dj osi musi byæ wiêkszy od 0
+	//Wymiar w kaï¿½dj osi musi byï¿½ wiï¿½kszy od 0
 	if (nm > 0)	m = nm;
 	else				m = 1;
 	if (nn > 0)	n = nn;
 	else				n = 1;
 	if (no > 0)	o = no;
 	else				o = 1;
-	//Twoznie komórek
+	//Twoznie komï¿½rek
 	cells = new unsigned int **[m];
 	for (unsigned int i = 0; i < m; i++)
 	{
@@ -217,7 +221,7 @@ void CellularAutomataSpace::constructSpace(unsigned int nm, unsigned int nn, uns
 
 void CellularAutomataSpace::destroySpace()
 {
-	//Usuwanie komórek
+	//Usuwanie komï¿½rek
 	if (cells)
 	{
 		for (unsigned int i = 0; i < m; i++)
