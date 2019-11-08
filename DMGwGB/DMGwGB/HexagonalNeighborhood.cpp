@@ -9,7 +9,7 @@ HexagonalNeighborhood::~HexagonalNeighborhood()
 {
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::get(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::get(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z) const
 {
 	int v = rand() % 6;
 	if (v == 0) return getXA(cellular_automata_space, x, y, z);
@@ -20,12 +20,12 @@ std::vector<unsigned int> HexagonalNeighborhood::get(const std::shared_ptr< Cell
 	return getZB(cellular_automata_space, x, y, z);
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::getXA(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::getXA(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z) const
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellular_automata_space->m),
-		n = static_cast<int>(cellular_automata_space->n),
-		o = static_cast<int>(cellular_automata_space->o);
+	int m = static_cast<int>(cellular_automata_space->getSizeOnXAxis()),
+		n = static_cast<int>(cellular_automata_space->getSizeOnYAxis()),
+		o = static_cast<int>(cellular_automata_space->getSizeOnZAxis());
 
 	for (int i = -radius; i <= radius; i++)
 	{
@@ -94,12 +94,12 @@ std::vector<unsigned int> HexagonalNeighborhood::getXA(const std::shared_ptr< Ce
 	return neighborhood;
 }
 
-std::vector<unsigned int> HexagonalNeighborhood::getXB(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> HexagonalNeighborhood::getXB(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)const
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellular_automata_space->m),
-		n = static_cast<int>(cellular_automata_space->n),
-		o = static_cast<int>(cellular_automata_space->o);
+	int m = static_cast<int>(cellular_automata_space->getSizeOnXAxis()),
+		n = static_cast<int>(cellular_automata_space->getSizeOnYAxis()),
+		o = static_cast<int>(cellular_automata_space->getSizeOnZAxis());
 
 	for (int i = -radius; i <= radius; i++)
 	{
@@ -167,13 +167,13 @@ std::vector<unsigned int> HexagonalNeighborhood::getXB(const std::shared_ptr< Ce
 	}
 	return neighborhood;
 }
-
-std::vector<unsigned int> HexagonalNeighborhood::getYA(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
+																																												
+std::vector<unsigned int> HexagonalNeighborhood::getYA(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)const
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellular_automata_space->m),
-		n = static_cast<int>(cellular_automata_space->n),
-		o = static_cast<int>(cellular_automata_space->o);
+	int m = static_cast<int>(cellular_automata_space->getSizeOnXAxis()),
+		n = static_cast<int>(cellular_automata_space->getSizeOnYAxis()),
+		o = static_cast<int>(cellular_automata_space->getSizeOnZAxis());
 
 	for (int i = -radius; i <= radius; i++)
 	{
@@ -241,13 +241,13 @@ std::vector<unsigned int> HexagonalNeighborhood::getYA(const std::shared_ptr< Ce
 	}
 	return neighborhood;
 }
-
-std::vector<unsigned int> HexagonalNeighborhood::getYB(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
+																																												
+std::vector<unsigned int> HexagonalNeighborhood::getYB(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)const
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellular_automata_space->m),
-		n = static_cast<int>(cellular_automata_space->n),
-		o = static_cast<int>(cellular_automata_space->o);
+	int m = static_cast<int>(cellular_automata_space->getSizeOnXAxis()),
+		n = static_cast<int>(cellular_automata_space->getSizeOnYAxis()),
+		o = static_cast<int>(cellular_automata_space->getSizeOnZAxis());
 
 	for (int i = -radius; i <= radius; i++)
 	{
@@ -315,13 +315,13 @@ std::vector<unsigned int> HexagonalNeighborhood::getYB(const std::shared_ptr< Ce
 	}
 	return neighborhood;
 }
-
-std::vector<unsigned int> HexagonalNeighborhood::getZA(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
+																																												
+std::vector<unsigned int> HexagonalNeighborhood::getZA(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)const
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellular_automata_space->m),
-		n = static_cast<int>(cellular_automata_space->n),
-		o = static_cast<int>(cellular_automata_space->o);
+	int m = static_cast<int>(cellular_automata_space->getSizeOnXAxis()),
+		n = static_cast<int>(cellular_automata_space->getSizeOnYAxis()),
+		o = static_cast<int>(cellular_automata_space->getSizeOnZAxis());
 
 	for (int i = -radius; i <= radius; i++)
 	{
@@ -389,13 +389,13 @@ std::vector<unsigned int> HexagonalNeighborhood::getZA(const std::shared_ptr< Ce
 	}
 	return neighborhood;
 }
-
-std::vector<unsigned int> HexagonalNeighborhood::getZB(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
+																																												
+std::vector<unsigned int> HexagonalNeighborhood::getZB(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)const
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellular_automata_space->m),
-		n = static_cast<int>(cellular_automata_space->n),
-		o = static_cast<int>(cellular_automata_space->o);
+	int m = static_cast<int>(cellular_automata_space->getSizeOnXAxis()),
+		n = static_cast<int>(cellular_automata_space->getSizeOnYAxis()),
+		o = static_cast<int>(cellular_automata_space->getSizeOnZAxis());
 
 	for (int i = -radius; i <= radius; i++)
 	{

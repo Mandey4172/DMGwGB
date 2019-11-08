@@ -2,8 +2,9 @@
 
 #include "CellularAutomata.h"
 #include "Neighborhood.h"
-/**/
 
+/**/
+//Simulation of grain growth
 class GrainGrowthCellularAutomata :
 	public CellularAutomata
 {

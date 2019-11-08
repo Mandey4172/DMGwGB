@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
-//!				Cellular Automata
+
+//				Cellular Automata
 /// <summary>
 // Class represents implementation of cellular automata system.
 //
@@ -8,12 +9,11 @@
 /// Each cell has a set of cell called neighborhood. Next time step can be
 /// calculated by a specific rule witch depends on actual cell state and neighborhood state.
 /// </summary>
-
 class CellularAutomata
 {
 public:
 
-	CellularAutomata();
+	CellularAutomata() noexcept;
 	virtual ~CellularAutomata();
 
 	/// <summary> Perform single time step </summary>
@@ -22,13 +22,13 @@ public:
 	/// <summary> Perform next time steps until cellular automata is stable </summary>
 	void start();
 
-	//TODO:: Komentarze
+	/// <summary>  </summary>
 	void setCellularAutomataSpace(const std::shared_ptr< class CellularAutomataSpace > & cellularautomata);
 	std::shared_ptr< class CellularAutomataSpace > getCellularAutomataSpace() const;
-	//TODO:: Komentarze
+	/// <summary>  </summary>
 	void setNeighborhood(const std::shared_ptr< class Neighborhood > & neighborhood);
 	std::shared_ptr< class Neighborhood > getNeighborhood() const;
-	//TODO:: Komentarze
+	/// <summary>  </summary>
 	void setCellularAutomataRule(const std::shared_ptr< class CellularAutomataRule > & rule);
 	std::shared_ptr< class CellularAutomataRule > getCellularAutomataRule() const;
 protected:

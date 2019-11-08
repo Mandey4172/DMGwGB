@@ -1,0 +1,313 @@
+{
+  "version": "2.0.0",
+  "$schema": "http://json.schemastore.org/sarif-2.0.0",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "26432",
+          "message": {
+            "text": "If you define or delete any default operation in the type 'class CellularAutomataRule', define or delete them all (c.21)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///F:/Source/C++/Mag/dmgwgb/DMGwGB/DMGwGB/CellularAutomataRule.h"
+                },
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 11,
+                  "endLine": 14,
+                  "endColumn": 11
+                }
+              },
+              "fullyQualifiedLogicalName": "public: virtual __cdecl CellularAutomataRule::~CellularAutomataRule(void)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26432",
+          "message": {
+            "text": "If you define or delete any default operation in the type 'struct BoundaryNode', define or delete them all (c.21)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///F:/Source/C++/Mag/dmgwgb/DMGwGB/DMGwGB/GrainBoundaryRule.h"
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 2,
+                  "endLine": 12,
+                  "endColumn": 2
+                }
+              },
+              "fullyQualifiedLogicalName": "public: __cdecl BoundaryNode::BoundaryNode(struct BoundaryNode const &)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26432",
+          "message": {
+            "text": "If you define or delete any default operation in the type 'class GrainBoundaryRule', define or delete them all (c.21)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///F:/Source/C++/Mag/dmgwgb/DMGwGB/DMGwGB/GrainBoundaryRule.cpp"
+                },
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 21,
+                  "endLine": 11,
+                  "endColumn": 21
+                }
+              },
+              "fullyQualifiedLogicalName": "public: virtual __cdecl GrainBoundaryRule::~GrainBoundaryRule(void)"
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "name": "PREfast",
+        "fullName": "PREfast Code Analysis",
+        "version": "14.22.27905.0",
+        "fileVersion": "14.00.27905.00"
+      },
+      "invocations": [
+        {
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\bin\\HostX86\\x64\\c1xx.dll\" -ACf{1F7B090C-16DB-4822-966A-A93D26ED4681} -ACpmspft140.dll -Alint -D_PREFAST_ -D_AST_FE_ -Analyze -zm0x00362090 -il C:\\Users\\Mandey\\AppData\\Local\\Temp\\_CL_63594bf3ast -typedil -f GrainBoundaryRule.cpp -Ze -D_MSC_EXTENSIONS -Zp16 -ZB64 -D_INTEGRAL_MAX_BITS=64 -pc \\:/ -D_MSC_VER=1922 -D_MSC_FULL_VER=192227905 -D_MSC_BUILD=0 -D_M_AMD64=100 -ZILP448 -D_M_X64=100 -D_WIN64 -D_WIN32 -GR -D_CPPRTTI -nologo -W 4 -diagnostics:column -D_GUARDOVERFLOW_CRT_ALLOCATORS=1 -GF -Og -Ot -Oy -Oi -ltcg -DCODE_ANALYSIS -DNDEBUG -D_LIB -D_UNICODE -DUNICODE -EHs -D_CPPUNWIND -EHc -D_MT -D_DLL -GS -D_M_FP_PRECISE -permissive- -Zc:wchar_t -Zc:forScope -omp -D_OPENMP=200203 -Fox64\\Release\\GrainBoundaryRule.obj -Fdx64\\Release\\DMGwGB.pdb -Gd -analyze:quiet -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\bin\\HostX86\\x86\\EspXEngine.dll -FC -errorreport:prompt -Zc:twoPhase- -analyze:ruleset C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\Rule Sets\\CppCoreCheckClassRules.ruleset -analyze:projectdirectory F:\\Source\\C++\\Mag\\dmgwgb\\DMGwGB\\DMGwGB -analyze:rulesetdirectory ;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\\\Rule Sets -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\atlmfc\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\ucrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\cppwinrt -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.7.2\\Include\\um"
+        }
+      ],
+      "files": {
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/vonneummanneighborhood.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/vonneummanneighborhood.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/radialneighborhood.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/neighborhood.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/cellularautomataspace.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/radialneighborhood.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/cellularautomata.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/cellularautomata.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/cellularautomatarule.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/mooreneighborhood.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/pentagonalneighborhood.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/hexagonalneighborhood.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/graingrowthwithboundarycellularautomata.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/pentagonalneighborhood.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/nucleongenerator.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/nucleongenerator.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/graingrowthcellularautomata.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/neighborhood.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/mooreneighborhood.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/hexagonalneighborhood.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/graingrowthcellularautomata.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/graingrowthrule.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/graingrowthrule.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/graingrowthwithboundarycellularautomata.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/grainboundaryrule.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/grainboundaryrule.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        }
+      },
+      "logicalLocations": {},
+      "resources": {
+        "rules": {
+          "26432": {
+            "id": "26432",
+            "name": "",
+            "shortDescription": "",
+            "fullDescription": "",
+            "configuration": {
+              "enabled": true,
+              "defaultLevel": "warning"
+            },
+            "helpUri": ""
+          },
+          "26433": {
+            "id": "26433",
+            "name": "",
+            "shortDescription": "",
+            "fullDescription": "",
+            "configuration": {
+              "enabled": true,
+              "defaultLevel": "warning"
+            },
+            "helpUri": ""
+          },
+          "26443": {
+            "id": "26443",
+            "name": "",
+            "shortDescription": "",
+            "fullDescription": "",
+            "configuration": {
+              "enabled": true,
+              "defaultLevel": "warning"
+            },
+            "helpUri": ""
+          },
+          "26434": {
+            "id": "26434",
+            "name": "",
+            "shortDescription": "",
+            "fullDescription": "",
+            "configuration": {
+              "enabled": true,
+              "defaultLevel": "warning"
+            },
+            "helpUri": ""
+          },
+          "26435": {
+            "id": "26435",
+            "name": "",
+            "shortDescription": "",
+            "fullDescription": "",
+            "configuration": {
+              "enabled": true,
+              "defaultLevel": "warning"
+            },
+            "helpUri": ""
+          },
+          "26436": {
+            "id": "26436",
+            "name": "",
+            "shortDescription": "",
+            "fullDescription": "",
+            "configuration": {
+              "enabled": true,
+              "defaultLevel": "warning"
+            },
+            "helpUri": ""
+          },
+          "26456": {
+            "id": "26456",
+            "name": "",
+            "shortDescription": "",
+            "fullDescription": "",
+            "configuration": {
+              "enabled": true,
+              "defaultLevel": "warning"
+            },
+            "helpUri": ""
+          }
+        }
+      }
+    }
+  ]
+}

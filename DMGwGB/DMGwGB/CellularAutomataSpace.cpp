@@ -9,7 +9,6 @@
 #include <streambuf>
 
 // https://stackoverflow.com/questions/9435385/split-a-string-using-c11
-
 std::vector<std::string> split(const std::string& input, const std::string& regex) {
 	// passing -1 as the submatch index parameter performs splitting
 	std::regex re(regex);
@@ -19,13 +18,30 @@ std::vector<std::string> split(const std::string& input, const std::string& rege
 	return { first, last };
 }
 
-/*  Konstruktor	*/
-CellularAutomataSpace::CellularAutomataSpace(unsigned int m, unsigned int n, unsigned int o)
+CellularAutomataSpace::CellularAutomataSpace(unsigned int x, unsigned int y, unsigned int z) noexcept
+	: cells(nullptr), 
+	m(x), n(y), o(z), 
+	boundary_contidion(BoundaryContidionTypes::Blocking), 
+	nucleons_count(0)
 {
-	constructSpace(m, n, o);
-	boundary_contidion = BoundaryContidionTypes::Blocking;
-	nucleons_count = 0;
-	boundarys_count = 0;
+	if (cells)
+	{
+		for (unsigned int i = 0; i < m; i++)
+		{
+			for (unsigned int j = 0; j < n; j++)
+			{
+				if (cells[i][j])
+				{
+					delete[] cells[i][j];
+				}
+			}
+			if (cells[i])
+			{
+				delete[] cells[i];
+			}
+		}
+		delete[] cells;
+	}
 }
 
 CellularAutomataSpace::CellularAutomataSpace(const CellularAutomataSpace & ca)
@@ -35,46 +51,76 @@ CellularAutomataSpace::CellularAutomataSpace(const CellularAutomataSpace & ca)
 	o = ca.o;
 
 	cells = new unsigned int **[m];
-	//cells.resize(m);
 	for (unsigned int i = 0; i < m; i++)
 	{
 		cells[i] = new unsigned int *[n];
-		//cells[i].resize(n);
 		for (unsigned int j = 0; j < n; j++)
 		{
 			cells[i][j] = new unsigned int[o];
 			std::copy(ca.cells[i][j], ca.cells[i][j] + o, getCells()[i][j]);
-			//for (unsigned int k = 0; k < o; k++)
-			//{
-			//	cells[i][j][k] = ca.getCells()[i][j][k];
-			//}
 		}
 	}
 	nucleons_count = ca.nucleons_count;
 	boundary_contidion = ca.boundary_contidion;
-	boundarys_count = ca.boundarys_count;
-
 }
-CellularAutomataSpace::CellularAutomataSpace(CellularAutomataSpace && ca)
+
+CellularAutomataSpace::CellularAutomataSpace(CellularAutomataSpace && ca) noexcept
 {
 	cells = ca.cells;
+	m = ca.m;
+	n = ca.n;
+	o = ca.o;
+	nucleons_count = ca.nucleons_count;
+	boundary_contidion = ca.boundary_contidion;
+
+	ca.m = 0;
+	ca.n = 0;
+	ca.o = 0;
 	ca.cells = nullptr;
+	ca.boundary_contidion = BoundaryContidionTypes::Blocking;
+	ca.nucleons_count = 0;
 }
+
 CellularAutomataSpace& CellularAutomataSpace::operator=(const CellularAutomataSpace & ca)
 {
-	CellularAutomataSpace instance(ca);
-	return instance;
+	*this = CellularAutomataSpace(ca);
+	return *this;
 }
-/*	 Dstruktor	*/
+
+CellularAutomataSpace& CellularAutomataSpace::operator=(CellularAutomataSpace&& ca) noexcept
+{
+	std::swap(*this,ca);
+	return *this;
+}
+
 CellularAutomataSpace::~CellularAutomataSpace()
 {
-	destroySpace();
+	if (cells)
+	{
+		for (unsigned int i = 0; i < m; i++)
+		{
+			for (unsigned int j = 0; j < n; j++)
+			{
+				if (cells[i][j])
+				{
+					delete[] cells[i][j];
+				}
+			}
+			if (cells[i])
+			{
+				delete[] cells[i];
+			}
+		}
+		delete[] cells;
+	}
 }
 
 std::string CellularAutomataSpace::save() const
 {
 	std::string save;
-	//save = std::to_string(nucleons_count) + "\n\n";
+	const unsigned int size = 4 * m * n * o;
+
+	save.reserve(size);
 	for (unsigned int i = 0; i < m; i++)
 	{
 		for (unsigned int j = 0; j < n; j++)
@@ -91,11 +137,11 @@ std::string CellularAutomataSpace::save() const
 	return save;
 }
 
-bool CellularAutomataSpace::load(const std::string &path)
+void CellularAutomataSpace::load(const std::string &path)
 {
-	struct Chunk
+	struct CellStateChunk
 	{
-		Chunk() : x(0), y(0), z(0), state(0) {};
+		CellStateChunk() : x(0), y(0), z(0), state(0) {};
 		unsigned int x;
 		unsigned int y;
 		unsigned int z;
@@ -110,32 +156,32 @@ bool CellularAutomataSpace::load(const std::string &path)
 		file.seekg(0, std::ios::end);
 		data.resize(file.tellg());
 		file.seekg(0, std::ios::beg);
-		file.read(&data[0], data.size());
+		file.read(&data.at(0), data.size());
 		file.close();
 
-		std::vector<Chunk> cell_chunks;
+		std::vector<CellStateChunk> cell_chunks;
 		unsigned int a = 0, b = 0, c = 0,
 			smax = 0;
 		{
 			std::vector<std::string> data_chunks = split(data, "\n");
-#pragma omp parallel for schedule(static)
-			for (int i = 0; i < data_chunks.size(); i++)
+//#pragma omp parallel for schedule(static)
+			for (unsigned int i = 0; i < data_chunks.size(); i++)
 			{
-				std::string data_chunk = data_chunks[i];
-				Chunk cell_chunk;
+				std::string data_chunk = data_chunks.at(i);
+				CellStateChunk cell_chunk;
 				std::vector<std::string> string_chunk = split(data_chunk, " ");
 				if (string_chunk.size() == 4)
 				{
-					cell_chunk.x = static_cast<int>(std::stoi(string_chunk[0]));
+					cell_chunk.x = static_cast<unsigned int>(std::stoi(string_chunk.at(0)));
 					if (cell_chunk.x > a) a = cell_chunk.x;
-					cell_chunk.y = static_cast<int>(std::stoi(string_chunk[1]));
+					cell_chunk.y = static_cast<unsigned int>(std::stoi(string_chunk.at(1)));
 					if (cell_chunk.y > b) b = cell_chunk.y;
-					cell_chunk.z = std::stoi(string_chunk[2]);
+					cell_chunk.z = static_cast<unsigned int>(std::stoi(string_chunk.at(2)));
 					if (cell_chunk.z > c) c = cell_chunk.z;
-					cell_chunk.state = std::stoi(string_chunk[3]);
+					cell_chunk.state = static_cast<unsigned int>(std::stoi(string_chunk.at(3)));
 					if (cell_chunk.state > smax) smax = cell_chunk.state;
 
-#pragma omp critical
+//#pragma omp critical
 					cell_chunks.push_back(cell_chunk);
 				}
 			}
@@ -144,16 +190,15 @@ bool CellularAutomataSpace::load(const std::string &path)
 		constructSpace(a + 1, b + 1, c + 1);
 		nucleons_count = smax;
 
-#pragma omp parallel for schedule(static)
-		for (int i = 0; i < cell_chunks.size(); i++)
+//#pragma omp parallel for schedule(static)
+		for (unsigned int i = 0; i < cell_chunks.size(); i++)
 		{
-			Chunk chunk = cell_chunks[i];
+			CellStateChunk chunk = cell_chunks.at(i);
 			cells[chunk.x][chunk.y][chunk.z] = chunk.state;
 		}
 	}
 }
 
-/*	Pobieranie kom�rek	*/
 unsigned int *** CellularAutomataSpace::getCells() const
 {
 	return cells;
@@ -164,45 +209,44 @@ BoundaryContidionTypes CellularAutomataSpace::getBoundatyConditionType() const
 	return boundary_contidion;
 }
 
-std::vector<unsigned int> CellularAutomataSpace::getSize(const unsigned int n) const
-{
-	std::vector<unsigned int> size;
-	if (n == 0)
-	{
-		size.push_back(m);
-		size.push_back(n);
-		size.push_back(o);
-	}
-	if (n == 1)
-	{
-		size.push_back(m);
-	}
-	if (n == 2)
-	{
-		size.push_back(n);
-	}
-	if (n == 3)
-	{
-		size.push_back(o);
-	}
-	return size;
-}
-
 void CellularAutomataSpace::setBoundaryContidion(BoundaryContidionTypes type)
 {
 	boundary_contidion = type;
 }
 
+unsigned int CellularAutomataSpace::getNucleonsCount() const
+{
+	return nucleons_count;
+}
+
+void CellularAutomataSpace::setNucleonsCount(unsigned int count)
+{
+	nucleons_count = count;
+}
+
+unsigned int CellularAutomataSpace::getSizeOnXAxis() const
+{
+	return m;
+}
+
+unsigned int CellularAutomataSpace::getSizeOnYAxis() const
+{
+	return n;
+}
+
+unsigned int CellularAutomataSpace::getSizeOnZAxis() const
+{
+	return o;
+}
+
 void CellularAutomataSpace::constructSpace(unsigned int nm, unsigned int nn, unsigned int no)
 {
-	//Wymiar w ka�dj osi musi by� wi�kszy od 0
 	if (nm > 0)	m = nm;
 	else				m = 1;
 	if (nn > 0)	n = nn;
 	else				n = 1;
 	if (no > 0)	o = no;
 	else				o = 1;
-	//Twoznie kom�rek
 	cells = new unsigned int **[m];
 	for (unsigned int i = 0; i < m; i++)
 	{
@@ -221,7 +265,6 @@ void CellularAutomataSpace::constructSpace(unsigned int nm, unsigned int nn, uns
 
 void CellularAutomataSpace::destroySpace()
 {
-	//Usuwanie kom�rek
 	if (cells)
 	{
 		for (unsigned int i = 0; i < m; i++)

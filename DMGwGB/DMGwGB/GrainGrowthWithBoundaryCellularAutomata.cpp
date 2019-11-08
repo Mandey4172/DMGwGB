@@ -10,7 +10,6 @@ GrainGrowthWithBoundaryCellularAutomata::GrainGrowthWithBoundaryCellularAutomata
 	cellular_automata_space = std::make_shared< CellularAutomataSpace >(100, 100, 100);
 	neighborhood = std::make_shared < MooreNeighborhood >();
 	rule = std::make_shared < GrainBoundaryRule >();
-	//? !!!!!!!!!!!
 	boundary_neighborhood = std::make_shared< MooreNeighborhood >();
 
 	grainSize = 1;
@@ -31,64 +30,60 @@ bool GrainGrowthWithBoundaryCellularAutomata::step()
 {
 	bool isComplete = true;
 
-	GrainGrowthCellularAutomata GrainGrowth;
-	GrainGrowth.setNeighborhood(neighborhood);
-	GrainGrowth.setCellularAutomataSpace(cellular_automata_space);
-	GrainGrowth.start();
-	GrainGrowth.setNeighborhood(nullptr);
-	GrainGrowth.setCellularAutomataSpace(nullptr);
+	GrainGrowthCellularAutomata grainGrowth;
+	grainGrowth.setNeighborhood(neighborhood);
+	grainGrowth.setCellularAutomataSpace(cellular_automata_space);
+	grainGrowth.start();
+	grainGrowth.setNeighborhood(nullptr);
+	grainGrowth.setCellularAutomataSpace(nullptr);
 
-	int m = static_cast<int>(cellular_automata_space->m),
-		n = static_cast<int>(cellular_automata_space->n),
-		o = static_cast<int>(cellular_automata_space->o);
+	unsigned int m = cellular_automata_space->getSizeOnXAxis(),
+				 n = cellular_automata_space->getSizeOnYAxis(),
+				 o = cellular_automata_space->getSizeOnZAxis();
 
-	GrainGrowthCellularAutomata GrainGrowth2;
-	GrainGrowth2.setCellularAutomataSpace(std::make_shared< CellularAutomataSpace >(m, n, o));
+	GrainGrowthCellularAutomata grainGrowthCopy;
+	grainGrowthCopy.setCellularAutomataSpace(std::make_shared< CellularAutomataSpace >(m, n, o));
 
-	rule->grain_count = cellular_automata_space->nucleons_count;
+	rule->setGrainCount(cellular_automata_space->getNucleonsCount());
 
-#pragma omp parallel
-	for (int i = 0; i < m; i++)
+//#pragma omp parallel
+	for (unsigned int i = 0; i < m; i++)
 	{
-		for (int j = 0; j < n; j++)
+		for (unsigned int j = 0; j < n; j++)
 		{
-#pragma omp for schedule(static) nowait
-			for (int k = 0; k < o; k++)
+//#pragma omp for schedule(static) nowait
+			for (unsigned int k = 0; k < o; k++)
 			{
-				//Pobieranie s¹siedztwa
-				MooreNeighborhood n;
-				std::vector<unsigned int> neightborhood = n.get(cellular_automata_space, i, j, k);
+				MooreNeighborhood mooreNeighborhood;
+				std::vector<unsigned int> neightborhood = mooreNeighborhood.get(cellular_automata_space, i, j, k);
 
-				rule->check(&GrainGrowth2.getCellularAutomataSpace()->getCells()[i][j][k], neightborhood);
+				rule->transition(&grainGrowthCopy.getCellularAutomataSpace()->getCells()[i][j][k], neightborhood);
 			}
 		}
 	}
 	bool work = true;
-	/*for (int x = 0; x < 7; x++)
-	{*/
 
-	for (int i = 0; i < m*n*o && work; i++)
+	for (unsigned int x = 0; (x < m*n*o) && work; x++)
 	{
 		work = false;
-		GrainGrowthCellularAutomata GrainGrowth3;
-		GrainGrowth3.setCellularAutomataSpace(std::make_shared< CellularAutomataSpace >(*GrainGrowth2.getCellularAutomataSpace()));
-#pragma omp parallel
-		for (int i = 0; i < m; i++)
+		GrainGrowthCellularAutomata grainGrowthWithGrains;
+		grainGrowthWithGrains.setCellularAutomataSpace(std::make_shared< CellularAutomataSpace >(*grainGrowthCopy.getCellularAutomataSpace()));
+//#pragma omp parallel
+		for (unsigned int i = 0; i < m; i++)
 		{
-			for (int j = 0; j < n; j++)
+			for (unsigned int j = 0; j < n; j++)
 			{
-#pragma omp for schedule(static) nowait
-				for (int k = 0; k < o; k++)
+//#pragma omp for schedule(static) nowait
+				for (unsigned int k = 0; k < o; k++)
 				{
-					if (GrainGrowth3.getCellularAutomataSpace()->getCells()[i][j][k] > 0)// cellularautomata->nucleons_count)
+					if (grainGrowthWithGrains.getCellularAutomataSpace()->getCells()[i][j][k] > 0)
 					{
-						//Pobieranie s¹siedztwa
-						MooreNeighborhood n;
-						n.setRadius(2);
-						std::vector<unsigned int> neightborhood = n.get(GrainGrowth3.getCellularAutomataSpace(), i, j, k);
+						MooreNeighborhood mooreNeighborhood;
+						mooreNeighborhood.setRadius(2);
+						std::vector<unsigned int> neightborhood = mooreNeighborhood.get(grainGrowthWithGrains.getCellularAutomataSpace(), i, j, k);
 
-						static_cast<GrainBoundaryRule *>(rule.get())->clear(&GrainGrowth2.getCellularAutomataSpace()->getCells()[i][j][k], neightborhood);
-						if (GrainGrowth2.getCellularAutomataSpace()->getCells()[i][j][k] != GrainGrowth3.getCellularAutomataSpace()->getCells()[i][j][k])
+						static_cast<GrainBoundaryRule *>(rule.get())->clear(&grainGrowthCopy.getCellularAutomataSpace()->getCells()[i][j][k], neightborhood);
+						if (grainGrowthCopy.getCellularAutomataSpace()->getCells()[i][j][k] != grainGrowthWithGrains.getCellularAutomataSpace()->getCells()[i][j][k])
 						{
 							work = true;
 						}
@@ -98,30 +93,29 @@ bool GrainGrowthWithBoundaryCellularAutomata::step()
 		}
 	}
 
-	GrainGrowth2.getCellularAutomataSpace()->boundarys_count = static_cast<unsigned int>(((GrainBoundaryRule *)rule.get())->boundary_states.size());
-	GrainGrowth2.setNeighborhood(boundary_neighborhood);
+	grainGrowthCopy.setNeighborhood(boundary_neighborhood);
 	if (grainSize > 1)
 	{
 		for (unsigned int i = 1; i < grainSize; i++)
 		{
-			GrainGrowth2.step();
+			grainGrowthCopy.step();
 		}
 	}
-	GrainGrowth2.setNeighborhood(nullptr);
+	grainGrowthCopy.setNeighborhood(nullptr);
 
 	if (bFuseAfterSimulation)
 	{
-#pragma omp parallel
-		for (int i = 0; i < m; i++)
+//#pragma omp parallel
+		for (unsigned int i = 0; i < m; i++)
 		{
-			for (int j = 0; j < n; j++)
+			for (unsigned int j = 0; j < n; j++)
 			{
-#pragma omp for schedule(static) nowait
-				for (int k = 0; k < o; k++)
+//#pragma omp for schedule(static) nowait
+				for (unsigned int k = 0; k < o; k++)
 				{
-					if (GrainGrowth2.getCellularAutomataSpace()->getCells()[i][j][k] > 0)
+					if (grainGrowthCopy.getCellularAutomataSpace()->getCells()[i][j][k] > 0)
 					{
-						getCellularAutomataSpace()->getCells()[i][j][k] = GrainGrowth2.getCellularAutomataSpace()->getCells()[i][j][k];
+						getCellularAutomataSpace()->getCells()[i][j][k] = grainGrowthCopy.getCellularAutomataSpace()->getCells()[i][j][k];
 					}
 				}
 			}
@@ -129,9 +123,8 @@ bool GrainGrowthWithBoundaryCellularAutomata::step()
 	}
 	else
 	{
-		//if (cellular_automata_space) delete cellular_automata_space;
-		setCellularAutomataSpace(GrainGrowth2.getCellularAutomataSpace());
-		GrainGrowth2.setCellularAutomataSpace(nullptr);
+		setCellularAutomataSpace(grainGrowthCopy.getCellularAutomataSpace());
+		grainGrowthCopy.setCellularAutomataSpace(nullptr);
 	}
 
 	static_cast<GrainBoundaryRule *>(rule.get())->boundary_states.clear();
@@ -139,13 +132,22 @@ bool GrainGrowthWithBoundaryCellularAutomata::step()
 	return isComplete;
 }
 
-//void GrainGrowthWithBoundaryCellularAutomata::start()
-//{
-//
-//	if (rule)
-//		delete rule;
-//	rule = new GrainBoundaryRule();
-//	int state = 0;
-//	while (!step());
-//	int stop = 0;
-//}
+unsigned int GrainGrowthWithBoundaryCellularAutomata::getGrainSize()
+{
+	return grainSize;
+}
+
+bool GrainGrowthWithBoundaryCellularAutomata::souldFuseAfterSimulation()
+{
+	return bFuseAfterSimulation;
+}
+
+void GrainGrowthWithBoundaryCellularAutomata::setFuseAfterSimulation(bool fuseAfterSimulation)
+{
+	bFuseAfterSimulation = fuseAfterSimulation;
+}
+
+void GrainGrowthWithBoundaryCellularAutomata::setGrainSize(unsigned int size)
+{
+	grainSize = size;
+}

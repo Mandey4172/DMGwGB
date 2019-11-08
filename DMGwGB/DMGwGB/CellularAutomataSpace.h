@@ -3,6 +3,11 @@
 #include<vector>
 #include<string>
 
+//				BoundaryContidionTypes
+/// <summary>
+// Enum for each boundary type for cellular automata
+//
+/// </summary>
 enum class BoundaryContidionTypes
 {
 	Blocking,
@@ -10,50 +15,56 @@ enum class BoundaryContidionTypes
 	Reflecting
 };
 
+//				Cellular Automata Space
+/// <summary>
+/// Implements cellular automata grid of cells with description of boundary condition.
+/// </summary>
 class CellularAutomataSpace
 {
 public:
-	CellularAutomataSpace(unsigned int m = 1, unsigned int n = 1, unsigned int o = 1);
-	//Konstruktor kopiuj¹cy
+	CellularAutomataSpace(unsigned int m = 1, unsigned int n = 1, unsigned int o = 1) noexcept;
+	//Copy constructor
 	CellularAutomataSpace(const CellularAutomataSpace & ca);
-	//Konstruktor przesuwaj¹cy
-	CellularAutomataSpace(CellularAutomataSpace && ca);
-	//Operator przepisania
+	//Move constructor
+	CellularAutomataSpace(CellularAutomataSpace && ca) noexcept;
+	//Copy assigment
 	CellularAutomataSpace& operator=(const CellularAutomataSpace & ca);
+	//Move assigment
+	CellularAutomataSpace& operator=(CellularAutomataSpace&& ca) noexcept;
 	//Destruktor
 	~CellularAutomataSpace();
 
-	//Zapisu w obiekcie string
+	//Save to string
 	std::string save() const;
-	//Wczytaj z obiektu string
-	//void load(const std::string &data);
-	bool load(const std::string &path);
+	//Load from path
+	void load(const std::string &path);
 
-	//Pobieranie komórek
-	inline unsigned int *** getCells() const;
+	//Get cells
+	unsigned int *** getCells() const;
 
-	//Pobieranie rozmiaru : 0 - wszystkie wymiary, 1 - oœ X, 2 - oœ Y, 3 - oœ Z
-	std::vector<unsigned int> getSize(const unsigned int n = 0) const;
-
-	//Pobierz typ sasiedztwa
+	//Get boundary type
 	BoundaryContidionTypes getBoundatyConditionType() const;
-	//Ustaw typ sasiedztwa
+	//Set boundary type
 	void setBoundaryContidion(BoundaryContidionTypes type);
 
-	//Iloœæ zarodków
-	unsigned int nucleons_count;
-	//Iloœæ granic ziaren
-	unsigned int boundarys_count;
-	//Rozmiar na osi:
+	unsigned int getNucleonsCount() const;
+	void setNucleonsCount(unsigned int count);
+
+	unsigned int getSizeOnXAxis() const;
+	unsigned int getSizeOnYAxis() const;
+	unsigned int getSizeOnZAxis() const;
+
+
+private:
+	unsigned int *** cells;
+
+	//Cells per axis
 	unsigned int m;	//X
 	unsigned int n;	//Y
 	unsigned int o;	//Z
 
-private:
-	//Komórki
-	unsigned int *** cells;
-	//Warunki brzegowe
 	BoundaryContidionTypes boundary_contidion;
+	unsigned int nucleons_count;
 
 	void constructSpace(unsigned int m, unsigned int n, unsigned int o);
 	void destroySpace();

@@ -1,4 +1,7 @@
 #pragma once
+
+#include <vector>
+#include <array>
 class ColorGenerator
 {
 public:
@@ -7,7 +10,7 @@ public:
 
 	void generate(int n);
 
-	double ** colors;
-	unsigned int colorCount;;
+	float ** colors;
+	unsigned int colorCount;
 };
 

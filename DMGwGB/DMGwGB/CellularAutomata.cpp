@@ -9,21 +9,17 @@
 
 #include<vector>
 
-CellularAutomata::CellularAutomata()
-{
-	cellular_automata_space = nullptr;
-	neighborhood = nullptr;
-	rule = nullptr;
-}
+CellularAutomata::CellularAutomata() noexcept :
+	cellular_automata_space(nullptr),
+	neighborhood(nullptr),
+	rule(nullptr)	
+{}
 
-CellularAutomata::~CellularAutomata()
-{
-}
+CellularAutomata::~CellularAutomata() {}
 
-bool CellularAutomata::step()
-{
-	bool isComplete = true;
-	return isComplete;
+bool CellularAutomata::step() 
+{ 
+	return true; 
 }
 
 void CellularAutomata::start()

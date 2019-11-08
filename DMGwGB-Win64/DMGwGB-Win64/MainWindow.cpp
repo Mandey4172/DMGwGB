@@ -303,8 +303,8 @@ void MainWindow::startSimulation()
 	GrainGrowthWithBoundaryCellularAutomata * simulation = dynamic_cast<GrainGrowthWithBoundaryCellularAutomata *>(calculationsThread.simulation);
 	if (simulation)
 	{
-		simulation->grainSize = grainSize;
-		simulation->bFuseAfterSimulation = fuseAfterSimulationChechBox->isChecked();
+		simulation->setGrainSize(grainSize);
+		simulation->setFuseAfterSimulation(fuseAfterSimulationChechBox->isChecked());
 		if (boundaryNeightborhoodComboBox->itemText(boundaryNeightborhoodComboBox->currentIndex()) == " VonNeumman ")
 		{
 			simulation->setBoundaryNeighborhood(std::make_shared<VonNeummanNeighborhood>());

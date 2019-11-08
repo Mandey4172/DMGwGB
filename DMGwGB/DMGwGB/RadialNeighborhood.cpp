@@ -10,12 +10,12 @@ RadialNeighborhood::~RadialNeighborhood()
 {
 }
 
-std::vector<unsigned int> RadialNeighborhood::get(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z)
+std::vector<unsigned int> RadialNeighborhood::get(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z) const
 {
 	std::vector<unsigned int> neighborhood;
-	int m = static_cast<int>(cellular_automata_space->m),
-		n = static_cast<int>(cellular_automata_space->n),
-		o = static_cast<int>(cellular_automata_space->o);
+	int m = static_cast<int>(cellular_automata_space->getSizeOnXAxis()),
+		n = static_cast<int>(cellular_automata_space->getSizeOnYAxis()),
+		o = static_cast<int>(cellular_automata_space->getSizeOnZAxis());
 
 	for (int i = -radius; i <= radius; i++)
 	{
@@ -113,7 +113,6 @@ std::vector<unsigned int> RadialNeighborhood::get(const std::shared_ptr< Cellula
 				}
 				double r = r_x + r_y + r_z;
 				double rad = pow(static_cast<double>(radius), 2);
-				//r = sqrt(r);
 				if ((r <= rad) && (cellular_automata_space->getCells()[current_x][current_y][current_z] > 0))
 				{
 					neighborhood.push_back(cellular_automata_space->getCells()[current_x][current_y][current_z]);

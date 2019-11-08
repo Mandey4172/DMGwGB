@@ -118,14 +118,6 @@ void QGLRender::initializeGL()
 {
 	OpenGL.initializeOpenGLFunctions();
 
-	//QVector<Point> vcolors;
-	//QVector<Point> vtranslations;
-	//QVector<float> vmodels;
-
-	//Pseudo inicjacja
-	//int m = static_cast<int>(ca->m),
-	//	n = static_cast<int>(ca->n),
-	//	o = static_cast<int>(ca->o);
 
 	// Budowa i kompilacja shaderów
 	if (!ShaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, "TransformVertexShader.vertexshader"))
@@ -277,9 +269,9 @@ void QGLRender::paintGL()
 
 bool QGLRender::shouldDrawCell(int x, int y, int z)
 {
-	int m = static_cast<int>(ca->m),
-		n = static_cast<int>(ca->n),
-		o = static_cast<int>(ca->o);
+	int m = static_cast<int>(ca->getSizeOnXAxis()),
+		n = static_cast<int>(ca->getSizeOnYAxis()),
+		o = static_cast<int>(ca->getSizeOnZAxis());
 
 	unsigned int state = ca->getCells()[x][y][z];
 
@@ -308,65 +300,21 @@ bool QGLRender::shouldDrawCell(int x, int y, int z)
 	return false;
 }
 
-//void QGLRender::updateTextures()
-//{
-//	int m = 100, //ca->m ,
-//		n = 100, //ca->n ,
-//		o = 100; //ca->o ;
-//
-//	QImage	TexturesData[6];
-//
-//	TexturesData[0] = QImage(QSize(n, o), QImage::Format_RGB32);
-//	TexturesData[1] = QImage(QSize(n, o), QImage::Format_RGB32);
-//
-//	TexturesData[2] = QImage(QSize(m, o), QImage::Format_RGB32);
-//	TexturesData[3] = QImage(QSize(m, o), QImage::Format_RGB32);
-//
-//	TexturesData[4] = QImage(QSize(m, n), QImage::Format_RGB32);
-//	TexturesData[5] = QImage(QSize(m, n), QImage::Format_RGB32);
-//
-//	for (QOpenGLTexture* t : Textures)
-//	{
-//		if (t)
-//		{
-//			delete t;
-//		}
-//	}
-//	//if (Textures[0])
-//	//	delete Textures[0];
-//	Textures[0] = new QOpenGLTexture(TexturesData[0].mirrored(false, false));
-//	//if (Textures[1])
-//	//	delete Textures[1];
-//	Textures[1] = new QOpenGLTexture(TexturesData[1].mirrored(true, false));
-//	//if (Textures[2])
-//	//	delete Textures[2];
-//	Textures[2] = new QOpenGLTexture(TexturesData[2].mirrored(true, false));
-//	//if (Textures[3])
-//	//	delete Textures[3];
-//	Textures[3] = new QOpenGLTexture(TexturesData[3].mirrored(false, false));
-//	//if (Textures[4])
-//	//	delete Textures[4];
-//	Textures[4] = new QOpenGLTexture(TexturesData[4].mirrored(false, true));
-//	//if (Textures[5])
-//	//	delete Textures[5];
-//	Textures[5] = new QOpenGLTexture(TexturesData[5].mirrored(false, false));
-//}
-
 void QGLRender::updateCells()
 {
-	int m = static_cast<int>(ca->m),
-		n = static_cast<int>(ca->n),
-		o = static_cast<int>(ca->o);
+	int m = static_cast<int>(ca->getSizeOnXAxis()),
+		n = static_cast<int>(ca->getSizeOnYAxis()),
+		o = static_cast<int>(ca->getSizeOnZAxis());
 
 	position.clear();
 	color.clear();
 
-	//#pragma omp parallel
+	#pragma omp parallel
 	for (int i = 0; i < m; i++)
 	{
 		for (int j = 0; j < n; j++)
 		{
-			//#pragma omp for schedule(static) //nowait
+			#pragma omp for schedule(static) nowait
 			for (int k = 0; k < o; k++)
 			{
 				unsigned int state = ca->getCells()[i][j][k];
@@ -376,26 +324,33 @@ void QGLRender::updateCells()
 						(i == n - 1) || (j == m - 1) || (k == o - 1) ||
 						shouldDrawCell(i, j, k))
 					{
-						//color.push_back(QVector3D(0.5, 0.5, 0.5));
-						if (bShowGrains && (state <= ca->nucleons_count))
+						if (bShowGrains && (state <= ca->getNucleonsCount()))
 						{
-							//#pragma omp critical
+							#pragma omp critical
 							{
 								position.push_back(QVector3D(i, j, k));
-								color.push_back(QVector3D(colorGenerator.colors[state][0],
-									colorGenerator.colors[state][1],
-									colorGenerator.colors[state][2]));
+								//color.push_back(QVector3D(	colorGenerator.getColor(state)[0],
+								//							colorGenerator.getColor(state)[1],
+								//							colorGenerator.getColor(state)[2]));
+
+								color.push_back(QVector3D(	colorGenerator.colors[state][0],
+															colorGenerator.colors[state][1],
+															colorGenerator.colors[state][2]));
 							}
 						}
-						else if (state > ca->nucleons_count)
+						else if (state > ca->getNucleonsCount())
 						{
 							state += 500 * 500 / 2;
-							//#pragma omp critical
+							#pragma omp critical
 							{
 								position.push_back(QVector3D(i, j, k));
+								//color.push_back(QVector3D(	colorGenerator.getColor(state)[0],
+								//							colorGenerator.getColor(state)[1],
+								//							colorGenerator.getColor(state)[2]));
 								color.push_back(QVector3D(colorGenerator.colors[state][0],
 									colorGenerator.colors[state][1],
 									colorGenerator.colors[state][2]));
+
 							}
 						}
 					}
@@ -403,11 +358,10 @@ void QGLRender::updateCells()
 			}
 		}
 	}
-	//#pragma omp barrier
+	#pragma omp barrier
 	colorVBO.bind();
 	colorVBO.allocate(color.constData(), sizeof(color[0]) * color.size());
 	colorVBO.release();
-	//
 
 	offsetVBO.bind();
 	offsetVBO.allocate(position.constData(), sizeof(position[0]) * position.size());
@@ -416,9 +370,9 @@ void QGLRender::updateCells()
 
 void QGLRender::updateView()
 {
-	float	center_x = static_cast<float>(ca->m / 2),
-		center_y = static_cast<float>(ca->n / 2),
-		center_z = static_cast<float>(ca->o / 2);
+	float	center_x = static_cast<float>(ca->getSizeOnXAxis() / 2),
+			center_y = static_cast<float>(ca->getSizeOnYAxis() / 2),
+			center_z = static_cast<float>(ca->getSizeOnZAxis() / 2);
 
 	float max = center_x;
 	if (max > center_y) max = center_y;
