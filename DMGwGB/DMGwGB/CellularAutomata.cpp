@@ -15,8 +15,6 @@ CellularAutomata::CellularAutomata() noexcept :
 	rule(nullptr)	
 {}
 
-CellularAutomata::~CellularAutomata() {}
-
 bool CellularAutomata::step() 
 { 
 	return true; 

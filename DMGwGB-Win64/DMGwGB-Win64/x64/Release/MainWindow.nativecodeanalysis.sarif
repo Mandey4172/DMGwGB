@@ -1201,62 +1201,42 @@
       },
       "invocations": [
         {
-          "commandLine": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\bin\\HostX86\\x64\\c1xx.dll\" -ACf{1F7B090C-16DB-4822-966A-A93D26ED4681} -ACpmspft140.dll -Alint -D_PREFAST_ -D_AST_FE_ -Analyze -zm0x00362090 -il C:\\Users\\Mandey\\AppData\\Local\\Temp\\_CL_d227aa84ast -typedil -f MainWindow.cpp -Ze -D_MSC_EXTENSIONS -Zp16 -ZB64 -D_INTEGRAL_MAX_BITS=64 -pc \\:/ -D_MSC_VER=1922 -D_MSC_FULL_VER=192227905 -D_MSC_BUILD=0 -D_M_AMD64=100 -ZILP448 -D_M_X64=100 -D_WIN64 -D_WIN32 -GR -D_CPPRTTI -I .\\GeneratedFiles\\Release -I ..\\..\\DMGwGB\\DMGwGB -I .\\GeneratedFiles\\Release -I .\\GeneratedFiles -I . -I C:\\Qt\\5.11.2\\msvc2017_64\\include -I release -I \\include -I C:\\Qt\\5.11.2\\msvc2017_64\\mkspecs\\win32-msvc -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\QtOpenGL -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\QtOpenGLExtensions -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\QtCore -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\QtWidgets -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DCore -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DAnimation -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DExtras -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DInput -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DLogic -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DRender -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DQuick -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DQuickAnimation -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DQuickExtras -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DQuickInput -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DQuickRender -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DQuickScene2D -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\QtGui -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\QtANGLE -nologo -W 2 -diagnostics:column -GF -Og -Oi -Ot -Oy -DCODE_ANALYSIS -D_WINDOWS -DUNICODE -D_UNICODE -DWIN32 -DWIN64 -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DNDEBUG -DQT_OPENGL_LIB -DQT_OPENGLEXTENSIONS_LIB -DQT_CORE_LIB -DQT_WIDGETS_LIB -DQT_3DCORE_LIB -DQT_3DANIMATION_LIB -DQT_3DEXTRAS_LIB -DQT_3DINPUT_LIB -DQT_3DLOGIC_LIB -DQT_3DRENDER_LIB -DQT_3DQUICK_LIB -DQT_3DQUICKANIMATION_LIB -DQT_3DQUICKEXTRAS_LIB -DQT_3DQUICKINPUT_LIB -DQT_3DQUICKRENDER_LIB -DQT_3DQUICKSCENE2D_LIB -DQT_GUI_LIB -EHs -D_CPPUNWIND -EHc -D_MT -D_DLL -GS -D_M_FP_PRECISE -Zc:wchar_t -Zc:forScope -omp -D_OPENMP=200203 -Fox64\\Release\\MainWindow.obj -Fdx64\\Release\\vc142.pdb -Gd -wd 4577 -wd 4467 -analyze:quiet -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\bin\\HostX86\\x86\\EspXEngine.dll -FC -errorreport:prompt -Zc:rvalueCast -Zc:strictStrings -Zc:referenceBinding -w3 4100 -w3 4189 -w4 4996 -w4 4456 -w4 4457 -w4 4458 -Zc:twoPhase- -analyze:ruleset C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\Rule Sets\\CppCoreCheckGslRules.ruleset -analyze:projectdirectory F:\\Source\\C++\\Mag\\dmgwgb\\DMGwGB-Win64\\DMGwGB-Win64 -analyze:rulesetdirectory ;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\\\Rule Sets -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\atlmfc\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\ucrt -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\VS\\UnitTest\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.7.2\\Include\\um -MPdiagMutex 00000000000001BC"
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\bin\\HostX86\\x64\\c1xx.dll\" -ACf{1F7B090C-16DB-4822-966A-A93D26ED4681} -ACpmspft140.dll -Alint -D_PREFAST_ -D_AST_FE_ -Analyze -zm0x00362090 -il C:\\Users\\Mandey\\AppData\\Local\\Temp\\_CL_960ca39aast -typedil -f MainWindow.cpp -Ze -D_MSC_EXTENSIONS -Zp16 -ZB64 -D_INTEGRAL_MAX_BITS=64 -pc \\:/ -D_MSC_VER=1922 -D_MSC_FULL_VER=192227905 -D_MSC_BUILD=0 -D_M_AMD64=100 -ZILP448 -D_M_X64=100 -D_WIN64 -D_WIN32 -GR -D_CPPRTTI -I .\\GeneratedFiles\\Release -I ..\\..\\DMGwGB\\DMGwGB -I .\\GeneratedFiles\\Release -I .\\GeneratedFiles -I . -I C:\\Qt\\5.11.2\\msvc2017_64\\include -I release -I \\include -I C:\\Qt\\5.11.2\\msvc2017_64\\mkspecs\\win32-msvc -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\QtOpenGL -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\QtOpenGLExtensions -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\QtCore -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\QtWidgets -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DCore -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DAnimation -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DExtras -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DInput -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DLogic -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DRender -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DQuick -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DQuickAnimation -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DQuickExtras -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DQuickInput -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DQuickRender -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\Qt3DQuickScene2D -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\QtGui -I C:\\Qt\\5.11.2\\msvc2017_64\\include\\QtANGLE -nologo -W 2 -diagnostics:column -GF -Og -Oi -Ot -Oy -DCODE_ANALYSIS -D_WINDOWS -DUNICODE -D_UNICODE -DWIN32 -DWIN64 -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DNDEBUG -DQT_OPENGL_LIB -DQT_OPENGLEXTENSIONS_LIB -DQT_CORE_LIB -DQT_WIDGETS_LIB -DQT_3DCORE_LIB -DQT_3DANIMATION_LIB -DQT_3DEXTRAS_LIB -DQT_3DINPUT_LIB -DQT_3DLOGIC_LIB -DQT_3DRENDER_LIB -DQT_3DQUICK_LIB -DQT_3DQUICKANIMATION_LIB -DQT_3DQUICKEXTRAS_LIB -DQT_3DQUICKINPUT_LIB -DQT_3DQUICKRENDER_LIB -DQT_3DQUICKSCENE2D_LIB -DQT_GUI_LIB -EHs -D_CPPUNWIND -EHc -D_MT -D_DLL -GS -D_M_FP_PRECISE -Zc:wchar_t -Zc:forScope -omp -D_OPENMP=200203 -Fox64\\Release\\MainWindow.obj -Fdx64\\Release\\vc142.pdb -Gd -wd 4577 -wd 4467 -analyze:quiet -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\bin\\HostX86\\x86\\EspXEngine.dll -FC -errorreport:prompt -Zc:rvalueCast -Zc:strictStrings -Zc:referenceBinding -w3 4100 -w3 4189 -w4 4996 -w4 4456 -w4 4457 -w4 4458 -Zc:twoPhase- -analyze:ruleset C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\Rule Sets\\CppCoreCheckGslRules.ruleset -analyze:projectdirectory F:\\Source\\C++\\Mag\\dmgwgb\\DMGwGB-Win64\\DMGwGB-Win64 -analyze:rulesetdirectory ;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\\\Rule Sets -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\atlmfc\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\ucrt -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\VS\\UnitTest\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.7.2\\Include\\um -MPdiagMutex 00000000000001B4"
         }
       ],
       "files": {
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qconfig.h": {
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qtguiglobal.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qlist.h": {
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtwidgets/qtwidgetsglobal.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///f:/source/c++/mag/dmgwgb/dmgwgb-win64/dmgwgb-win64/generatedfiles/release/moc_calculationsthread.cpp": {
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb-win64/dmgwgb-win64/mainwindow.cpp": {
           "roles": [
             "analysisTarget",
             "resultFile"
           ]
         },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qpoint.h": {
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb-win64/dmgwgb-win64/mainwindow.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qalgorithms.h": {
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qatomic.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///f:/source/c++/mag/dmgwgb/dmgwgb-win64/dmgwgb-win64/calculationsthread.h": {
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qopenglvertexarrayobject": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qstringliteral.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qobjectdefs_impl.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qthread.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qobject.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qobjectdefs.h": {
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtwidgets/qmainwindow": {
           "roles": [
             "resultFile"
           ]
@@ -1276,17 +1256,17 @@
             "resultFile"
           ]
         },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qbytearray.h": {
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qhashfunctions.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qnamespace.h": {
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtwidgets/qmainwindow.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qpen.h": {
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qconfig.h": {
           "roles": [
             "resultFile"
           ]
@@ -1321,6 +1301,16 @@
             "resultFile"
           ]
         },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qrgba64.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qt_windows.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qgenericatomic.h": {
           "roles": [
             "resultFile"
@@ -1341,27 +1331,17 @@
             "resultFile"
           ]
         },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qrgb.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qsysinfo.h": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qflags.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtwidgets/qmainwindow": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qatomic.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qopenglvertexarrayobject": {
           "roles": [
             "resultFile"
           ]
@@ -1382,6 +1362,91 @@
           ]
         },
         "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qversiontagging.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qtgui-config.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qwindowdefs.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtwidgets/qtwidgets-config.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qregion.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtwidgets/qwidget.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qobjectdefs.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qbytearray.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qnamespace.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qpen.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qstringliteral.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qobjectdefs_impl.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qthread.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qwindowdefs_win.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qcolor.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtwidgets/qabstractspinbox.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qelapsedtimer.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qobject.h": {
           "roles": [
             "resultFile"
           ]
@@ -1416,22 +1481,27 @@
             "resultFile"
           ]
         },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qlist.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qpoint.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qalgorithms.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qobject_impl.h": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qiterator.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtwidgets/qmainwindow.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qhashfunctions.h": {
           "roles": [
             "resultFile"
           ]
@@ -1496,72 +1566,6 @@
             "resultFile"
           ]
         },
-        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/cellularautomata.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/cellularautomataspace.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qline.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///f:/source/c++/mag/dmgwgb/dmgwgb-win64/dmgwgb-win64/mainwindow.cpp": {
-          "roles": [
-            "analysisTarget",
-            "resultFile"
-          ]
-        },
-        "file:///f:/source/c++/mag/dmgwgb/dmgwgb-win64/dmgwgb-win64/mainwindow.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtwidgets/qtwidgetsglobal.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qtguiglobal.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qtgui-config.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qwindowdefs.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtwidgets/qtwidgets-config.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qregion.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtwidgets/qwidget.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qwindowdefs_win.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qmargins.h": {
           "roles": [
             "resultFile"
@@ -1592,36 +1596,6 @@
             "resultFile"
           ]
         },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qcolor.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtwidgets/qabstractspinbox.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qelapsedtimer.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qrgb.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qrgba64.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qt_windows.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/qt/5.11.2/msvc2017_64/include/qtgui/qbrush.h": {
           "roles": [
             "resultFile"
@@ -1648,6 +1622,16 @@
           ]
         },
         "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qiodevice.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/qt/5.11.2/msvc2017_64/include/qtcore/qline.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/cellularautomataspace.h": {
           "roles": [
             "resultFile"
           ]
@@ -2123,6 +2107,16 @@
           ]
         },
         "file:///c:/qt/5.11.2/msvc2017_64/include/qtwidgets/qfiledialog.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb-win64/dmgwgb-win64/calculationsthread.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/cellularautomata.h": {
           "roles": [
             "resultFile"
           ]

@@ -30,7 +30,7 @@ void GrainBoundaryRule::transition(unsigned int * cell, std::vector<unsigned int
 		}
 		std::sort(unique_grains.begin(), unique_grains.end());
 		bool exist = false;
-//#pragma omp critical
+#pragma omp critical
 		{
 			if (unique_grains.size() > 1)
 			{

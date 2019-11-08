@@ -37,7 +37,7 @@ QGLRender::~QGLRender()
 
 void QGLRender::setCA(const std::shared_ptr<CellularAutomataSpace> new_ca)
 {
-	ca = std::make_shared<CellularAutomataSpace>(*new_ca);
+	ca = new_ca;
 	//updateTextures();
 	updateCells();
 	updateView();

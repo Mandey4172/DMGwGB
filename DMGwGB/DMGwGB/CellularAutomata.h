@@ -14,7 +14,7 @@ class CellularAutomata
 public:
 
 	CellularAutomata() noexcept;
-	virtual ~CellularAutomata();
+	virtual ~CellularAutomata() = default;
 
 	/// <summary> Perform single time step </summary>
 	/// <returns> Is cellular automata stable </returns>

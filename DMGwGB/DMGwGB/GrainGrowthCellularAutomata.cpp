@@ -27,12 +27,12 @@ bool GrainGrowthCellularAutomata::step()
 		n = static_cast<int>(cellular_automata_space->getSizeOnYAxis()),
 		o = static_cast<int>(cellular_automata_space->getSizeOnZAxis());
 	bool exit = true;
-//#pragma omp parallel
+#pragma omp parallel
 	for (int i = 0; i < m; i++)
 	{
 		for (int j = 0; j < n; j++)
 		{
-//#pragma omp for schedule(static) nowait
+#pragma omp for schedule(static) nowait
 			for (int k = 0; k < o; k++)
 			{
 				if (cellular_automata_space->getCells()[i][j][k] == 0)

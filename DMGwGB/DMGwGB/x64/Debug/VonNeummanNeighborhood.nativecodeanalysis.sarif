@@ -1,0 +1,192 @@
+{
+  "version": "2.0.0",
+  "$schema": "http://json.schemastore.org/sarif-2.0.0",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "26432",
+          "message": {
+            "text": "If you define or delete any default operation in the type 'class VonNeummanNeighborhood', define or delete them all (c.21)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///F:/Source/C++/Mag/dmgwgb/DMGwGB/DMGwGB/VonNeummanNeighborhood.cpp"
+                },
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 26,
+                  "endLine": 8,
+                  "endColumn": 26
+                }
+              },
+              "fullyQualifiedLogicalName": "public: __cdecl VonNeummanNeighborhood::~VonNeummanNeighborhood(void)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26435",
+          "message": {
+            "text": "Function 'VonNeummanNeighborhood::get' should specify exactly one of 'virtual', 'override', or 'final' (c.128)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///F:/Source/C++/Mag/dmgwgb/DMGwGB/DMGwGB/VonNeummanNeighborhood.cpp"
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 51,
+                  "endLine": 12,
+                  "endColumn": 51
+                }
+              },
+              "fullyQualifiedLogicalName": "public: virtual class std::vector<unsigned int,class std::allocator<unsigned int> > __cdecl VonNeummanNeighborhood::get(class std::shared_ptr<class CellularAutomataSpace> const &,unsigned int,unsigned int,unsigned int)const "
+            }
+          ]
+        },
+        {
+          "ruleId": "26436",
+          "message": {
+            "text": "The type 'mod_const(class VonNeummanNeighborhood)' with a virtual function needs either public virtual or protected non-virtual destructor (c.35)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///F:/Source/C++/Mag/dmgwgb/DMGwGB/DMGwGB/VonNeummanNeighborhood.cpp"
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 51,
+                  "endLine": 12,
+                  "endColumn": 51
+                }
+              },
+              "fullyQualifiedLogicalName": "public: virtual class std::vector<unsigned int,class std::allocator<unsigned int> > __cdecl VonNeummanNeighborhood::get(class std::shared_ptr<class CellularAutomataSpace> const &,unsigned int,unsigned int,unsigned int)const "
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "name": "PREfast",
+        "fullName": "PREfast Code Analysis",
+        "version": "14.22.27905.0",
+        "fileVersion": "14.00.27905.00"
+      },
+      "invocations": [
+        {
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\bin\\HostX86\\x64\\c1xx.dll\" -ACf{1F7B090C-16DB-4822-966A-A93D26ED4681} -ACpmspft140.dll -Alint -D_PREFAST_ -D_AST_FE_ -Analyze -zm0x00362090 -il C:\\Users\\Mandey\\AppData\\Local\\Temp\\_CL_25321af1ast -typedil -f VonNeummanNeighborhood.cpp -Ze -D_MSC_EXTENSIONS -Zp16 -ZB64 -D_INTEGRAL_MAX_BITS=64 -pc \\:/ -D_MSC_VER=1922 -D_MSC_FULL_VER=192227905 -D_MSC_BUILD=0 -D_M_AMD64=100 -ZILP448 -D_M_X64=100 -D_WIN64 -D_WIN32 -GR -D_CPPRTTI -nologo -W 4 -diagnostics:column -D_GUARDOVERFLOW_CRT_ALLOCATORS=1 -Ot -DCODE_ANALYSIS -D_DEBUG -D_LIB -D_UNICODE -DUNICODE -EHs -D_CPPUNWIND -EHc -D__MSVC_RUNTIME_CHECKS -RTCs -RTCu -D_DEBUG -D_MT -D_DLL -GS -D_M_FP_PRECISE -permissive- -Zc:wchar_t -Zc:forScope -omp -D_OPENMP=200203 -Fox64\\Debug\\VonNeummanNeighborhood.obj -Fdx64\\Debug\\DMGwGB.pdb -Gd -analyze:quiet -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\bin\\HostX86\\x86\\EspXEngine.dll -FC -errorreport:prompt -Zc:twoPhase- -analyze:ruleset C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\Rule Sets\\CppCoreCheckClassRules.ruleset -analyze:projectdirectory F:\\Source\\C++\\Mag\\dmgwgb\\DMGwGB\\DMGwGB -analyze:rulesetdirectory ;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\\\Rule Sets -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.22.27905\\atlmfc\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\ucrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\cppwinrt -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.7.2\\Include\\um"
+        }
+      ],
+      "files": {
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/vonneummanneighborhood.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/vonneummanneighborhood.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/neighborhood.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///f:/source/c++/mag/dmgwgb/dmgwgb/dmgwgb/cellularautomataspace.h": {
+          "roles": [
+            "resultFile"
+          ]
+        }
+      },
+      "logicalLocations": {},
+      "resources": {
+        "rules": {
+          "26432": {
+            "id": "26432",
+            "name": "",
+            "shortDescription": "",
+            "fullDescription": "",
+            "configuration": {
+              "enabled": true,
+              "defaultLevel": "warning"
+            },
+            "helpUri": ""
+          },
+          "26433": {
+            "id": "26433",
+            "name": "",
+            "shortDescription": "",
+            "fullDescription": "",
+            "configuration": {
+              "enabled": true,
+              "defaultLevel": "warning"
+            },
+            "helpUri": ""
+          },
+          "26443": {
+            "id": "26443",
+            "name": "",
+            "shortDescription": "",
+            "fullDescription": "",
+            "configuration": {
+              "enabled": true,
+              "defaultLevel": "warning"
+            },
+            "helpUri": ""
+          },
+          "26434": {
+            "id": "26434",
+            "name": "",
+            "shortDescription": "",
+            "fullDescription": "",
+            "configuration": {
+              "enabled": true,
+              "defaultLevel": "warning"
+            },
+            "helpUri": ""
+          },
+          "26435": {
+            "id": "26435",
+            "name": "",
+            "shortDescription": "",
+            "fullDescription": "",
+            "configuration": {
+              "enabled": true,
+              "defaultLevel": "warning"
+            },
+            "helpUri": ""
+          },
+          "26436": {
+            "id": "26436",
+            "name": "",
+            "shortDescription": "",
+            "fullDescription": "",
+            "configuration": {
+              "enabled": true,
+              "defaultLevel": "warning"
+            },
+            "helpUri": ""
+          },
+          "26456": {
+            "id": "26456",
+            "name": "",
+            "shortDescription": "",
+            "fullDescription": "",
+            "configuration": {
+              "enabled": true,
+              "defaultLevel": "warning"
+            },
+            "helpUri": ""
+          }
+        }
+      }
+    }
+  ]
+}

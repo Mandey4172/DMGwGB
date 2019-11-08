@@ -46,12 +46,12 @@ bool GrainGrowthWithBoundaryCellularAutomata::step()
 
 	rule->setGrainCount(cellular_automata_space->getNucleonsCount());
 
-//#pragma omp parallel
+#pragma omp parallel
 	for (unsigned int i = 0; i < m; i++)
 	{
 		for (unsigned int j = 0; j < n; j++)
 		{
-//#pragma omp for schedule(static) nowait
+#pragma omp for schedule(static) nowait
 			for (unsigned int k = 0; k < o; k++)
 			{
 				MooreNeighborhood mooreNeighborhood;
@@ -68,12 +68,12 @@ bool GrainGrowthWithBoundaryCellularAutomata::step()
 		work = false;
 		GrainGrowthCellularAutomata grainGrowthWithGrains;
 		grainGrowthWithGrains.setCellularAutomataSpace(std::make_shared< CellularAutomataSpace >(*grainGrowthCopy.getCellularAutomataSpace()));
-//#pragma omp parallel
+#pragma omp parallel
 		for (unsigned int i = 0; i < m; i++)
 		{
 			for (unsigned int j = 0; j < n; j++)
 			{
-//#pragma omp for schedule(static) nowait
+#pragma omp for schedule(static) nowait
 				for (unsigned int k = 0; k < o; k++)
 				{
 					if (grainGrowthWithGrains.getCellularAutomataSpace()->getCells()[i][j][k] > 0)
@@ -105,12 +105,12 @@ bool GrainGrowthWithBoundaryCellularAutomata::step()
 
 	if (bFuseAfterSimulation)
 	{
-//#pragma omp parallel
+#pragma omp parallel
 		for (unsigned int i = 0; i < m; i++)
 		{
 			for (unsigned int j = 0; j < n; j++)
 			{
-//#pragma omp for schedule(static) nowait
+#pragma omp for schedule(static) nowait
 				for (unsigned int k = 0; k < o; k++)
 				{
 					if (grainGrowthCopy.getCellularAutomataSpace()->getCells()[i][j][k] > 0)

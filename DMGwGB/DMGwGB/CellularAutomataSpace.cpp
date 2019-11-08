@@ -24,24 +24,7 @@ CellularAutomataSpace::CellularAutomataSpace(unsigned int x, unsigned int y, uns
 	boundary_contidion(BoundaryContidionTypes::Blocking), 
 	nucleons_count(0)
 {
-	if (cells)
-	{
-		for (unsigned int i = 0; i < m; i++)
-		{
-			for (unsigned int j = 0; j < n; j++)
-			{
-				if (cells[i][j])
-				{
-					delete[] cells[i][j];
-				}
-			}
-			if (cells[i])
-			{
-				delete[] cells[i];
-			}
-		}
-		delete[] cells;
-	}
+	constructSpace(x,y,z);
 }
 
 CellularAutomataSpace::CellularAutomataSpace(const CellularAutomataSpace & ca)
@@ -57,7 +40,11 @@ CellularAutomataSpace::CellularAutomataSpace(const CellularAutomataSpace & ca)
 		for (unsigned int j = 0; j < n; j++)
 		{
 			cells[i][j] = new unsigned int[o];
-			std::copy(ca.cells[i][j], ca.cells[i][j] + o, getCells()[i][j]);
+			for (unsigned int k = 0; k < o; k++)
+			{
+				cells[i][j][k] = ca.cells[i][j][k];
+			}
+			//std::copy(ca.cells[i][j], ca.cells[i][j] + o, cells[i][j]);
 		}
 	}
 	nucleons_count = ca.nucleons_count;
@@ -164,7 +151,7 @@ void CellularAutomataSpace::load(const std::string &path)
 			smax = 0;
 		{
 			std::vector<std::string> data_chunks = split(data, "\n");
-//#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static)
 			for (unsigned int i = 0; i < data_chunks.size(); i++)
 			{
 				std::string data_chunk = data_chunks.at(i);
@@ -181,7 +168,7 @@ void CellularAutomataSpace::load(const std::string &path)
 					cell_chunk.state = static_cast<unsigned int>(std::stoi(string_chunk.at(3)));
 					if (cell_chunk.state > smax) smax = cell_chunk.state;
 
-//#pragma omp critical
+#pragma omp critical
 					cell_chunks.push_back(cell_chunk);
 				}
 			}
@@ -190,7 +177,7 @@ void CellularAutomataSpace::load(const std::string &path)
 		constructSpace(a + 1, b + 1, c + 1);
 		nucleons_count = smax;
 
-//#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static)
 		for (unsigned int i = 0; i < cell_chunks.size(); i++)
 		{
 			CellStateChunk chunk = cell_chunks.at(i);

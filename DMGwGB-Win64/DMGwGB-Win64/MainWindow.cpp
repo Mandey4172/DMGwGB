@@ -512,10 +512,7 @@ void MainWindow::loadFile()
 		QElapsedTimer timer;
 		timer.start();
 
-		if (!calculationsThread.simulation->getCellularAutomataSpace()->load(fileName.toStdString()))
-		{
-			//TODO::Cath load error
-		}
+		calculationsThread.simulation->getCellularAutomataSpace()->load(fileName.toStdString());
 		QString debug = tr("Time : ");
 		debug += QString::number(timer.elapsed());
 		debug += tr(" milliseconds");
