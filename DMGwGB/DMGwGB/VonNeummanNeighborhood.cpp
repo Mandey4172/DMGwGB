@@ -1,14 +1,6 @@
 #include "VonNeummanNeighborhood.h"
 #include"CellularAutomataSpace.h"
 
-VonNeummanNeighborhood::VonNeummanNeighborhood()
-{
-}
-
-VonNeummanNeighborhood::~VonNeummanNeighborhood()
-{
-}
-
 std::vector<unsigned int> VonNeummanNeighborhood::get(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z) const
 {
 	std::vector<unsigned int> neighborhood;

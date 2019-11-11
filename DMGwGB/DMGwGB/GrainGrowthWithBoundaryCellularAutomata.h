@@ -13,7 +13,7 @@ public:
 	void setBoundaryNeighborhood(const std::shared_ptr< class Neighborhood > & neighborhood);
 	std::shared_ptr< class Neighborhood > getBoundaryNeighborhood();
 
-	virtual bool step() override;
+	bool step() override;
 
 	unsigned int getGrainSize();
 	bool souldFuseAfterSimulation();

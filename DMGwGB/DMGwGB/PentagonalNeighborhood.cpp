@@ -5,10 +5,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-PentagonalNeighborhood::PentagonalNeighborhood()
-{
-}
-
 std::vector<unsigned int> PentagonalNeighborhood::get(const std::shared_ptr< CellularAutomataSpace >& cellular_automata_space, unsigned int x, unsigned int y, unsigned int z) const
 {
 	int v = rand() % 6;

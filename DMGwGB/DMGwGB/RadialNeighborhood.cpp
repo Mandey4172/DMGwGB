@@ -1,15 +1,6 @@
 #include "RadialNeighborhood.h"
 #include"CellularAutomataSpace.h"
 
-RadialNeighborhood::RadialNeighborhood()
-{
-	radius = 1;
-}
-
-RadialNeighborhood::~RadialNeighborhood()
-{
-}
-
 std::vector<unsigned int> RadialNeighborhood::get(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z) const
 {
 	std::vector<unsigned int> neighborhood;

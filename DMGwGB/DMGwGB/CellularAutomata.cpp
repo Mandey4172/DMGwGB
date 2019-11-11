@@ -15,6 +15,36 @@ CellularAutomata::CellularAutomata() noexcept :
 	rule(nullptr)	
 {}
 
+CellularAutomata::CellularAutomata(const CellularAutomata & other)
+{
+	cellular_automata_space = other.cellular_automata_space;
+	neighborhood = other.neighborhood;
+	rule = other.rule;
+}
+
+CellularAutomata::CellularAutomata(CellularAutomata&& other) noexcept
+{
+	std::swap(cellular_automata_space, other.cellular_automata_space);
+	std::swap(neighborhood, other.neighborhood);
+	std::swap(rule, other.rule);
+}
+
+CellularAutomata& CellularAutomata::operator=(const CellularAutomata& other)
+{
+	cellular_automata_space = other.cellular_automata_space;
+	neighborhood = other.neighborhood;
+	rule = other.rule;
+}
+
+CellularAutomata& CellularAutomata::operator=(CellularAutomata&& other) noexcept
+{
+	std::swap(cellular_automata_space, other.cellular_automata_space);
+	std::swap(neighborhood, other.neighborhood);
+	std::swap(rule, other.rule);
+}
+
+CellularAutomata::~CellularAutomata() {}
+
 bool CellularAutomata::step() 
 { 
 	return true; 

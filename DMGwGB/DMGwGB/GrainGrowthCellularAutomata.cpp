@@ -16,10 +16,6 @@ GrainGrowthCellularAutomata::GrainGrowthCellularAutomata()
 	rule = std::make_shared < GrainGrowthRule >();
 }
 
-GrainGrowthCellularAutomata::~GrainGrowthCellularAutomata()
-{
-}
-
 bool GrainGrowthCellularAutomata::step()
 {
 	std::shared_ptr< CellularAutomataSpace > cellularAutomataSpaceCopy = std::make_shared< CellularAutomataSpace >(*cellular_automata_space);

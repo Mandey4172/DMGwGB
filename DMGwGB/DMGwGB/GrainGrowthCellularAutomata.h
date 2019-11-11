@@ -10,8 +10,7 @@ class GrainGrowthCellularAutomata :
 {
 public:
 	GrainGrowthCellularAutomata();
-	~GrainGrowthCellularAutomata();
 
-	virtual bool step() override;
+	bool step() override;
 };
 

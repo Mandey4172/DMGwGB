@@ -2,10 +2,6 @@
 
 #include <vector>
 
-GrainGrowthRule::GrainGrowthRule() {}
-
-GrainGrowthRule::~GrainGrowthRule() {}
-
 void GrainGrowthRule::transition(unsigned int * cell, std::vector<unsigned int> & neighborhood)
 {
 	if (!neighborhood.empty())

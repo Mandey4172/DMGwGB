@@ -6,8 +6,5 @@ class GrainGrowthRule :
 	public CellularAutomataRule
 {
 public:
-	GrainGrowthRule();
-	~GrainGrowthRule();
-
-	virtual void transition(unsigned int * cell, class std::vector<unsigned int > & neighborhood) override;
+	void transition(unsigned int * cell, class std::vector<unsigned int > & neighborhood) override;
 };

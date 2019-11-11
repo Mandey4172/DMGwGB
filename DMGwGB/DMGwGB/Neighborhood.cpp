@@ -1,16 +1,37 @@
 #include "Neighborhood.h"
 
-Neighborhood::Neighborhood() : radius(1) {}
-
-Neighborhood::Neighborhood(const Neighborhood & o) : radius(o.radius) {}
-
-Neighborhood::~Neighborhood() {}
-
 //std::vector<unsigned int> Neighborhood::get(const std::shared_ptr<CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z) const
 //{
 //	std::vector<unsigned int> neightborhood;
 //	return neightborhood;
 //}
+
+Neighborhood::Neighborhood()
+{
+}
+
+Neighborhood::Neighborhood(const Neighborhood& other)
+{
+	radius = other.radius;
+}
+
+Neighborhood::Neighborhood(Neighborhood&& other)
+{
+	std::swap(radius, other.radius);
+}
+
+Neighborhood& Neighborhood::operator=(const Neighborhood& other)
+{
+	radius = other.radius;
+}
+
+Neighborhood& Neighborhood::operator=(Neighborhood&& other)
+{
+	std::swap(radius, other.radius);
+	return *this;
+}
+
+Neighborhood::~Neighborhood() {}
 
 void Neighborhood::setRadius(unsigned int r)
 {

@@ -4,14 +4,6 @@
 #include <vector>
 #include <omp.h>
 
-GrainBoundaryRule::GrainBoundaryRule()
-{
-}
-
-GrainBoundaryRule::~GrainBoundaryRule()
-{
-}
-
 void GrainBoundaryRule::transition(unsigned int * cell, std::vector<unsigned int> & neighborhood)
 {
 	if (!neighborhood.empty())

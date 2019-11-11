@@ -10,8 +10,15 @@
 class CellularAutomataRule
 {
 public:
-	CellularAutomataRule() {};
-	virtual ~CellularAutomataRule() {};
+	CellularAutomataRule() = default;
+
+	CellularAutomataRule(const CellularAutomataRule& other);
+	CellularAutomataRule(CellularAutomataRule&& other);
+
+	CellularAutomataRule& operator=(const CellularAutomataRule& other);
+	CellularAutomataRule& operator=(CellularAutomataRule&& other);
+
+	virtual ~CellularAutomataRule();
 
 	/// <summary> Transition function performed on cell. Modyfies cells state to the next time step </summary>
 	virtual void transition(unsigned int * cell, class std::vector<unsigned int> & neighborhood) = 0;

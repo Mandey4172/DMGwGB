@@ -3,13 +3,7 @@
 
 #include<array>
 #include<list>
-MooreNeighborhood::MooreNeighborhood()
-{
-}
 
-MooreNeighborhood::~MooreNeighborhood()
-{
-}
 
 std::vector<unsigned int> MooreNeighborhood::get(const std::shared_ptr< CellularAutomataSpace > & cellular_automata_space, unsigned int x, unsigned int y, unsigned int z) const 
 {

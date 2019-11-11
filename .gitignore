@@ -70,3 +70,11 @@ release/Qt5Core.dll
 release/Qt5Gui.dll
 release/Qt5Widgets.dll
 DMGwGB-Win64/DMGwGB-Win64/release/Krzysztof_Madej_DMgWGB.rar
+
+*.sarif
+
+*.pchast
+
+*.tmp
+
+DMGwGB-Win64/x64/

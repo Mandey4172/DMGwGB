@@ -14,7 +14,14 @@ class CellularAutomata
 public:
 
 	CellularAutomata() noexcept;
-	virtual ~CellularAutomata() = default;
+
+	CellularAutomata(const CellularAutomata& other);
+	CellularAutomata(CellularAutomata&& other) noexcept;
+
+	CellularAutomata& operator=(const CellularAutomata& other);
+	CellularAutomata& operator=(CellularAutomata&& other) noexcept;
+
+	virtual ~CellularAutomata();
 
 	/// <summary> Perform single time step </summary>
 	/// <returns> Is cellular automata stable </returns>
